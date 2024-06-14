@@ -2,11 +2,13 @@ package com.example.challengelocaweb.presentation.nvgraph
 
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navigation
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.example.challengelocaweb.presentation.calendar.CalendarScreen
 import com.example.challengelocaweb.presentation.home.HomeScreen
 import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.presentation.onBoarding.OnBoardScreen
@@ -14,10 +16,11 @@ import com.example.challengelocaweb.presentation.onBoarding.OnBoardingViewModel
 
 @Composable
 fun NavGraph(
-    startDestination: String
+    navController: NavHostController,
+    startDestination: String = Route.AppStartNavigationScreen.route
 ){
 
-    val navController = rememberNavController()
+    //val navController = rememberNavController()
     
     NavHost(
         navController = navController,
@@ -25,29 +28,39 @@ fun NavGraph(
     ){
         navigation(
             route = Route.AppStartNavigationScreen.route,
-            startDestination = Route.OnBoardingScreen.route
+            startDestination = Route.HomeScreen.route
         ){
             composable(
-                route =Route.OnBoardingScreen.route
+                route =Route.HomeScreen.route
             ){
-                val viewModel: OnBoardingViewModel = hiltViewModel()
-                OnBoardScreen(
-                    event = viewModel::onEvent
-                )
+                val viewModel: HomeViewModel = hiltViewModel()
+                val emails = viewModel.emailPagingDataFlow.collectAsLazyPagingItems()
+                HomeScreen(navController = navController, emails = emails, navigate = {})
             }
         }
 
+//        navigation(
+//            route = Route.HomeScreen.route,
+//            startDestination = Route.HomeScreen.route
+//        ) {
+//            composable(
+//                route = Route.HomeScreen.route
+//            ){
+//                val viewModel: HomeViewModel = hiltViewModel()
+//                //val emails = viewModel.news.collectAsLazyPagingItems()
+//                val emails = viewModel.emailPagingDataFlow.collectAsLazyPagingItems()
+//                HomeScreen(navController = navController, emails = emails, navigate = {})
+//            }
+//        }
+
         navigation(
             route = Route.NewsNavigation.route,
-            startDestination = Route.NewsNavigationScreen.route
+            startDestination = Route.CalendarScreen.route
         ) {
             composable(
-                route = Route.NewsNavigationScreen.route
+                route = Route.CalendarScreen.route
             ){
-                val viewModel: HomeViewModel = hiltViewModel()
-                //val emails = viewModel.news.collectAsLazyPagingItems()
-                val emails = viewModel.emailPagingDataFlow.collectAsLazyPagingItems()
-                HomeScreen(emails = emails, navigate = {})
+                CalendarScreen(navController = navController)
             }
         }
 

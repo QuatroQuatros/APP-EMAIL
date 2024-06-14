@@ -1,7 +1,6 @@
 package com.example.challengelocaweb.presentation.home
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.basicMarquee
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -10,40 +9,37 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.paging.compose.LazyPagingItems
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import androidx.paging.compose.collectAsLazyPagingItems
+import androidx.navigation.NavHostController
 import com.example.challengelocaweb.R
-import com.example.challengelocaweb.data.remote.MockEmailPagingSource
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.presentation.Dimens.MediumPadding1
+import com.example.challengelocaweb.presentation.common.CustomNavigationBar
 import com.example.challengelocaweb.presentation.common.EmailsList
 import com.example.challengelocaweb.presentation.common.SearchBar
 import com.example.challengelocaweb.presentation.nvgraph.Route
-import kotlinx.coroutines.flow.Flow
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
+    navController: NavHostController,
     emails: LazyPagingItems<Email>,
     navigate:(String) -> Unit,
 
 ) {
+
     val titles by remember {
         derivedStateOf {
             if(emails.itemCount > 10){
@@ -60,32 +56,34 @@ fun HomeScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(top = MediumPadding1)
+//            .padding(top = MediumPadding1)
             .statusBarsPadding()
     ){
 
 
 
-        SearchBar(
-            modifier = Modifier.fillMaxWidth(0.6f).align(Alignment.CenterHorizontally),
-            text = "",
-            readOnly = false,
-            onValueChange = {},
-            onClick = {
-                navigate(Route.SearchScreen.route)
-            },
-            onSearch = {}
-        )
+//        SearchBar(
+//            modifier = Modifier
+//                .fillMaxWidth(0.6f)
+//                .align(Alignment.CenterHorizontally),
+//            text = "",
+//            readOnly = false,
+//            onValueChange = {},
+//            onClick = {
+//                navigate(Route.SearchScreen.route)
+//            },
+//            onSearch = {}
+//        )
 
-        Spacer(modifier = Modifier.height(MediumPadding1))
+//        Spacer(modifier = Modifier.height(MediumPadding1))
 
-        Text( text= titles, modifier = Modifier
-            .fillMaxWidth()
-            .padding(start = MediumPadding1)
-            .basicMarquee(), 
-            fontSize = 12.sp,
-            color = colorResource(id = R.color.placeholder)
-        )
+//        Text( text= titles, modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(start = MediumPadding1)
+//            .basicMarquee(),
+//            fontSize = 12.sp,
+//            color = colorResource(id = R.color.placeholder)
+//        )
 
 //        Spacer(modifier = Modifier.height(MediumPadding1))
 
@@ -96,6 +94,8 @@ fun HomeScreen(
                 navigate(Route.DetailScreen.route)
             }
         )
+
+
 
     }
 
