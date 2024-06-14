@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.challengelocaweb.domain.model.Event
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -20,12 +19,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.challengelocaweb.R
 import com.example.challengelocaweb.presentation.common.TimelineEventCard
+import com.example.challengelocaweb.presentation.calendar.components.CreateEventModal
+import com.example.challengelocaweb.presentation.calendar.components.FloatingActionButton
 
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
@@ -54,29 +53,10 @@ fun CalendarScreen(
             }
         }
     }
-
-
-
-
     
 }
 
-@Composable
-fun FloatingActionButton(
-    onClick: () -> Unit
-) {
-    FloatingActionButton(
-        modifier = Modifier
-            .padding(40.dp, bottom = 80.dp),
-        onClick = onClick
-    ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_add),
-            contentDescription = "Add",
-            tint = colorResource(id = R.color.primary)
-        )
-    }
-}
+
 
 @Composable
 fun Header() {
@@ -290,41 +270,7 @@ fun TimelineEventCard(event: Event) {
 
 @Preview(showBackground = true)
 @Composable
-fun AppPreview() {
+fun CalendarScreenPreview() {
     CalendarScreen(navController = rememberNavController())
 }
 
-@Composable
-fun CreateEventModal(
-    onDismiss: () -> Unit
-) {
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(dismissOnClickOutside = true)
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-                .background(Color.White, shape = RoundedCornerShape(8.dp))
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            // Conteúdo do modal de criação de evento
-            Text(
-                text = "Novo Evento",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.primary)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { /* Lógica para criar o evento */ },
-                modifier = Modifier.align(Alignment.Center)
-            ) {
-                Text("Criar Evento")
-            }
-        }
-    }
-}
