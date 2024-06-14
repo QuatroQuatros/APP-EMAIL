@@ -1,10 +1,7 @@
 package com.example.challengelocaweb.presentation.nvgraph
 
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.ActivityNavigator
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -14,7 +11,6 @@ import com.example.challengelocaweb.presentation.home.HomeScreen
 import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.presentation.onBoarding.OnBoardScreen
 import com.example.challengelocaweb.presentation.onBoarding.OnBoardingViewModel
-import kotlinx.coroutines.flow.collectIndexed
 
 @Composable
 fun NavGraph(
@@ -49,8 +45,9 @@ fun NavGraph(
                 route = Route.NewsNavigationScreen.route
             ){
                 val viewModel: HomeViewModel = hiltViewModel()
-                val articles = viewModel.news.collectAsLazyPagingItems()
-                HomeScreen(articles = articles, navigate = {})
+                //val emails = viewModel.news.collectAsLazyPagingItems()
+                val emails = viewModel.emailPagingDataFlow.collectAsLazyPagingItems()
+                HomeScreen(emails = emails, navigate = {})
             }
         }
 

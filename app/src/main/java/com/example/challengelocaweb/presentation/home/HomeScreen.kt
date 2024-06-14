@@ -16,7 +16,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.remember
 import androidx.paging.compose.LazyPagingItems
-import com.example.challengelocaweb.domain.model.Article
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,23 +23,31 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.challengelocaweb.R
+import com.example.challengelocaweb.data.remote.MockEmailPagingSource
+import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.presentation.Dimens.MediumPadding1
-import com.example.challengelocaweb.presentation.common.ArticlesList
+import com.example.challengelocaweb.presentation.common.EmailsList
 import com.example.challengelocaweb.presentation.common.SearchBar
 import com.example.challengelocaweb.presentation.nvgraph.Route
+import kotlinx.coroutines.flow.Flow
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun HomeScreen(
-    articles: LazyPagingItems<Article>,
-    navigate:(String) -> Unit
-) {
+    emails: LazyPagingItems<Email>,
+    navigate:(String) -> Unit,
 
+) {
     val titles by remember {
         derivedStateOf {
-            if(articles.itemCount > 10){
-                articles.itemSnapshotList.items
+            if(emails.itemCount > 10){
+                emails.itemSnapshotList.items
                     .slice(IntRange(start = 0, endInclusive = 9))
                     .joinToString(separator = "\uD83d\uDF35") { it.title }
             }else{
@@ -49,26 +56,20 @@ fun HomeScreen(
         }
     }
 
+
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(top = MediumPadding1)
             .statusBarsPadding()
     ){
-        Image(
-            painter = painterResource(id = R.drawable.ic_network_error),
-            contentDescription = null,
-            modifier = Modifier
-                .padding(MediumPadding1)
-                .width(150.dp)
-                .align(Alignment.CenterHorizontally)
-        )
 
-        Spacer(modifier = Modifier.height(MediumPadding1))
-        
+
+
         SearchBar(
+            modifier = Modifier.fillMaxWidth(0.6f).align(Alignment.CenterHorizontally),
             text = "",
-            readOnly = true,
+            readOnly = false,
             onValueChange = {},
             onClick = {
                 navigate(Route.SearchScreen.route)
@@ -86,11 +87,11 @@ fun HomeScreen(
             color = colorResource(id = R.color.placeholder)
         )
 
-        Spacer(modifier = Modifier.height(MediumPadding1))
+//        Spacer(modifier = Modifier.height(MediumPadding1))
 
-        ArticlesList(
+        EmailsList(
             modifier = Modifier.padding(horizontal = MediumPadding1),
-            articles = articles,
+            emails = emails,
             onClick = {
                 navigate(Route.DetailScreen.route)
             }

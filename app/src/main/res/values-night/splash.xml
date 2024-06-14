@@ -2,7 +2,7 @@
 <resources>
     <style name="App.Starting.Theme" parent="Theme.SplashScreen">
         <item name="windowSplashScreenBackground">#1C1E21</item>
-        <item name="windowSplashScreenAnimatedIcon">@drawable/baseline_search_24</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/email_logo</item>
         <item name="postSplashScreenTheme">@style/Theme.ChallengeLocaWeb</item>
     </style>
 </resources>

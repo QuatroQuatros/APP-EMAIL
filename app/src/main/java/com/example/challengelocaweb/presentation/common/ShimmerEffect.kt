@@ -32,27 +32,27 @@ import com.example.challengelocaweb.presentation.Dimens.MediumPadding1
 
 @SuppressLint("ModifierFactoryUnreferencedReceiver")
 fun Modifier.shimmerEffect() = composed {
-    var transition = rememberInfiniteTransition()
-    var alpha = transition.animateFloat(
+    val transition = rememberInfiniteTransition(label = "")
+    val alpha = transition.animateFloat(
         initialValue = 0.2f,
         targetValue = 0.9f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 1000),
             repeatMode = RepeatMode.Reverse
-        )
+        ), label = ""
     ).value
     background(color = colorResource(id = R.color.shimmer).copy(alpha = alpha))
 }
 
 
 @Composable
-fun ArticleCardShimmer(modifier: Modifier = Modifier){
+fun EmailCardShimmer(modifier: Modifier = Modifier){
     Row (
         modifier = modifier
     ){
         Box(
             modifier = Modifier
-                .size(Dimens.ArticleCardSize)
+                .size(Dimens.EmailCardSize)
                 .clip(MaterialTheme.shapes.medium)
                 .shimmerEffect()
 
@@ -62,7 +62,7 @@ fun ArticleCardShimmer(modifier: Modifier = Modifier){
             verticalArrangement = Arrangement.SpaceAround,
             modifier = Modifier
                 .padding(horizontal = Dimens.ExtraSmallPadding)
-                .height(Dimens.ArticleCardSize)
+                .height(Dimens.EmailCardSize)
         )
         {
             Box(
@@ -93,9 +93,9 @@ fun ArticleCardShimmer(modifier: Modifier = Modifier){
 @Preview(showBackground = true)
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
-fun ArticleCardShimmerPreview() {
+fun EmailCardShimmerPreview() {
     for (i in 0..5){
-        ArticleCardShimmer()
+        EmailCardShimmer()
     }
 
 }

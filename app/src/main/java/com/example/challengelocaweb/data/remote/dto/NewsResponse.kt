@@ -1,9 +1,9 @@
 package com.example.challengelocaweb.data.remote.dto
 
-import com.example.challengelocaweb.domain.model.Article
+import com.example.challengelocaweb.domain.model.Email
 
 data class NewsResponse(
-    val articles: List<Article>,
+    val emails: List<Email>,
     val status: String,
     val totalResults: Int
 )

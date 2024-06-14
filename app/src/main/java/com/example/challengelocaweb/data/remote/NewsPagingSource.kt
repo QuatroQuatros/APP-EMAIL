@@ -2,8 +2,8 @@ package com.example.challengelocaweb.data.remote
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.example.challengelocaweb.domain.model.Article
-import com.example.challengelocaweb.util.Constansts
+import com.example.challengelocaweb.domain.model.Email
+
 
 class NewsPagingSource(
 
@@ -11,21 +11,30 @@ class NewsPagingSource(
     private val sources: String
 
 
-): PagingSource<Int, Article>()
+): PagingSource<Int, Email>()
 {
+
+
+    override fun getRefreshKey(state: PagingState<Int, Email>): Int? {
+        return state.anchorPosition?.let { anchorPosition ->
+            val anchorPage = state.closestPageToPosition(anchorPosition)
+            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
+        }
+    }
+
     private var totalNewsCount = 0
 
-    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Article> {
+    override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Email> {
         val page = params.key ?: 1
         return try{
             val response = newsAPI.getNews(
                 page = page,
                 sources = sources
             )
-            totalNewsCount += response.articles.size
-            val articles = response.articles.distinctBy { it.title }
+            totalNewsCount += response.emails.size
+            val emails = response.emails.distinctBy { it.title }
             LoadResult.Page(
-                data = articles,
+                data = emails,
                 prevKey = null,
                 nextKey = if (totalNewsCount == response.totalResults) null else page + 1
             )
@@ -41,11 +50,5 @@ class NewsPagingSource(
         }
     }
 
-    override fun getRefreshKey(state: PagingState<Int, Article>): Int? {
-        return state.anchorPosition?.let { anchorPosition ->
-            val anchorPage = state.closestPageToPosition(anchorPosition)
-            anchorPage?.prevKey?.plus(1) ?: anchorPage?.nextKey?.minus(1)
-        }
-    }
 
 }

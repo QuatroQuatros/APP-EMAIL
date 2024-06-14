@@ -1,6 +1,7 @@
 package com.example.challengelocaweb.presentation.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsPressedAsState
@@ -8,6 +9,7 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -31,7 +33,6 @@ import com.example.challengelocaweb.R
 import com.example.challengelocaweb.presentation.Dimens.IconSize
 import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBar(
     modifier: Modifier = Modifier,
@@ -53,9 +54,10 @@ fun SearchBar(
         }
     }
 
-    Box(
-        modifier = modifier
-    ){
+    Box(modifier = modifier)
+    {
+        val containerColor = Color.White
+//        val containerColor = colorResource(id = R.color.input_background)
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -73,22 +75,29 @@ fun SearchBar(
             },
             placeholder = {
                 Text(
-                    text = "Pesquise por seus emails aqui...",
+                    text = "Pesquise aqui...",
                     style = MaterialTheme.typography.bodySmall,
                     color = colorResource(id = R.color.placeholder)
                 )
 
             },
-            shape = MaterialTheme.shapes.medium,
-            colors = TextFieldDefaults.textFieldColors(
-                containerColor = colorResource(id = R.color.input_background),
-                //textColor = if(isSystemInDarkTheme()) Color.White else Color.Black,
+            shape = RoundedCornerShape(50),
+            colors = TextFieldDefaults.colors(
+                focusedTextColor = MaterialTheme.colorScheme.onBackground,
+                unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
+                disabledTextColor = MaterialTheme.colorScheme.onBackground,
+                focusedContainerColor = containerColor,
+                unfocusedContainerColor = containerColor,
+                disabledContainerColor = containerColor,
+                errorContainerColor = containerColor,
                 cursorColor = if(isSystemInDarkTheme()) Color.White else Color.Black,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
                 disabledIndicatorColor = Color.Transparent,
                 errorIndicatorColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent
+
             ),
+
             singleLine = true,
             keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
             keyboardActions = KeyboardActions(
@@ -97,7 +106,7 @@ fun SearchBar(
                 }
             ),
             textStyle = MaterialTheme.typography.bodySmall,
-            interactionSource = interactionSource
+            interactionSource = interactionSource,
 
 
         )
@@ -108,9 +117,9 @@ fun SearchBar(
 fun Modifier.searchBarBorder() = composed{
     if(!isSystemInDarkTheme()){
         border(
-            width = 1.dp,
-            color = Color.Black,
-            shape = MaterialTheme.shapes.medium
+//            BorderStroke(width = 1.dp, color = Color.Black),
+            BorderStroke(width = 1.dp, color = Color(0xFF09757C)),
+            shape = RoundedCornerShape(50)
         )
     }else{
         this

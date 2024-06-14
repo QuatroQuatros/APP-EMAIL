@@ -8,31 +8,35 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
-import com.example.challengelocaweb.domain.model.Article
+import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.presentation.Dimens.ExtraSmallPadding2
 import com.example.challengelocaweb.presentation.Dimens.MediumPadding1
 
 @Composable
-fun ArticlesList(
+fun EmailsList(
     modifier: Modifier = Modifier,
-    articles: LazyPagingItems<Article>,
-    onClick:(Article) -> Unit
+    emails: LazyPagingItems<Email>,
+    onClick:(Email) -> Unit
 ) {
 
-    val handlePagingResult = handlePagingResult(articles = articles)
+    val handlePagingResult = handlePagingResult(emails = emails)
+
+
     if(handlePagingResult){
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
-            verticalArrangement = Arrangement.spacedBy(MediumPadding1),
+//            verticalArrangement = Arrangement.spacedBy(2.dp),
+//            verticalArrangement = Arrangement.spacedBy(MediumPadding1),
             contentPadding = PaddingValues(all = ExtraSmallPadding2)
         ) {
-            items(articles.itemCount) {
-                articles[it]?.let { article ->
-                    ArticleCard(
-                        article = article,
-                        onClick = { onClick(article) }
+            items(emails.itemCount) {
+                emails[it]?.let { email ->
+                    EmailCard(
+                        email = email,
+                        onClick = { onClick(email) }
                     )
                 }
             }
@@ -43,11 +47,11 @@ fun ArticlesList(
 
 @Composable
 fun handlePagingResult(
-    articles: LazyPagingItems<Article>,
+    emails: LazyPagingItems<Email>,
 ): Boolean
 {
 
-    val loadState = articles.loadState
+    val loadState = emails.loadState
 
     val error = when{
         loadState.refresh is LoadState.Error -> {
@@ -68,25 +72,12 @@ fun handlePagingResult(
             false
         }
         error != null -> {
-            EmptyScreen()
+            EmptyScreen(error = error)
             false
         }
         else -> {
             true
         }
-
-//        loadState.append is LoadState.Loading -> {
-//            true
-//        }
-//        loadState.prepend is LoadState.Loading -> {
-//            true
-//        }
-//        error != null -> {
-//            false
-//        }
-//        else -> {
-//            false
-//        }
     }
 
 }
@@ -95,7 +86,7 @@ fun handlePagingResult(
 private fun shimmerEffect(){
     Column(verticalArrangement = Arrangement.spacedBy(MediumPadding1)) {
         repeat(10) {
-            ArticleCardShimmer(
+            EmailCardShimmer(
                 modifier = Modifier.padding(horizontal = MediumPadding1)
             )
         }

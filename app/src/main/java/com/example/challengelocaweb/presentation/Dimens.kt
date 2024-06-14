@@ -1,7 +1,6 @@
 package com.example.challengelocaweb.presentation
 
 import androidx.compose.ui.unit.dp
-import com.example.challengelocaweb.domain.model.Article
 
 object Dimens {
 
@@ -9,7 +8,7 @@ object Dimens {
     val MediumPadding2 = 30.dp
     val IndicatorSize = 14.dp
     val PageIndicatorWidth = 52.dp
-    val ArticleCardSize = 96.dp
+    val EmailCardSize = 96.dp
     val ExtraSmallPadding = 3.dp
     val ExtraSmallPadding2 = 6.dp
     val SmallIconSize = 11.dp

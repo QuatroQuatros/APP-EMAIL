@@ -1,6 +1,6 @@
 package com.example.challengelocaweb.domain.model
 
-data class Article(
+data class Email(
     val author: String,
     val content: String,
     val description: String,
