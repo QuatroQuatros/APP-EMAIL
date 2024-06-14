@@ -1,27 +1,17 @@
 package com.example.challengelocaweb.presentation.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.interaction.collectIsPressedAsState
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.zIndex
 import com.example.challengelocaweb.R
 import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
 //
@@ -121,30 +111,32 @@ import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
 
 @Composable
 fun TopBarWithSearchBar(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    text: String,
+    onValueChange: (String) -> Unit,
+    onSearch: () -> Unit
+
 ) {
     Column(
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
             .height(150.dp)
 
     ) {
-        // Top Bar
         Box(
             contentAlignment = Alignment.BottomCenter,
             modifier = Modifier
                 .fillMaxSize()
-
-                .background(color = colorResource(id =R.color.primary))
+                .background(color = colorResource(id = R.color.primary))
         ) {
             SearchBar(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 20.dp),
-                text = "",
+                text = text,
                 readOnly = false,
-                onValueChange = {},
-                onSearch = {}
+                onValueChange = onValueChange,
+                onSearch = onSearch
             )
         }
 
@@ -156,7 +148,8 @@ fun TopBarWithSearchBar(
 @Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
 @Composable
 fun TopBarWithSearchBarPreview() {
+    val (searchTerm, setSearchTerm) = remember { mutableStateOf("") }
     ChallengeLocaWebTheme {
-        TopBarWithSearchBar()
+        TopBarWithSearchBar(text = "", onValueChange = setSearchTerm, onSearch = {searchTerm})
     }
 }

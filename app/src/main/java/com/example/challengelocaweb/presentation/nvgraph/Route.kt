@@ -8,11 +8,9 @@ sealed class Route(
 
     object CalendarScreen : Route("calendarScreen")
 
-
-
+    object CategoriesScreen : Route("categoriesScreen")
 
     object SearchScreen : Route("searchScreen")
-    object BookmarkScreen : Route("bookmarkScreen")
     object DetailScreen : Route("detailScreen")
     object AppStartNavigationScreen : Route("appStartNavigationScreen")
     object NewsNavigation : Route("newsNavigation")

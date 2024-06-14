@@ -83,16 +83,14 @@ fun MyApp(viewModel: MainViewModel) {
         var selectedItems by remember { mutableStateOf("Home") }
 
         Scaffold(
-            topBar = {
-
-                TopBarWithSearchBar(
-//                    text = "Pesquise aqui...",
-//                    readOnly = false,
-//                    onValueChange = {}
-                )
-
-
-            },
+//            topBar = {
+//
+//                TopBarWithSearchBar(
+//
+//                )
+//
+//
+//            },
             bottomBar = {
                 CustomNavigationBar(
                     navController = navController,
@@ -103,7 +101,7 @@ fun MyApp(viewModel: MainViewModel) {
         ) { innerPadding ->
             Box(modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)
+                //.padding(innerPadding)
                 .background(color = MaterialTheme.colorScheme.background)) {
                 NavGraph(navController = navController)
             }

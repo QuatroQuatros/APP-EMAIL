@@ -1,11 +1,10 @@
-package com.example.challengelocaweb.presentation.calendar
-import android.annotation.SuppressLint
+package com.example.challengelocaweb.presentation.common
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import com.example.challengelocaweb.domain.model.Event
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -14,67 +13,29 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.challengelocaweb.R
-import com.example.challengelocaweb.presentation.common.TimelineEventCard
 
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
-    ) {
-    var showModal by remember { mutableStateOf(false) }
-    Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = { showModal = true })
-        }
-    ) {
-        Column(
-            modifier = modifier
-                .fillMaxSize()
-                .padding(bottom = 90.dp)
-        ) {
-            Header()
-            WeekDaysHeader()
-            NavigationButtons()
-            EventsTimeline()
-
-            if (showModal) {
-                CreateEventModal(onDismiss = { showModal = false })
-            }
-        }
-    }
-
-
-
-
-    
-}
-
-@Composable
-fun FloatingActionButton(
-    onClick: () -> Unit
 ) {
-    FloatingActionButton(
-        modifier = Modifier
-            .padding(40.dp, bottom = 80.dp),
-        onClick = onClick
+    Column(
+        modifier = modifier
+            .fillMaxSize()
+        //.background(color = colorResource(id = R.color.background))
     ) {
-        Icon(
-            painter = painterResource(id = R.drawable.ic_add),
-            contentDescription = "Add",
-            tint = colorResource(id = R.color.primary)
-        )
+        Header()
+        WeekDaysHeader()
+        NavigationButtons()
+        EventsTimeline()
     }
 }
 
@@ -83,7 +44,7 @@ fun Header() {
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp, top = 30.dp),
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -106,7 +67,7 @@ fun WeekDaysHeader() {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 10.dp),
+            .padding(horizontal = 10.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         listOf("D", "S", "T", "Q", "Q", "S", "S").forEach { day ->
@@ -172,61 +133,64 @@ fun EventsTimeline() {
         Event("Aniversário Adalberto", "", "15", "12:35"),
         Event("Aniversário Adalberto", "", "15", "12:35"),
         Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Chupada do Ayala", "", "69", "04:20")
+        Event("Aniversário Adalberto", "", "15", "12:35")
 
-        )
-    LazyColumn(
+
+    )
+
+    Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 10.dp)
-        //.background(color = Color.Green)
+            .padding(horizontal = 8.dp, vertical = 16.dp)
     ) {
-        items(events) { event ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                //.background(color = Color.Blue)
-            ) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .width(80.dp)
-                    //.background(color = Color.Red)
-                ) {
-                    Box(
+        LazyColumn(
+            modifier = Modifier
+                .width(50.dp)
+                .padding(end = 8.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            items(events) { event ->
+                Box(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(80.dp)
+                        .padding(bottom = 0.dp)
+                        .background(color = Color.Transparent),
+                    contentAlignment = Alignment.Center,
+
+                    ){
+                    Text(
                         modifier = Modifier
-                            .padding(bottom = 0.dp, top = 20.dp)
-                            .fillMaxWidth()
-                            .fillMaxHeight(),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Text(
-                            modifier = Modifier
-                                .fillMaxHeight(1f),
-                            text = event.day,
-                            color = colorResource(id = R.color.selected),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
+                            .fillMaxHeight(1f)
+                            .padding(10.dp),
+                        text = event.day,
+                        color = colorResource(id = R.color.selected),
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
 
-                            )
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth(1f),
-                            text = event.time,
-                            color = colorResource(id = R.color.selected),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
                         )
-                    }
-
+                    Text(
+                        modifier = Modifier
+                            .fillMaxWidth(1f),
+                        text = event.time,
+                        color = colorResource(id = R.color.selected),
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
                 }
+
+            }
+
+        }
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        ) {
+            items(events) { event ->
                 TimelineEventCard(event)
             }
-            Spacer(modifier = Modifier.height(10.dp))
         }
     }
 }
@@ -239,7 +203,7 @@ fun TimelineEventCard(event: Event) {
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box() {
+        Box(){
 
         }
         Column(
@@ -288,43 +252,92 @@ fun TimelineEventCard(event: Event) {
     }
 }
 
+
+
+
+
+
+
+//@Composable
+//fun EventsTimeline() {
+//    val today = 11
+//    val events = listOf(
+//        Event("Reunião José Bezerra", "Sobre finanças", "09", "14:50"),
+//        Event("Consulta Médica", "Levar documento e cartão SUS", "11", "11:10"),
+//        Event("Aniversário Jully", "", "12", ""),
+//        Event("Reunião José Bezerra", "Sobre finanças", "14", "14:50"),
+//        Event("Aniversário Adalberto", "", "15", "")
+//    )
+//
+//    LazyColumn(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(horizontal = 8.dp, vertical = 16.dp)
+//    ) {
+//        items(events) { event ->
+//            TimelineEventCard(event, event.day.toInt() == today)
+//        }
+//    }
+//}
+//@Composable
+//fun TimelineEventCard(event: Event) {
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(vertical = 8.dp),
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        Column(
+//            horizontalAlignment = Alignment.CenterHorizontally
+//        ) {
+//            Box(
+//                modifier = Modifier
+//                    .size(16.dp)
+//                    .clip(CircleShape)
+//                    .background(color = colorResource(id = R.color.primary))
+//            )
+//            Spacer(modifier = Modifier.height(4.dp))
+//            Box(
+//                modifier = Modifier
+//                    .width(2.dp)
+//                    .height(40.dp)
+//                    .background(color = colorResource(id = R.color.primary))
+//            )
+//        }
+//        Spacer(modifier = Modifier.width(16.dp))
+//        Card(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(end = 16.dp),
+//            //backgroundColor = colorResource(id = R.color.eventBackground)
+//        ) {
+//            Column(
+//                modifier = Modifier.padding(16.dp)
+//            ) {
+//                Text(
+//                    text = event.title,
+//                    fontWeight = FontWeight.Bold,
+//                    color = colorResource(id = R.color.primary)
+//                )
+//                if (event.description.isNotEmpty()) {
+//                    Text(text = event.description)
+//                }
+//                if (event.time.isNotEmpty()) {
+//                    Text(
+//                        text = event.time,
+//                        color = colorResource(id = R.color.selected)
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
+
+
 @Preview(showBackground = true)
 @Composable
 fun AppPreview() {
     CalendarScreen(navController = rememberNavController())
 }
 
-@Composable
-fun CreateEventModal(
-    onDismiss: () -> Unit
-) {
-    Dialog(
-        onDismissRequest = onDismiss,
-        properties = DialogProperties(dismissOnClickOutside = true)
-    ) {
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-                .background(Color.White, shape = RoundedCornerShape(8.dp))
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
-            // Conteúdo do modal de criação de evento
-            Text(
-                text = "Novo Evento",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.primary)
-            )
 
-            Spacer(modifier = Modifier.height(16.dp))
-
-            Button(
-                onClick = { /* Lógica para criar o evento */ },
-                modifier = Modifier.align(Alignment.Center)
-            ) {
-                Text("Criar Evento")
-            }
-        }
-    }
-}

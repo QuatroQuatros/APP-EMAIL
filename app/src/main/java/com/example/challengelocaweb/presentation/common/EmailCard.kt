@@ -36,7 +36,7 @@ import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.domain.model.Source
 import com.example.challengelocaweb.presentation.Dimens.SmallIconSize
 import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
-import com.example.challengelocaweb.util.converteTimestampToDate
+import com.example.challengelocaweb.util.convertTimestampToDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -93,7 +93,7 @@ fun EmailCard(
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
                             color = colorResource(id = R.color.primary),
-                            text = converteTimestampToDate(email.publishedAt)
+                            text = convertTimestampToDate(email.publishedAt)
                         )
                     }
 

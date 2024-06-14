@@ -5,7 +5,7 @@ import com.example.challengelocaweb.domain.model.Email
 import kotlinx.coroutines.flow.Flow
 
 
-interface NewsRepository {
+interface EmailRepository {
 
-    fun getNews(sources: List<String>): Flow<PagingData<Email>>
+    fun getEmails(sources: List<String>): Flow<PagingData<Email>>
 }

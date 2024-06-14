@@ -5,10 +5,11 @@ import androidx.paging.PagingState
 import com.example.challengelocaweb.domain.model.Email
 
 
-class NewsPagingSource(
+class EmailPagingSource(
 
-    private val newsAPI: NewsAPI,
-    private val sources: String
+    private val emailAPI: EmailAPI,
+    private val sources: String,
+    private val searchTerm: String
 
 
 ): PagingSource<Int, Email>()
@@ -27,12 +28,15 @@ class NewsPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Email> {
         val page = params.key ?: 1
         return try{
-            val response = newsAPI.getNews(
+            val response = emailAPI.getEmails(
                 page = page,
                 sources = sources
             )
             totalNewsCount += response.emails.size
-            val emails = response.emails.distinctBy { it.title }
+            //val emails = response.emails.distinctBy { it.title }
+            val emails = response.emails.filter { email ->
+                email.title.contains(searchTerm, ignoreCase = true)
+            }
             LoadResult.Page(
                 data = emails,
                 prevKey = null,

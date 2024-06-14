@@ -1,6 +1,7 @@
 package com.example.challengelocaweb.presentation.common
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.border
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -57,7 +58,6 @@ fun SearchBar(
     Box(modifier = modifier)
     {
         val containerColor = Color.White
-//        val containerColor = colorResource(id = R.color.input_background)
         TextField(
             modifier = Modifier
                 .fillMaxWidth()
@@ -81,7 +81,7 @@ fun SearchBar(
                 )
 
             },
-            shape = RoundedCornerShape(50),
+            shape = RoundedCornerShape(20),
             colors = TextFieldDefaults.colors(
                 focusedTextColor = MaterialTheme.colorScheme.onBackground,
                 unfocusedTextColor = MaterialTheme.colorScheme.onBackground,
@@ -119,7 +119,7 @@ fun Modifier.searchBarBorder() = composed{
         border(
 //            BorderStroke(width = 1.dp, color = Color.Black),
             BorderStroke(width = 1.dp, color = Color(0xFF09757C)),
-            shape = RoundedCornerShape(50)
+            shape = RoundedCornerShape(20)
         )
     }else{
         this

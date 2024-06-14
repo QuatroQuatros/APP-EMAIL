@@ -8,17 +8,17 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.challengelocaweb.data.remote.MockEmailPagingSource
 import com.example.challengelocaweb.domain.model.Email
-import com.example.challengelocaweb.domain.useCases.news.NewsUseCases
+import com.example.challengelocaweb.domain.useCases.emails.EmailUseCases
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val newsUseCases: NewsUseCases
+    private val emailUseCases: EmailUseCases
 ): ViewModel(){
 
-//    val news = newsUseCases.getNews(
+//    val news = emailUseCases.getEmails(
 //        sources = listOf("google-news-br", "globo", "infoMoney", "techcrunch", "the-verge")
 //    ).cachedIn(viewModelScope)
 

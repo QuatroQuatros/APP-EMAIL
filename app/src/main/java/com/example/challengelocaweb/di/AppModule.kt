@@ -2,15 +2,15 @@ package com.example.challengelocaweb.di
 
 import android.app.Application
 import com.example.challengelocaweb.data.manager.LocalUserManagerImpl
-import com.example.challengelocaweb.data.remote.NewsAPI
-import com.example.challengelocaweb.data.repository.NewsRepositoryImpl
+import com.example.challengelocaweb.data.remote.EmailAPI
+import com.example.challengelocaweb.data.repository.EmailRepositoryImpl
 import com.example.challengelocaweb.domain.manager.LocalUserManager
-import com.example.challengelocaweb.domain.repository.NewsRepository
+import com.example.challengelocaweb.domain.repository.EmailRepository
 import com.example.challengelocaweb.domain.useCases.appEntry.AppEntryUseCases
 import com.example.challengelocaweb.domain.useCases.appEntry.ReadAppEntry
 import com.example.challengelocaweb.domain.useCases.appEntry.SaveAppEntry
-import com.example.challengelocaweb.domain.useCases.news.GetNews
-import com.example.challengelocaweb.domain.useCases.news.NewsUseCases
+import com.example.challengelocaweb.domain.useCases.emails.EmailUseCases
+import com.example.challengelocaweb.domain.useCases.emails.GetEmails
 import com.example.challengelocaweb.util.Constansts.BASE_URL
 import dagger.Module
 import dagger.Provides
@@ -42,27 +42,27 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideNewsAPI(): NewsAPI{
+    fun provideEmailAPI(): EmailAPI{
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(GsonConverterFactory.create())
             .build()
-            .create(NewsAPI::class.java)
+            .create(EmailAPI::class.java)
     }
 
     @Provides
     @Singleton
-    fun provideNewsRepository(
-        newsAPI: NewsAPI
-    ): NewsRepository = NewsRepositoryImpl(newsAPI)
+    fun provideEmailRepository(
+        emailAPI: EmailAPI
+    ): EmailRepository = EmailRepositoryImpl(emailAPI)
 
     @Provides
     @Singleton
-    fun provideNewsUseCases(
-        newsRepository: NewsRepository
-    ): NewsUseCases {
-        return NewsUseCases(
-            getNews = GetNews(newsRepository)
+    fun provideEmailUseCases(
+        emailRepository: EmailRepository
+    ): EmailUseCases {
+        return EmailUseCases(
+            getEmails = GetEmails(emailRepository)
         )
     }
 }
