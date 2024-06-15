@@ -343,6 +343,7 @@ fun EventsTimeline(
 ) {
 
     val listEvents = listOf(
+
         Event("Reunião José Bezerra", "Sobre finanças", "09", "14:50", "2023-05-09T00:00:00Z"),
         Event("Consulta Médica", "Levar documento e cartão SUS", "11", "11:10", "2024-06-11T00:00:00Z"),
         Event("Aniversário Jully", "", "12", "00:00", "1998-06-12T00:00:00Z"),
@@ -360,6 +361,7 @@ fun EventsTimeline(
         Event("TESTE 2024", "Levar documento e cartão SUS", "14", "11:10", "2024-06-14T00:00:00Z"),
         Event("TESTE 2024", "Levar documento e cartão SUS", "15", "11:10", "2024-06-15T00:00:00Z"),
         Event("TESTE 2024", "Levar documento e cartão SUS", "16", "11:10", "2024-06-16T00:00:00Z")
+
 
         )
 
