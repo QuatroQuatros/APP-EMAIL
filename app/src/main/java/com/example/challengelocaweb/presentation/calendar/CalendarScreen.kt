@@ -4,11 +4,16 @@ import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowDropDown
+import androidx.compose.material.icons.filled.KeyboardArrowDown
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import com.example.challengelocaweb.domain.model.Event
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -21,6 +26,7 @@ import java.time.format.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
@@ -60,12 +66,11 @@ fun CalendarScreen(
         ) {
             Header(
                 selectedDate = selectedDate,
-                selectedMonth = selectedMonth,
-                selectedYear = selectedYear,
-                onDateChange = { newDate, newMonth, newYear ->
+                onDateChange = { newDate ->
                     selectedDate = newDate
-                    selectedMonth = newMonth
-                    selectedYear = newYear
+                    selectedDay = newDate.dayOfMonth
+                    selectedMonth = newDate.dayOfMonth
+                    selectedYear = newDate.year
                 }
             )
             WeekDaysHeader(
@@ -126,9 +131,7 @@ fun CalendarScreen(
 @Composable
 fun Header(
     selectedDate: LocalDate,
-    selectedMonth: Int,
-    selectedYear: Int,
-    onDateChange: (LocalDate, Int, Int) -> Unit
+    onDateChange: (LocalDate) -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -143,7 +146,7 @@ fun Header(
             color = colorResource(id = R.color.primary)
         )
         val months = java.time.Month.values().map { it.getDisplayName(TextStyle.FULL, Locale("pt", "BR")).capitalize() }
-        val years = (1900..2100).toList()
+        val years = (1980..2100).toList()
         var selectedMonthIndex by remember { mutableStateOf(selectedDate.monthValue - 1) }
         var selectedYearIndex by remember { mutableStateOf(years.indexOf(selectedDate.year)) }
 
@@ -163,14 +166,15 @@ fun Header(
                 onItemSelected = { index ->
                     try{
                         val newDate = selectedDate.withMonth(index + 1).withDayOfMonth(1)
-                        onDateChange(newDate, index + 1, selectedYear)
+                        onDateChange(newDate)
                     }catch (e: DateTimeException){
                         val newDate = selectedDate.withDayOfMonth(1)
-                        onDateChange(newDate, newDate.monthValue, selectedYear)
+                        onDateChange(newDate)
                     }
 
                 },
-                label = "Mês"
+                label = "Mês",
+                labelFontSize = 20.sp
             )
 
             DropdownSelector(
@@ -179,13 +183,14 @@ fun Header(
                 onItemSelected = { index ->
                     try {
                         val newDate = selectedDate.withYear(years[index])
-                        onDateChange(newDate, selectedMonth, years[index])
+                        onDateChange(newDate)
                     } catch (e: DateTimeException) {
                         val newDate = selectedDate.withDayOfMonth(1)
-                        onDateChange(newDate, selectedMonth, newDate.year)
+                        onDateChange(newDate)
                     }
                 },
-                label = "Ano"
+                label = "Ano",
+                labelFontSize = 20.sp
             )
         }
     }
@@ -196,7 +201,9 @@ fun DropdownSelector(
     items: List<String>,
     selectedIndex: Int,
     onItemSelected: (Int) -> Unit,
-    label: String
+    label: String,
+    labelFontSize: TextUnit = 12.sp,
+    maxDropdownHeight: Int = 600
 ) {
     var expanded by remember { mutableStateOf(false) }
 
@@ -207,12 +214,23 @@ fun DropdownSelector(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = items[selectedIndex],
-            style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.Bold,
-            color = colorResource(id = R.color.primary)
-        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            verticalAlignment = Alignment.CenterVertically
+        ){
+            Text(
+                text = items[selectedIndex],
+                style = MaterialTheme.typography.labelLarge.copy(fontSize = labelFontSize),
+                fontWeight = FontWeight.Bold,
+                color = colorResource(id = R.color.primary)
+            )
+            Icon(
+                imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
+                contentDescription = null,
+                tint = Color.Black
+            )
+        }
+
 
         DropdownMenu(
             expanded = expanded,
@@ -220,6 +238,7 @@ fun DropdownSelector(
             modifier = Modifier
                 .width(100.dp)
                 .background(Color.White)
+                .heightIn(max = maxDropdownHeight.dp)
         ) {
             items.forEachIndexed { index, text ->
                 DropdownMenuItem(
@@ -343,8 +362,6 @@ fun EventsTimeline(
         Event("TESTE 2024", "Levar documento e cartão SUS", "16", "11:10", "2024-06-16T00:00:00Z")
 
         )
-    //val selectedDate = LocalDate.of(selectedYear, selectedMonth, selectedDay)
-
 
     val selectedDate = try {
         if(selectedMonth  > 12 || selectedMonth < 1){
@@ -380,7 +397,6 @@ fun EventsTimeline(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 10.dp)
-            //.background(color = Color.Green)
         ) {
             items(events) { event ->
                 Row(
