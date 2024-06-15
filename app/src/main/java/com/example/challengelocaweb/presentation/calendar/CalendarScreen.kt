@@ -142,7 +142,7 @@ fun WeekDaysHeader(
                     .clip(CircleShape)
                     .background(
                         color = when {
-                            date.dayOfMonth == selectedDay -> Color.Red
+                            date.dayOfMonth == selectedDay -> colorResource(id = R.color.selected)
                             date == today -> colorResource(id = R.color.primary)
                             else -> colorResource(id = R.color.primary)
                         }
@@ -203,59 +203,69 @@ fun EventsTimeline(selectedDate: LocalDate) {
         eventDate == selectedDate
     }
 
-
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 10.dp)
-        //.background(color = Color.Green)
-    ) {
-        items(events) { event ->
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp)
-                //.background(color = Color.Blue)
-            ) {
-                Column(
+    if (events.isEmpty()) {
+        Text(
+            text = "Nenhum evento para o dia selecionado.",
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            color = colorResource(id = R.color.placeholder),
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold
+        )
+    } else {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 10.dp, vertical = 10.dp)
+            //.background(color = Color.Green)
+        ) {
+            items(events) { event ->
+                Row(
                     modifier = Modifier
-                        .fillMaxHeight()
-                        .width(80.dp)
-                    //.background(color = Color.Red)
+                        .fillMaxWidth()
+                        .height(100.dp)
                 ) {
-                    Box(
+                    Column(
                         modifier = Modifier
-                            .padding(bottom = 0.dp, top = 20.dp)
-                            .fillMaxWidth()
-                            .fillMaxHeight(),
-                        contentAlignment = Alignment.Center,
+                            .fillMaxHeight()
+                            .width(80.dp)
                     ) {
-                        Text(
+                        Box(
                             modifier = Modifier
-                                .fillMaxHeight(1f),
-                            text = event.day,
-                            color = colorResource(id = R.color.selected),
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
+                                .padding(bottom = 0.dp, top = 20.dp)
+                                .fillMaxWidth()
+                                .fillMaxHeight(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxHeight(1f),
+                                text = event.day,
+                                color = colorResource(id = R.color.selected),
+                                fontSize = 20.sp,
+                                fontWeight = FontWeight.Bold,
 
+                                )
+                            Text(
+                                modifier = Modifier
+                                    .fillMaxWidth(1f),
+                                text = event.time,
+                                color = colorResource(id = R.color.selected),
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                textAlign = TextAlign.Center
                             )
-                        Text(
-                            modifier = Modifier
-                                .fillMaxWidth(1f),
-                            text = event.time,
-                            color = colorResource(id = R.color.selected),
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            textAlign = TextAlign.Center
-                        )
-                    }
+                        }
 
+                    }
+                    TimelineEventCard(event)
                 }
-                TimelineEventCard(event)
+                Spacer(modifier = Modifier.height(10.dp))
             }
-            Spacer(modifier = Modifier.height(10.dp))
         }
     }
+
 }
 
 @Composable
@@ -291,7 +301,6 @@ fun TimelineEventCard(event: Event) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(end = 16.dp),
-            //backgroundColor = colorResource(id = R.color.eventBackground)
         ) {
             Column(
                 modifier = Modifier.padding(16.dp)
