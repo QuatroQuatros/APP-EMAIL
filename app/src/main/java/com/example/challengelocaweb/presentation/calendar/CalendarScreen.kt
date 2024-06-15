@@ -3,6 +3,7 @@ import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import java.time.format.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +40,8 @@ fun CalendarScreen(
     ) {
     var showModal by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
+    var selectedDay by remember { mutableStateOf(LocalDate.now().dayOfMonth) }
+
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { showModal = true })
@@ -49,10 +53,19 @@ fun CalendarScreen(
                 .padding(bottom = 90.dp)
         ) {
             Header(selectedDate = selectedDate)
-            WeekDaysHeader(selectedDate = selectedDate)
+            WeekDaysHeader(selectedDate, selectedDay) { day ->
+                selectedDay = day
+                selectedDate = selectedDate.withDayOfMonth(day)
+            }
             NavigationButtons(
-                onPreviousClick = { selectedDate = selectedDate.minusDays(7) },
-                onNextClick = { selectedDate = selectedDate.plusDays(7) }
+                onPreviousClick = {
+                    selectedDate = selectedDate.minusWeeks(1).with(java.time.DayOfWeek.SUNDAY)
+                    selectedDay = selectedDate.dayOfMonth
+                },
+                onNextClick = {
+                    selectedDate = selectedDate.plusWeeks(1).with(java.time.DayOfWeek.MONDAY)
+                    selectedDay = selectedDate.dayOfMonth
+                }
             )
             EventsTimeline(selectedDate = selectedDate)
 
@@ -82,8 +95,7 @@ fun Header(selectedDate: LocalDate) {
             color = colorResource(id = R.color.primary)
         )
         Text(
-            text = "${selectedDate.month.name.lowercase()
-                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }} ${selectedDate.year}",
+            text = "${selectedDate.month.getDisplayName(TextStyle.FULL, Locale("pt", "BR")).capitalize()} ${selectedDate.year}",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.primary)
@@ -93,7 +105,11 @@ fun Header(selectedDate: LocalDate) {
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WeekDaysHeader(selectedDate: LocalDate) {
+fun WeekDaysHeader(
+    selectedDate: LocalDate,
+    selectedDay: Int,
+    onDaySelected: (Int) -> Unit
+) {
     val startOfWeek = selectedDate.with(java.time.DayOfWeek.MONDAY)
     val daysOfWeek = (0 until 7).map { startOfWeek.plusDays(it.toLong()) }
     Row(
@@ -102,9 +118,10 @@ fun WeekDaysHeader(selectedDate: LocalDate) {
             .padding(horizontal = 10.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        listOf("D", "S", "T", "Q", "Q", "S", "S").forEach { day ->
+        val daysOfWeekShortNames = listOf("D", "S", "T", "Q", "Q", "S", "S")
+        daysOfWeekShortNames.forEachIndexed { index, dayShortName ->
             Text(
-                text = day,
+                text = dayShortName,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.primary)
             )
@@ -122,10 +139,17 @@ fun WeekDaysHeader(selectedDate: LocalDate) {
             Box(
                 Modifier
                     .size(36.dp)
+                    .clip(CircleShape)
                     .background(
-                        color = if (date == today) Color.Red else colorResource(id = R.color.primary),
-                        shape = CircleShape
-                    ), Alignment.Center
+                        color = when {
+                            date.dayOfMonth == selectedDay -> Color.Red
+                            date == today -> colorResource(id = R.color.primary)
+                            else -> colorResource(id = R.color.primary)
+                        }
+                    )
+                    .clickable { onDaySelected(date.dayOfMonth) },
+                contentAlignment = Alignment.Center
+
             ) {
                 Text(
                     text = date.dayOfMonth.toString(),
@@ -160,7 +184,6 @@ fun NavigationButtons(
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun EventsTimeline(selectedDate: LocalDate) {
-    val today = 11
     val listEvents = listOf(
         Event("Reunião José Bezerra", "Sobre finanças", "09", "14:50"),
         Event("Consulta Médica", "Levar documento e cartão SUS", "11", "11:10"),
@@ -175,9 +198,9 @@ fun EventsTimeline(selectedDate: LocalDate) {
 
         )
 
-        val events = listEvents.filter { event ->
-            val eventDate = LocalDate.of(2024, 6, event.day.toInt())
-            eventDate == selectedDate
+    val events = listEvents.filter { event ->
+        val eventDate = LocalDate.of(selectedDate.year, selectedDate.month, event.day.toInt())
+        eventDate == selectedDate
     }
 
 
