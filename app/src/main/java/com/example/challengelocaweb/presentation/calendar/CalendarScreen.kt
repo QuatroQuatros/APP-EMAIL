@@ -1,5 +1,7 @@
 package com.example.challengelocaweb.presentation.calendar
 import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,7 +15,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,7 +26,10 @@ import com.example.challengelocaweb.R
 import com.example.challengelocaweb.presentation.common.TimelineEventCard
 import com.example.challengelocaweb.presentation.calendar.components.CreateEventModal
 import com.example.challengelocaweb.presentation.calendar.components.FloatingActionButton
+import java.time.LocalDate
+import java.util.Locale
 
+@RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CalendarScreen(
@@ -33,6 +37,7 @@ fun CalendarScreen(
     navController: NavHostController,
     ) {
     var showModal by remember { mutableStateOf(false) }
+    var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     Scaffold(
         floatingActionButton = {
             FloatingActionButton(onClick = { showModal = true })
@@ -43,10 +48,13 @@ fun CalendarScreen(
                 .fillMaxSize()
                 .padding(bottom = 90.dp)
         ) {
-            Header()
-            WeekDaysHeader()
-            NavigationButtons()
-            EventsTimeline()
+            Header(selectedDate = selectedDate)
+            WeekDaysHeader(selectedDate = selectedDate)
+            NavigationButtons(
+                onPreviousClick = { selectedDate = selectedDate.minusDays(7) },
+                onNextClick = { selectedDate = selectedDate.plusDays(7) }
+            )
+            EventsTimeline(selectedDate = selectedDate)
 
             if (showModal) {
                 CreateEventModal(onDismiss = { showModal = false })
@@ -58,8 +66,9 @@ fun CalendarScreen(
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Header() {
+fun Header(selectedDate: LocalDate) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -73,7 +82,8 @@ fun Header() {
             color = colorResource(id = R.color.primary)
         )
         Text(
-            text = "Junho 2024",
+            text = "${selectedDate.month.name.lowercase()
+                .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.ROOT) else it.toString() }} ${selectedDate.year}",
             fontSize = 18.sp,
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.primary)
@@ -81,8 +91,11 @@ fun Header() {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun WeekDaysHeader() {
+fun WeekDaysHeader(selectedDate: LocalDate) {
+    val startOfWeek = selectedDate.with(java.time.DayOfWeek.MONDAY)
+    val daysOfWeek = (0 until 7).map { startOfWeek.plusDays(it.toLong()) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -104,8 +117,8 @@ fun WeekDaysHeader() {
             .padding(horizontal = 10.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        val today = 11
-        listOf(9, 10, 11, 12, 13, 14, 15).forEach { date ->
+        val today = LocalDate.now()
+        daysOfWeek.forEach { date ->
             Box(
                 Modifier
                     .size(36.dp)
@@ -115,7 +128,7 @@ fun WeekDaysHeader() {
                     ), Alignment.Center
             ) {
                 Text(
-                    text = date.toString(),
+                    text = date.dayOfMonth.toString(),
                     color = Color.White,
                     fontWeight = FontWeight.Bold
                 )
@@ -125,38 +138,49 @@ fun WeekDaysHeader() {
 }
 
 @Composable
-fun NavigationButtons() {
+fun NavigationButtons(
+    onPreviousClick: () -> Unit,
+    onNextClick: () -> Unit
+){
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-        Button(onClick = { /* Handle previous days navigation */ }) {
+        Button(onClick = { onPreviousClick() }){
             Text("Dias anteriores")
         }
-        Button(onClick = { /* Handle next days navigation */ }) {
+        Button(onClick = { onNextClick() }) {
             Text("Próximos dias")
         }
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun EventsTimeline() {
+fun EventsTimeline(selectedDate: LocalDate) {
     val today = 11
-    val events = listOf(
+    val listEvents = listOf(
         Event("Reunião José Bezerra", "Sobre finanças", "09", "14:50"),
         Event("Consulta Médica", "Levar documento e cartão SUS", "11", "11:10"),
         Event("Aniversário Jully", "", "12", "00:00"),
         Event("Reunião José Bezerra", "Sobre finanças", "14", "14:50"),
+        Event("Aniversário Adalberto", "", "11", "12:35"),
+        Event("Aniversário Adalberto", "", "12", "12:35"),
+        Event("Aniversário Adalberto", "", "13", "12:35"),
+        Event("Aniversário Adalberto", "", "14", "12:35"),
         Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Chupada do Ayala", "", "69", "04:20")
+        Event("Chupada do Ayala", "", "16", "04:20")
 
         )
+
+        val events = listEvents.filter { event ->
+            val eventDate = LocalDate.of(2024, 6, event.day.toInt())
+            eventDate == selectedDate
+    }
+
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -268,6 +292,7 @@ fun TimelineEventCard(event: Event) {
     }
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun CalendarScreenPreview() {
