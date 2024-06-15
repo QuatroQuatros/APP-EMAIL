@@ -1,6 +1,7 @@
 package com.example.challengelocaweb.presentation.calendar
 import android.annotation.SuppressLint
 import android.os.Build
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -28,6 +29,7 @@ import com.example.challengelocaweb.R
 import com.example.challengelocaweb.presentation.common.TimelineEventCard
 import com.example.challengelocaweb.presentation.calendar.components.CreateEventModal
 import com.example.challengelocaweb.presentation.calendar.components.FloatingActionButton
+import java.time.DateTimeException
 import java.time.LocalDate
 import java.util.Locale
 
@@ -38,9 +40,13 @@ fun CalendarScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
     ) {
+
     var showModal by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     var selectedDay by remember { mutableStateOf(LocalDate.now().dayOfMonth) }
+    var selectedMonth by remember { mutableStateOf(LocalDate.now().monthValue) }
+    var selectedYear by remember { mutableStateOf(LocalDate.now().year) }
+
 
     Scaffold(
         floatingActionButton = {
@@ -52,22 +58,58 @@ fun CalendarScreen(
                 .fillMaxSize()
                 .padding(bottom = 90.dp)
         ) {
-            Header(selectedDate = selectedDate)
-            WeekDaysHeader(selectedDate, selectedDay) { day ->
-                selectedDay = day
-                selectedDate = selectedDate.withDayOfMonth(day)
-            }
-            NavigationButtons(
-                onPreviousClick = {
-                    selectedDate = selectedDate.minusWeeks(1).with(java.time.DayOfWeek.SUNDAY)
-                    selectedDay = selectedDate.dayOfMonth
-                },
-                onNextClick = {
-                    selectedDate = selectedDate.plusWeeks(1).with(java.time.DayOfWeek.MONDAY)
-                    selectedDay = selectedDate.dayOfMonth
+            Header(
+                selectedDate = selectedDate,
+                selectedMonth = selectedMonth,
+                selectedYear = selectedYear,
+                onDateChange = { newDate, newMonth, newYear ->
+                    selectedDate = newDate
+                    selectedMonth = newMonth
+                    selectedYear = newYear
                 }
             )
-            EventsTimeline(selectedDate = selectedDate)
+            WeekDaysHeader(
+                selectedDate = selectedDate,
+                selectedDay = selectedDay,
+                onDaySelected = { day ->
+                    selectedDay = day
+                },
+            )
+            NavigationButtons(
+                onPreviousClick = {
+                    try {
+                        selectedDate = selectedDate.minusWeeks(1)
+                            .with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.SUNDAY))
+                            //.with(java.time.temporal.TemporalAdjusters.firstDayOfMonth())
+                        selectedDay = selectedDate.dayOfMonth
+                        selectedMonth = selectedDate.monthValue
+                        selectedYear = selectedDate.year
+                    } catch (e: DateTimeException) {
+                        selectedDay = 1
+                        selectedDate = selectedDate.withDayOfMonth(1)
+                        selectedMonth = selectedDate.monthValue
+                        selectedYear = selectedDate.year
+                    }
+                },
+                onNextClick = {
+                    try {
+                        selectedDate = selectedDate.plusWeeks(1).with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.SUNDAY))
+                        selectedDay = selectedDate.dayOfMonth
+                        selectedMonth = selectedDate.monthValue
+                        selectedYear = selectedDate.year
+                    } catch (e: DateTimeException) {
+                        selectedDay = 1
+                        selectedDate = selectedDate.withDayOfMonth(1)
+                        selectedMonth = selectedDate.monthValue
+                        selectedYear = selectedDate.year
+                    }
+                }
+            )
+            EventsTimeline(
+                selectedDay = selectedDay,
+                selectedMonth = selectedMonth,
+                selectedYear = selectedYear
+            )
 
             if (showModal) {
                 CreateEventModal(onDismiss = { showModal = false })
@@ -79,9 +121,15 @@ fun CalendarScreen(
 
 
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun Header(selectedDate: LocalDate) {
+fun Header(
+    selectedDate: LocalDate,
+    selectedMonth: Int,
+    selectedYear: Int,
+    onDateChange: (LocalDate, Int, Int) -> Unit
+) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -94,62 +142,148 @@ fun Header(selectedDate: LocalDate) {
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.primary)
         )
+        val months = java.time.Month.values().map { it.getDisplayName(TextStyle.FULL, Locale("pt", "BR")).capitalize() }
+        val years = (1900..2100).toList()
+        var selectedMonthIndex by remember { mutableStateOf(selectedDate.monthValue - 1) }
+        var selectedYearIndex by remember { mutableStateOf(years.indexOf(selectedDate.year)) }
+
+
+        selectedMonthIndex = selectedDate.monthValue -1
+        selectedYearIndex = years.indexOf(selectedDate.year)
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            horizontalArrangement = Arrangement.SpaceEvenly,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            DropdownSelector(
+                items = months,
+                selectedIndex = selectedMonthIndex,
+                onItemSelected = { index ->
+                    try{
+                        val newDate = selectedDate.withMonth(index + 1).withDayOfMonth(1)
+                        onDateChange(newDate, index + 1, selectedYear)
+                    }catch (e: DateTimeException){
+                        val newDate = selectedDate.withDayOfMonth(1)
+                        onDateChange(newDate, newDate.monthValue, selectedYear)
+                    }
+
+                },
+                label = "Mês"
+            )
+
+            DropdownSelector(
+                items = years.map { it.toString() },
+                selectedIndex = selectedYearIndex,
+                onItemSelected = { index ->
+                    try {
+                        val newDate = selectedDate.withYear(years[index])
+                        onDateChange(newDate, selectedMonth, years[index])
+                    } catch (e: DateTimeException) {
+                        val newDate = selectedDate.withDayOfMonth(1)
+                        onDateChange(newDate, selectedMonth, newDate.year)
+                    }
+                },
+                label = "Ano"
+            )
+        }
+    }
+}
+
+@Composable
+fun DropdownSelector(
+    items: List<String>,
+    selectedIndex: Int,
+    onItemSelected: (Int) -> Unit,
+    label: String
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .width(100.dp)
+            .clickable { expanded = true },
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
         Text(
-            text = "${selectedDate.month.getDisplayName(TextStyle.FULL, Locale("pt", "BR")).capitalize()} ${selectedDate.year}",
-            fontSize = 18.sp,
+            text = items[selectedIndex],
+            style = MaterialTheme.typography.bodySmall,
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.primary)
         )
+
+        DropdownMenu(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier
+                .width(100.dp)
+                .background(Color.White)
+        ) {
+            items.forEachIndexed { index, text ->
+                DropdownMenuItem(
+                    text = { Text(text) },
+                    onClick = {
+                        onItemSelected(index)
+                        expanded = false
+                    }
+                )
+            }
+        }
     }
 }
+
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WeekDaysHeader(
     selectedDate: LocalDate,
     selectedDay: Int,
-    onDaySelected: (Int) -> Unit
+    onDaySelected: (Int) -> Unit,
 ) {
-    val startOfWeek = selectedDate.with(java.time.DayOfWeek.MONDAY)
+    val startOfWeek = selectedDate.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.SUNDAY))
     val daysOfWeek = (0 until 7).map { startOfWeek.plusDays(it.toLong()) }
+    Log.d("startOfWeek", startOfWeek.toString())
+    Log.d("daysOfWeek", daysOfWeek.toString())
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 10.dp),
+            .padding(horizontal = 10.dp, vertical = 0.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        val daysOfWeekShortNames = listOf("D", "S", "T", "Q", "Q", "S", "S")
-        daysOfWeekShortNames.forEachIndexed { index, dayShortName ->
+        listOf("D", "S", "T", "Q", "Q", "S", "S").forEach { day ->
             Text(
-                text = dayShortName,
+                text = day,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.primary)
             )
         }
     }
 
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp),
+            .padding(horizontal = 10.dp, vertical = 10.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        val today = LocalDate.now()
         daysOfWeek.forEach { date ->
+            val isSelected = date.dayOfMonth == selectedDay
             Box(
                 Modifier
                     .size(36.dp)
                     .clip(CircleShape)
                     .background(
-                        color = when {
-                            date.dayOfMonth == selectedDay -> colorResource(id = R.color.selected)
-                            date == today -> colorResource(id = R.color.primary)
-                            else -> colorResource(id = R.color.primary)
-                        }
+                        color = if (isSelected) colorResource(id = R.color.selected)
+                        else colorResource(id = R.color.primary)
                     )
-                    .clickable { onDaySelected(date.dayOfMonth) },
+                    .clickable {
+                        onDaySelected(date.dayOfMonth)
+                    },
                 contentAlignment = Alignment.Center
-
             ) {
                 Text(
                     text = date.dayOfMonth.toString(),
@@ -160,7 +294,6 @@ fun WeekDaysHeader(
         }
     }
 }
-
 @Composable
 fun NavigationButtons(
     onPreviousClick: () -> Unit,
@@ -172,6 +305,7 @@ fun NavigationButtons(
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
+
         Button(onClick = { onPreviousClick() }){
             Text("Dias anteriores")
         }
@@ -183,23 +317,50 @@ fun NavigationButtons(
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun EventsTimeline(selectedDate: LocalDate) {
+fun EventsTimeline(
+    selectedDay: Int,
+    selectedMonth: Int ,
+    selectedYear: Int
+) {
+
     val listEvents = listOf(
-        Event("Reunião José Bezerra", "Sobre finanças", "09", "14:50"),
-        Event("Consulta Médica", "Levar documento e cartão SUS", "11", "11:10"),
-        Event("Aniversário Jully", "", "12", "00:00"),
-        Event("Reunião José Bezerra", "Sobre finanças", "14", "14:50"),
-        Event("Aniversário Adalberto", "", "11", "12:35"),
-        Event("Aniversário Adalberto", "", "12", "12:35"),
-        Event("Aniversário Adalberto", "", "13", "12:35"),
-        Event("Aniversário Adalberto", "", "14", "12:35"),
-        Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Chupada do Ayala", "", "16", "04:20")
+        Event("Reunião José Bezerra", "Sobre finanças", "09", "14:50", "2023-05-09T00:00:00Z"),
+        Event("Consulta Médica", "Levar documento e cartão SUS", "11", "11:10", "2024-06-11T00:00:00Z"),
+        Event("Aniversário Jully", "", "12", "00:00", "1998-06-12T00:00:00Z"),
+        Event("Reunião José Bezerra", "Sobre finanças", "14", "14:50", "2003-09-14T00:00:00Z"),
+        Event("Aniversário Adalberto", "", "11", "12:35", "2003-12-11T00:00:00Z"),
+        Event("Aniversário Adalberto", "", "12", "12:35", "2024-12-12T00:00:00Z"),
+        Event("Aniversário Adalberto", "", "13", "12:35", "1998-06-13T00:00:00Z"),
+        Event("Aniversário Adalberto", "", "14", "12:35", "1998-06-14T00:00:00Z"),
+        Event("Aniversário Adalberto", "", "15", "12:35", "1998-06-15T00:00:00Z"),
+        Event("Chupada do Ayala", "", "16", "04:20", "1998-06-16T00:00:00Z"),
+
+        Event("TESTE 2024", "Levar documento e cartão SUS", "11", "11:10", "2024-06-11T00:00:00Z"),
+        Event("TESTE 2024", "Levar documento e cartão SUS", "12", "11:10", "2024-06-12T00:00:00Z"),
+        Event("TESTE 2024", "Levar documento e cartão SUS", "13", "11:10", "2024-06-13T00:00:00Z"),
+        Event("TESTE 2024", "Levar documento e cartão SUS", "14", "11:10", "2024-06-14T00:00:00Z"),
+        Event("TESTE 2024", "Levar documento e cartão SUS", "15", "11:10", "2024-06-15T00:00:00Z"),
+        Event("TESTE 2024", "Levar documento e cartão SUS", "16", "11:10", "2024-06-16T00:00:00Z")
 
         )
+    //val selectedDate = LocalDate.of(selectedYear, selectedMonth, selectedDay)
+
+
+    val selectedDate = try {
+        if(selectedMonth  > 12 || selectedMonth < 1){
+            LocalDate.of(selectedYear, 1, 1)
+        }
+        if(selectedMonth <= 12){
+            LocalDate.of(selectedYear, selectedMonth, selectedDay)
+        } else {
+            LocalDate.of(selectedYear, 1, 1)
+        }
+    } catch (e: DateTimeException) {
+        LocalDate.of(selectedYear, selectedMonth, 1)
+    }
 
     val events = listEvents.filter { event ->
-        val eventDate = LocalDate.of(selectedDate.year, selectedDate.month, event.day.toInt())
+        val eventDate = LocalDate.parse(event.createdAt.substringBefore("T"))
         eventDate == selectedDate
     }
 
@@ -214,6 +375,7 @@ fun EventsTimeline(selectedDate: LocalDate) {
             fontWeight = FontWeight.Bold
         )
     } else {
+        Log.d("evento", events.toString())
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
