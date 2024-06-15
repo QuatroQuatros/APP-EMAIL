@@ -194,7 +194,7 @@ fun EventsTimeline(selectedDate: LocalDate) {
         Event("Aniversário Adalberto", "", "13", "12:35"),
         Event("Aniversário Adalberto", "", "14", "12:35"),
         Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Chupada do Ayala", "", "16", "04:20")
+        Event("Culto na igreja", "", "16", "19:00")
 
         )
 

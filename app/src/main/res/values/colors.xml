@@ -11,4 +11,7 @@
     <color name="body">#4E4B66</color>
     <color name="placeholder">#A0A3BD</color>
     <color name="shimmer">#C3C3C3</color>
+    <color name="small_text">#1B1B1B</color>
+    <color name="delete_color">#DF3333</color>
+
 </resources>
