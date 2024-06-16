@@ -72,24 +72,3 @@ fun CreateModal(
         }
     }
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun CreateModalPreview() {
-    val mockViewModel = object : EventViewModel(mockEventRepository()){}
-    ChallengeLocaWebTheme {
-        CreateModal(onDismiss = {}, viewModel = mockViewModel)
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun CreateEventFormPreview() {
-    val mockViewModel = object : EventViewModel(mockEventRepository()){}
-    ModalForm(selectedDate = LocalDate.now(), onDismiss = {  }, viewModel = mockViewModel)
-}
-
-
-

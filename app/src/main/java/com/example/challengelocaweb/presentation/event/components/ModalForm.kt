@@ -1,8 +1,10 @@
 package com.example.challengelocaweb.presentation.event.components
 
+import android.app.Application
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,17 +18,26 @@ import androidx.compose.material.icons.filled.Notifications
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldColors
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -39,10 +50,12 @@ import com.example.challengelocaweb.R
 import com.example.challengelocaweb.data.repository.mocks.mockEventRepository
 import com.example.challengelocaweb.domain.model.Event
 import com.example.challengelocaweb.presentation.event.EventViewModel
+import com.example.challengelocaweb.util.isValidTime
 import java.time.LocalDate
 
 import java.time.LocalTime
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ModalForm(
@@ -50,6 +63,7 @@ fun ModalForm(
     onDismiss: () -> Unit,
     viewModel: EventViewModel
 ) {
+    val currentLocation by viewModel.currentLocation.observeAsState("")
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
     var link by remember { mutableStateOf("") }
@@ -59,10 +73,17 @@ fun ModalForm(
     var startTime by remember { mutableStateOf("08:00") }
     var endTime by remember { mutableStateOf("09:00") }
     var isUnique by remember { mutableStateOf(true) }
+    var isNotifiable by remember { mutableStateOf(true) }
     var showParticipantsInput by remember { mutableStateOf(false) }
     var showLocationInput by remember { mutableStateOf(false) }
     var showNotificationInput by remember { mutableStateOf(false) }
     var showDescriptionInput by remember { mutableStateOf(false) }
+    var location by remember { mutableStateOf(currentLocation) }
+
+    var titleError by remember { mutableStateOf(false) }
+    var startTimeError by remember { mutableStateOf(false) }
+    var endTimeError by remember { mutableStateOf(false) }
+    var locationError by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -115,7 +136,10 @@ fun ModalForm(
             Column {
                 OutlinedTextField(
                     value = title,
-                    onValueChange = { title = it },
+                    onValueChange = {
+                        title = it
+                        titleError = it.isEmpty()
+                    },
                     label = { Text("Escreva o título aqui") },
                     leadingIcon = {
                         Icon(
@@ -128,8 +152,21 @@ fun ModalForm(
                         keyboardType = KeyboardType.Text,
                         imeAction = ImeAction.Done
                     ),
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    colors = OutlinedTextFieldDefaults.colors(
+                        errorBorderColor = Color.Red,
+
+                    )
+
                 )
+                if (titleError) {
+                    Text(
+                        text = "Título é obrigatório",
+                        color = Color.Red,
+                        fontSize = 12.sp,
+                        modifier = Modifier.padding(start = 16.dp, top = 4.dp)
+                    )
+                }
 
                     OutlinedTextField(
                         value = link,
@@ -172,7 +209,10 @@ fun ModalForm(
 
                         OutlinedTextField(
                             value = startTime,
-                            onValueChange = { startTime = it },
+                            onValueChange = {
+                                startTime = it
+                                startTimeError = it.isEmpty() || !isValidTime(it)
+                             },
                             label = { Text("Hora Início") },
                             leadingIcon = {
                                 Icon(
@@ -181,16 +221,23 @@ fun ModalForm(
                                     tint = colorResource(id = R.color.primary)
                                 )
                             },
+                            isError = startTimeError,
                             keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Text,
+                                keyboardType = KeyboardType.Number,
                                 imeAction = ImeAction.Done
                             ),
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            colors =  TextFieldDefaults.outlinedTextFieldColors(
+                                errorBorderColor = Color.Red,
+                            )
                         )
                         Spacer(modifier = Modifier.width(8.dp))
                         OutlinedTextField(
                             value = endTime,
-                            onValueChange = { endTime = it },
+                            onValueChange = {
+                                endTime = it
+                                endTimeError = it.isEmpty() || !isValidTime(it)
+                            },
                             label = { Text("Hora Fim") },
                             leadingIcon = {
                                 Icon(
@@ -199,11 +246,15 @@ fun ModalForm(
                                     tint = colorResource(id = R.color.primary)
                                 )
                             },
+                            isError = endTimeError,
                             keyboardOptions = KeyboardOptions(
-                                keyboardType = KeyboardType.Text,
+                                keyboardType = KeyboardType.Number,
                                 imeAction = ImeAction.Done
                             ),
-                            modifier = Modifier.weight(1f)
+                            modifier = Modifier.weight(1f),
+                            colors = OutlinedTextFieldDefaults.colors(
+                                errorBorderColor = Color.Red,
+                            ),
                         )
                     }
                 }
@@ -250,12 +301,14 @@ fun ModalForm(
                 ClickableRow(
                     text = "Adicionar local",
                     icon = Icons.Default.LocationOn,
-                    onClick = { showLocationInput = !showLocationInput }
+                    onClick = {
+                        showLocationInput = !showLocationInput
+                    }
                 )
                 if (showLocationInput) {
                     OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
+                        value = location,
+                        onValueChange = { location = it},
                         label = { Text("Local") },
                         leadingIcon = {
                             Icon(
@@ -277,23 +330,32 @@ fun ModalForm(
                     onClick = { showNotificationInput = !showNotificationInput }
                 )
                 if (showNotificationInput) {
-                    OutlinedTextField(
-                        value = "",
-                        onValueChange = {},
-                        label = { Text("Notificação") },
-                        leadingIcon = {
-                            Icon(
-                                imageVector = Icons.Default.Notifications,
-                                contentDescription = null,
-                                tint = colorResource(id = R.color.primary)
-                            )
-                        },
-                        keyboardOptions = KeyboardOptions(
-                            keyboardType = KeyboardType.Text,
-                            imeAction = ImeAction.Done
-                        ),
-                        modifier = Modifier.fillMaxWidth()
+                    Switch(
+                        modifier = Modifier.height(20.dp),
+                        checked = isNotifiable,
+                        onCheckedChange = { isNotifiable = true },
+                        colors = SwitchDefaults.colors(
+                            checkedTrackColor = colorResource(id = R.color.primary),
+                            checkedThumbColor = Color.White,
+                            uncheckedThumbColor = Color.Gray)
                     )
+//                    OutlinedTextField(
+//                        value = isNotifiable,
+//                        onValueChange = {isNotifiable = it},
+//                        label = { Text("Notificação") },
+//                        leadingIcon = {
+//                            Icon(
+//                                imageVector = Icons.Default.Notifications,
+//                                contentDescription = null,
+//                                tint = colorResource(id = R.color.primary)
+//                            )
+//                        },
+//                        keyboardOptions = KeyboardOptions(
+//                            keyboardType = KeyboardType.Text,
+//                            imeAction = ImeAction.Done
+//                        ),
+//                        modifier = Modifier.fillMaxWidth()
+//                    )
                 }
                 ClickableRow(
                     text = "Adicionar descrição",
@@ -324,20 +386,30 @@ fun ModalForm(
 
                 Button(
                     onClick = {
-                        val event = Event(
-                            title = title,
-                            description = description,
-                            link = link,
-                            eventType = selectedEventType,
-                            day = selectedDay.toString(),
-                            startTime = LocalTime.parse(startTime),
-                            endTime = LocalTime.parse(endTime),
-                            isUnique = isUnique,
-                            isAllDay = isAllDay,
-                            createdAt = selectedDate.toString()
-                        )
-                        viewModel.saveEvent(event)
-                        onDismiss()
+                        titleError = title.isEmpty()
+                        startTimeError = startTime.isEmpty() || !isValidTime(startTime)
+                        endTimeError = endTime.isEmpty() || !isValidTime(endTime)
+                        locationError = location.isEmpty()
+
+                        if (!titleError && !startTimeError && !endTimeError && !locationError) {
+                            val event = Event(
+                                title = title,
+                                description = description,
+                                link = link,
+                                eventType = selectedEventType,
+                                day = selectedDay.toString(),
+                                location = location,
+                                startTime = LocalTime.parse(startTime),
+                                endTime = LocalTime.parse(endTime),
+                                isUnique = isUnique,
+                                isAllDay = isAllDay,
+                                isNotifiable = isNotifiable,
+                                createdAt = selectedDate.toString()
+                            )
+                            viewModel.saveEvent(event)
+                            onDismiss()
+                        }
+
                     },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
@@ -351,7 +423,9 @@ fun ModalForm(
 @Preview(showBackground = true)
 @Composable
 fun CreateModalTestPreview() {
-    val mockViewModel = object : EventViewModel(mockEventRepository()){}
+    val context = LocalContext.current
+    val application = context.applicationContext as Application
+    val mockViewModel = mockEventRepository(application)
 
     ModalForm(LocalDate.now(), onDismiss = {}, viewModel = mockViewModel)
 

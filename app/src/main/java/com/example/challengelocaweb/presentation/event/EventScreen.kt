@@ -543,31 +543,3 @@ fun EventDetailsModal(
     }
 
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun CalendarScreenPreview() {
-    val mockViewModel = object : EventViewModel(mockEventRepository()){}
-
-    CalendarScreen(
-        navController = rememberNavController(),
-        events = listOf(
-            Event(
-                1,
-                "Consulta Médica",
-                "Levar documento e cartão SUS",
-                "http://google.com",
-                EventTypeEnum.MEETING,
-                "11",
-                LocalTime.parse("08:30"),
-                LocalTime.parse("09:30"),
-                false,
-                false,
-                "2024-06-11T00:00:00Z"
-            )
-        ),
-        viewModel = mockViewModel
-    )
-}
-

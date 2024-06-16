@@ -123,9 +123,9 @@ dependencies {
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
 
-    //Facebook Stetho
-    implementation("com.facebook.stetho:stetho:1.6.0")
-    implementation("com.facebook.stetho:stetho-okhttp3:1.6.0")
+    //Location
+    implementation("com.google.android.gms:play-services-location:21.3.0")
+
 
 
 

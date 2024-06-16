@@ -112,7 +112,7 @@ fun EventDetails(
             )
             DetailRow(
                 icon = painterResource(id = R.drawable.ic_location),
-                text = "Rua mockada, Mockados, MK - 00000-000"
+                text = event.location
             )
             DetailRow(
                 icon = painterResource(id = R.drawable.ic_description),
@@ -182,7 +182,7 @@ fun EventDetails(
                 ){
                     IconButton(onClick = onEdit) {
                         Icon(
-                            imageVector = Icons.Default.Edit,
+                            painter = painterResource(id = R.drawable.ic_edit_outline),
                             contentDescription = null,
                             tint = colorResource(id = R.color.white)
                         )
@@ -214,29 +214,4 @@ fun DetailRow(icon: Painter, text: String) {
         )
 
     }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun EventDetailsPreview() {
-    val mockViewModel = object : EventViewModel(mockEventRepository()){}
-    val mockEvent = Event(
-        id = 1,
-        title = "Consulta Médica",
-        description = "Levar documento e cartão SUS",
-        link = "Rua Zé do Feijão, 552, São Paulo, SP - 03258-800",
-        eventType = EventTypeEnum.EVENT,
-        day = "11",
-        startTime = LocalTime.of(8, 0),
-        endTime = LocalTime.of(9, 0),
-        isUnique = true,
-        isAllDay = false,
-        createdAt = "2024-06-11T00:00:00Z"
-    )
-    EventDetails(event = mockEvent,
-        onClose = {},
-        onDelete = {},
-        onEdit = {}
-    )
 }

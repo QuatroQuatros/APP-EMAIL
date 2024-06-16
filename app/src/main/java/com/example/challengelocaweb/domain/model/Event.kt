@@ -13,10 +13,12 @@ data class Event(
     val link: String,
     val eventType: EventTypeEnum,
     val day: String,
+    val location: String,
     val startTime: LocalTime,
     val endTime: LocalTime,
     val isUnique: Boolean,
     val isAllDay: Boolean,
-    val createdAt: String,
+    val isNotifiable: Boolean,
+    val createdAt: String
 )
 

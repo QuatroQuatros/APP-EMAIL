@@ -29,3 +29,13 @@ fun convertLongToTime(selectedDateMillis: Long): String {
     return format.format(date)
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
+fun isValidTime(time: String): Boolean {
+    return try {
+        LocalTime.parse(time)
+        true
+    } catch (e: Exception) {
+        false
+    }
+}
+
