@@ -18,9 +18,11 @@
 <!--    <color name="primary">#5e87d8</color>-->
 <!--    <color name="selected">#4270c5</color>-->
 <!--    <color name="input_background">#7b9eec</color>-->
-
+<color name="danger">#FFFF3256</color>
 <color name="primary">#85b9c6</color>
-<color name="selected">#72a7b3</color>
+<color name="selected">#538392</color>
+
+<!--<color name="selected">#72a7b3</color>-->
 <color name="input_background">#85b9c6</color>
 
 

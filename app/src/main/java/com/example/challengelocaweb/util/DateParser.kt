@@ -2,8 +2,10 @@ package com.example.challengelocaweb.util
 
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.room.TypeConverter
 import java.text.SimpleDateFormat
 import java.time.Instant
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.Date
@@ -26,3 +28,4 @@ fun convertLongToTime(selectedDateMillis: Long): String {
 
     return format.format(date)
 }
+

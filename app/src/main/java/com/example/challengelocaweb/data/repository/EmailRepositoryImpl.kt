@@ -13,14 +13,6 @@ class EmailRepositoryImpl(
     private val emailApi: EmailAPI
 ) : EmailRepository {
 
-//    override fun getEmails(sources: List<String>): Flow<PagingData<Email>> {
-//        return Pager(
-//            config = PagingConfig(pageSize = 10),
-//            pagingSourceFactory = { EmailPagingSource(
-//                newsAPI = emailApi,
-//                sources = sources.joinToString(separator = ",")) }
-//        ).flow
-//    }
 
     override fun getEmails(sources: List<String>): Flow<PagingData<Email>> {
         return Pager(

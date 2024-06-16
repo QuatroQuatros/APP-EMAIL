@@ -1,18 +1,11 @@
-package com.example.challengelocaweb.presentation.calendar.components
+package com.example.challengelocaweb.presentation.event.components
 
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Call
 import androidx.compose.material.icons.filled.DateRange
@@ -36,25 +29,40 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.challengelocaweb.R
+import com.example.challengelocaweb.data.repository.mocks.mockEventRepository
+import com.example.challengelocaweb.domain.model.Event
+import com.example.challengelocaweb.presentation.event.EventViewModel
 import java.time.LocalDate
 
+import java.time.LocalTime
+
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ModalForm(
     selectedDate: LocalDate,
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    viewModel: EventViewModel
 ) {
     var title by remember { mutableStateOf("") }
     var description by remember { mutableStateOf("") }
-    var selectedEventType by remember { mutableStateOf(EventType.EVENT) }
+    var link by remember { mutableStateOf("") }
+    var selectedEventType by remember { mutableStateOf(EventTypeEnum.EVENT) }
+    var selectedDay by remember { mutableStateOf(selectedDate.dayOfMonth) }
     var isAllDay by remember { mutableStateOf(false) }
     var startTime by remember { mutableStateOf("08:00") }
     var endTime by remember { mutableStateOf("09:00") }
-    var meetingLink by remember { mutableStateOf("") }
+    var isUnique by remember { mutableStateOf(true) }
+    var showParticipantsInput by remember { mutableStateOf(false) }
+    var showLocationInput by remember { mutableStateOf(false) }
+    var showNotificationInput by remember { mutableStateOf(false) }
+    var showDescriptionInput by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -76,24 +84,23 @@ fun ModalForm(
         Spacer(modifier = Modifier.height(16.dp))
 
         Row(
-            modifier = Modifier.fillMaxWidth(),
-//            modifier = Modifier.fillMaxWidth(),
+            modifier = Modifier.fillMaxWidth().padding(horizontal = 12.dp),
             horizontalArrangement = Arrangement.SpaceEvenly
         ) {
             EventTypeButton(
                 text = "Evento",
-                isSelected = selectedEventType == EventType.EVENT,
-                onClick = { selectedEventType = EventType.EVENT }
+                isSelected = selectedEventType == EventTypeEnum.EVENT,
+                onClick = { selectedEventType = EventTypeEnum.EVENT }
             )
             EventTypeButton(
                 text = "Reunião",
-                isSelected = selectedEventType == EventType.MEETING,
-                onClick = { selectedEventType = EventType.MEETING }
+                isSelected = selectedEventType == EventTypeEnum.MEETING,
+                onClick = { selectedEventType = EventTypeEnum.MEETING }
             )
             EventTypeButton(
                 text = "Lembrete",
-                isSelected = selectedEventType == EventType.REMINDER,
-                onClick = { selectedEventType = EventType.REMINDER }
+                isSelected = selectedEventType == EventTypeEnum.REMINDER,
+                onClick = { selectedEventType = EventTypeEnum.REMINDER }
             )
         }
 
@@ -117,14 +124,17 @@ fun ModalForm(
                             tint = colorResource(id = R.color.primary)
                         )
                     },
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done
+                    ),
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                if (selectedEventType == EventType.MEETING) {
                     OutlinedTextField(
-                        value = meetingLink,
-                        onValueChange = { meetingLink = it },
-                        label = { Text("Link da Reunião") },
+                        value = link,
+                        onValueChange = { link = it },
+                        label = { Text("Link (opcional)") },
                         leadingIcon = {
                             Icon(
                                 imageVector = Icons.Default.Call,
@@ -132,9 +142,12 @@ fun ModalForm(
                                 tint = colorResource(id = R.color.primary)
                             )
                         },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
+                        ),
                         modifier = Modifier.fillMaxWidth()
                     )
-                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -156,6 +169,7 @@ fun ModalForm(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
+
                         OutlinedTextField(
                             value = startTime,
                             onValueChange = { startTime = it },
@@ -167,6 +181,10 @@ fun ModalForm(
                                     tint = colorResource(id = R.color.primary)
                                 )
                             },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Done
+                            ),
                             modifier = Modifier.weight(1f)
                         )
                         Spacer(modifier = Modifier.width(8.dp))
@@ -181,6 +199,10 @@ fun ModalForm(
                                     tint = colorResource(id = R.color.primary)
                                 )
                             },
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Text,
+                                imeAction = ImeAction.Done
+                            ),
                             modifier = Modifier.weight(1f)
                         )
                     }
@@ -195,8 +217,8 @@ fun ModalForm(
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Checkbox(
-                        checked = isAllDay,
-                        onCheckedChange = { isAllDay = it }
+                        checked = isUnique,
+                        onCheckedChange = { isUnique = it }
                     )
                     Text("Não se repete")
                 }
@@ -204,28 +226,119 @@ fun ModalForm(
                 ClickableRow(
                     text = "Adicionar participantes",
                     icon = Icons.Default.Person,
-                    onClick = { /* Adicionar participantes */ }
+                    onClick = { showParticipantsInput = !showParticipantsInput }
                 )
+                if (showParticipantsInput) {
+                    OutlinedTextField(
+                        value = "",
+                        onValueChange = {},
+                        label = { Text("Participantes") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Person,
+                                contentDescription = null,
+                                tint = colorResource(id = R.color.primary)
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
                 ClickableRow(
                     text = "Adicionar local",
                     icon = Icons.Default.LocationOn,
-                    onClick = { /* Adicionar local */ }
+                    onClick = { showLocationInput = !showLocationInput }
                 )
+                if (showLocationInput) {
+                    OutlinedTextField(
+                        value = "",
+                        onValueChange = {},
+                        label = { Text("Local") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.LocationOn,
+                                contentDescription = null,
+                                tint = colorResource(id = R.color.primary)
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
                 ClickableRow(
                     text = "Adicionar notificação",
                     icon = Icons.Default.Notifications,
-                    onClick = { /* Adicionar notificação */ }
+                    onClick = { showNotificationInput = !showNotificationInput }
                 )
+                if (showNotificationInput) {
+                    OutlinedTextField(
+                        value = "",
+                        onValueChange = {},
+                        label = { Text("Notificação") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Notifications,
+                                contentDescription = null,
+                                tint = colorResource(id = R.color.primary)
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
                 ClickableRow(
                     text = "Adicionar descrição",
                     icon = Icons.Default.Menu,
-                    onClick = { /* Adicionar descrição */ }
+                    onClick = { showDescriptionInput = !showDescriptionInput }
                 )
+                if (showDescriptionInput) {
+                    OutlinedTextField(
+                        value = description,
+                        onValueChange = { description = it },
+                        label = { Text("Descrição") },
+                        leadingIcon = {
+                            Icon(
+                                imageVector = Icons.Default.Menu,
+                                contentDescription = null,
+                                tint = colorResource(id = R.color.primary)
+                            )
+                        },
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Text,
+                            imeAction = ImeAction.Done
+                        ),
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 Button(
-                    onClick = { /* TODO: Implement event creation logic */ },
+                    onClick = {
+                        val event = Event(
+                            title = title,
+                            description = description,
+                            link = link,
+                            eventType = selectedEventType,
+                            day = selectedDay.toString(),
+                            startTime = LocalTime.parse(startTime),
+                            endTime = LocalTime.parse(endTime),
+                            isUnique = isUnique,
+                            isAllDay = isAllDay,
+                            createdAt = selectedDate.toString()
+                        )
+                        viewModel.saveEvent(event)
+                        onDismiss()
+                    },
                     modifier = Modifier.align(Alignment.CenterHorizontally)
                 ) {
                     Text("Criar Evento")
@@ -238,7 +351,8 @@ fun ModalForm(
 @Preview(showBackground = true)
 @Composable
 fun CreateModalTestPreview() {
+    val mockViewModel = object : EventViewModel(mockEventRepository()){}
 
-    ModalForm(LocalDate.now(), onDismiss = {})
+    ModalForm(LocalDate.now(), onDismiss = {}, viewModel = mockViewModel)
 
 }

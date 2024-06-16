@@ -1,17 +1,15 @@
-package com.example.challengelocaweb.presentation.calendar
+package com.example.challengelocaweb.presentation.event
 import android.annotation.SuppressLint
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import com.example.challengelocaweb.domain.model.Event
@@ -32,26 +30,42 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.challengelocaweb.R
-import com.example.challengelocaweb.presentation.calendar.components.CreateModal
-import com.example.challengelocaweb.presentation.common.TimelineEventCard
-import com.example.challengelocaweb.presentation.calendar.components.FloatingActionButton
+import com.example.challengelocaweb.data.repository.mocks.mockEventRepository
+import com.example.challengelocaweb.presentation.event.components.CreateModal
+import com.example.challengelocaweb.presentation.event.components.EventDetails
+import com.example.challengelocaweb.presentation.event.components.EventTypeEnum
+import com.example.challengelocaweb.presentation.event.components.FloatingActionButton
+import com.google.accompanist.navigation.material.ExperimentalMaterialNavigationApi
+import kotlinx.coroutines.CoroutineScope
 import java.time.DateTimeException
 import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+@OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CalendarScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    events: List<Event>,
+    viewModel: EventViewModel
     ) {
 
+    var selectedEvent by remember { mutableStateOf<Event?>(null) }
     var showModal by remember { mutableStateOf(false) }
     var selectedDate by remember { mutableStateOf(LocalDate.now()) }
     var selectedDay by remember { mutableStateOf(LocalDate.now().dayOfMonth) }
     var selectedMonth by remember { mutableStateOf(LocalDate.now().monthValue) }
     var selectedYear by remember { mutableStateOf(LocalDate.now().year) }
+
+    val scope = rememberCoroutineScope()
+    val sheetState = rememberModalBottomSheetState(
+        skipPartiallyExpanded = true
+    )
+    var showBottomSheet by remember { mutableStateOf(false) }
 
 
     Scaffold(
@@ -113,11 +127,23 @@ fun CalendarScreen(
             EventsTimeline(
                 selectedDay = selectedDay,
                 selectedMonth = selectedMonth,
-                selectedYear = selectedYear
+                selectedYear = selectedYear,
+                events = events,
+                onEventClick = { event -> selectedEvent = event }
             )
 
             if (showModal) {
-                CreateModal(onDismiss = { showModal = false })
+                CreateModal(onDismiss = { showModal = false }, initialDate = selectedDate, viewModel = viewModel)
+            }
+
+            selectedEvent?.let {
+                EventDetailsModal(
+                    event = it,
+                    onDismiss = { showBottomSheet = false; selectedEvent = null },
+                    sheetState= sheetState,
+                    scope = scope,
+                    viewModel = viewModel
+                )
             }
         }
     }
@@ -264,8 +290,6 @@ fun WeekDaysHeader(
 ) {
     val startOfWeek = selectedDate.with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.SUNDAY))
     val daysOfWeek = (0 until 7).map { startOfWeek.plusDays(it.toLong()) }
-    Log.d("startOfWeek", startOfWeek.toString())
-    Log.d("daysOfWeek", daysOfWeek.toString())
 
     Row(
         modifier = Modifier
@@ -339,32 +363,10 @@ fun NavigationButtons(
 fun EventsTimeline(
     selectedDay: Int,
     selectedMonth: Int ,
-    selectedYear: Int
+    selectedYear: Int,
+    events: List<Event>,
+    onEventClick: (Event) -> Unit
 ) {
-
-    val listEvents = listOf(
-
-        Event("Reunião José Bezerra", "Sobre finanças", "09", "14:50", "2023-05-09T00:00:00Z"),
-        Event("Consulta Médica", "Levar documento e cartão SUS", "11", "11:10", "2024-06-11T00:00:00Z"),
-        Event("Aniversário Jully", "", "12", "00:00", "1998-06-12T00:00:00Z"),
-        Event("Reunião José Bezerra", "Sobre finanças", "14", "14:50", "2003-09-14T00:00:00Z"),
-        Event("Aniversário Adalberto", "", "11", "12:35", "2003-12-11T00:00:00Z"),
-        Event("Aniversário Adalberto", "", "12", "12:35", "2024-12-12T00:00:00Z"),
-        Event("Aniversário Adalberto", "", "13", "12:35", "1998-06-13T00:00:00Z"),
-        Event("Aniversário Adalberto", "", "14", "12:35", "1998-06-14T00:00:00Z"),
-        Event("Aniversário Adalberto", "", "15", "12:35", "1998-06-15T00:00:00Z"),
-        Event("Chupada do Ayala", "", "16", "04:20", "1998-06-16T00:00:00Z"),
-
-        Event("TESTE 2024", "Levar documento e cartão SUS", "11", "11:10", "2024-06-11T00:00:00Z"),
-        Event("TESTE 2024", "Levar documento e cartão SUS", "12", "11:10", "2024-06-12T00:00:00Z"),
-        Event("TESTE 2024", "Levar documento e cartão SUS", "13", "11:10", "2024-06-13T00:00:00Z"),
-        Event("TESTE 2024", "Levar documento e cartão SUS", "14", "11:10", "2024-06-14T00:00:00Z"),
-        Event("TESTE 2024", "Levar documento e cartão SUS", "15", "11:10", "2024-06-15T00:00:00Z"),
-        Event("TESTE 2024", "Levar documento e cartão SUS", "16", "11:10", "2024-06-16T00:00:00Z")
-
-
-        )
-
     val selectedDate = try {
         if(selectedMonth  > 12 || selectedMonth < 1){
             LocalDate.of(selectedYear, 1, 1)
@@ -378,12 +380,12 @@ fun EventsTimeline(
         LocalDate.of(selectedYear, selectedMonth, 1)
     }
 
-    val events = listEvents.filter { event ->
+    val filteredEvents  = events.filter { event ->
         val eventDate = LocalDate.parse(event.createdAt.substringBefore("T"))
         eventDate == selectedDate
     }
 
-    if (events.isEmpty()) {
+    if (filteredEvents.isEmpty()) {
         Text(
             text = "Nenhum evento para o dia selecionado.",
             modifier = Modifier
@@ -394,17 +396,17 @@ fun EventsTimeline(
             fontWeight = FontWeight.Bold
         )
     } else {
-        Log.d("evento", events.toString())
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 10.dp, vertical = 10.dp)
         ) {
-            items(events) { event ->
+            items(filteredEvents) { event ->
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp)
+                        .clickable { onEventClick(event) }
                 ) {
                     Column(
                         modifier = Modifier
@@ -430,7 +432,7 @@ fun EventsTimeline(
                             Text(
                                 modifier = Modifier
                                     .fillMaxWidth(1f),
-                                text = event.time,
+                                text = event.startTime.format(DateTimeFormatter.ofPattern("HH:mm")),
                                 color = colorResource(id = R.color.selected),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
@@ -448,6 +450,7 @@ fun EventsTimeline(
 
 }
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun TimelineEventCard(event: Event) {
     Row(
@@ -493,9 +496,10 @@ fun TimelineEventCard(event: Event) {
                 if (event.description.isNotEmpty()) {
                     Text(text = event.description)
                 }
-                if (event.time.isNotEmpty()) {
+                if (event.startTime != LocalTime.MIN) {
                     Text(
-                        text = event.time,
+                        text = event.startTime.format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + event.endTime.format(DateTimeFormatter.ofPattern("HH:mm")),
+
                         color = colorResource(id = R.color.selected)
                     )
                 }
@@ -504,10 +508,66 @@ fun TimelineEventCard(event: Event) {
     }
 }
 
+@SuppressLint("CoroutineCreationDuringComposition")
+@OptIn(ExperimentalAnimationApi::class, ExperimentalMaterial3Api::class,
+    ExperimentalMaterialNavigationApi::class
+)
+@RequiresApi(Build.VERSION_CODES.O)
+@Composable
+fun EventDetailsModal(
+    event: Event,
+    onDismiss: () -> Unit,
+    sheetState: SheetState,
+    scope: CoroutineScope,
+    viewModel: EventViewModel
+) {
+
+    ModalBottomSheet(
+        onDismissRequest = {
+            onDismiss()
+        },
+        sheetState = sheetState
+    ){
+
+        EventDetails(
+            event = event,
+            onClose = onDismiss,
+            onDelete = {
+                //viewModel.deleteEvent(event)
+                onDismiss()
+            },
+            onEdit = {
+                // Lógica para editar o evento
+            }
+        )
+    }
+
+}
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)
 @Composable
 fun CalendarScreenPreview() {
-    CalendarScreen(navController = rememberNavController())
+    val mockViewModel = object : EventViewModel(mockEventRepository()){}
+
+    CalendarScreen(
+        navController = rememberNavController(),
+        events = listOf(
+            Event(
+                1,
+                "Consulta Médica",
+                "Levar documento e cartão SUS",
+                "http://google.com",
+                EventTypeEnum.MEETING,
+                "11",
+                LocalTime.parse("08:30"),
+                LocalTime.parse("09:30"),
+                false,
+                false,
+                "2024-06-11T00:00:00Z"
+            )
+        ),
+        viewModel = mockViewModel
+    )
 }
 

@@ -1,9 +1,11 @@
 package com.example.challengelocaweb
 
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
@@ -34,6 +36,7 @@ import com.example.challengelocaweb.presentation.common.CustomNavigationBar
 import com.example.challengelocaweb.presentation.common.TopBarWithSearchBar
 import com.example.challengelocaweb.presentation.nvgraph.NavGraph
 import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
+import com.facebook.stetho.Stetho
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,8 +46,10 @@ class MainActivity : ComponentActivity() {
     val viewModel by viewModels<MainViewModel>()
 
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Stetho.initializeWithDefaults(this)
 
         WindowCompat.setDecorFitsSystemWindows(window, false)
 
@@ -63,6 +68,7 @@ class MainActivity : ComponentActivity() {
 }
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun MyApp(viewModel: MainViewModel) {
     val isSystemInDarkMode = isSystemInDarkTheme()
