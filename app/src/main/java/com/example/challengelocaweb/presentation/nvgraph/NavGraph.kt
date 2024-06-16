@@ -67,10 +67,7 @@ fun NavGraph(
                     email = email,
                     navController = navController,
                     viewModel = homeViewModel,
-//                    onFavoriteClick = {
-//                        email.isFavorite = !email.isFavorite
-//                        homeViewModel.updateEmail(email)
-//                    }
+
                 )
             }
         }
