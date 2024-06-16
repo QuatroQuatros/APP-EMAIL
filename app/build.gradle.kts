@@ -63,6 +63,8 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
     implementation("androidx.paging:paging-common-android:3.3.0")
+    implementation("androidx.compose.runtime:runtime-livedata:1.6.8")
+    implementation("com.google.android.gms:play-services-location:21.3.0")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -105,6 +107,9 @@ dependencies {
 
     //Accompanist
     implementation("com.google.accompanist:accompanist-systemuicontroller:0.31.4-beta")
+    implementation("com.google.accompanist:accompanist-insets:0.31.5-beta")
+    implementation("com.google.accompanist:accompanist-navigation-material:0.31.5-beta")
+
 
     //Paging
     implementation("androidx.paging:paging-runtime-ktx:3.3.0")
@@ -117,6 +122,9 @@ dependencies {
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
+
+    //Location
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 
 
 

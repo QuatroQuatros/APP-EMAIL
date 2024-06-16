@@ -1,4 +1,4 @@
-package com.example.challengelocaweb.presentation.calendar.components
+package com.example.challengelocaweb.presentation.event.components
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

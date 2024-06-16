@@ -1,4 +1,4 @@
-package com.example.challengelocaweb.presentation.calendar.components
+package com.example.challengelocaweb.presentation.event.components
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -12,6 +12,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.challengelocaweb.data.repository.mocks.mockEventRepository
+import com.example.challengelocaweb.presentation.event.EventViewModel
 import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
 import java.time.LocalDate
 
@@ -20,9 +22,11 @@ import java.time.LocalDate
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CreateModal(
-    onDismiss: () -> Unit
+    onDismiss: () -> Unit,
+    initialDate: LocalDate = LocalDate.now(),
+    viewModel: EventViewModel
 ) {
-    var selectedDate by remember { mutableStateOf<LocalDate>(LocalDate.now()) }
+    var selectedDate by remember { mutableStateOf(initialDate) }
     var showForm by remember { mutableStateOf(false) }
 
     Dialog(
@@ -30,7 +34,8 @@ fun CreateModal(
         properties = DialogProperties(dismissOnClickOutside = true)
     ) {
         if (showForm) {
-            ModalForm(selectedDate = selectedDate, onDismiss = onDismiss)
+
+            ModalForm(selectedDate = selectedDate, onDismiss = onDismiss, viewModel = viewModel)
 
         } else {
             val datePickerState = rememberDatePickerState()
@@ -67,22 +72,3 @@ fun CreateModal(
         }
     }
 }
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun CreateModalPreview() {
-    ChallengeLocaWebTheme {
-        CreateModal(onDismiss = {})
-    }
-}
-
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun CreateEventFormPreview() {
-    ModalForm(LocalDate.now(), onDismiss = {})
-}
-
-
-
