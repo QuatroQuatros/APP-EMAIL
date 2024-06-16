@@ -10,7 +10,11 @@ class GetEmails(
     private val emailRepository: EmailRepository
 ) {
 
-    operator fun invoke(sources: List<String>): Flow<PagingData<Email>> {
-        return emailRepository.getEmails(sources)
+    suspend operator fun invoke(): List<Email> {
+        return emailRepository.getEmails()
     }
+
+//    operator fun invoke(sources: List<String>): Flow<PagingData<Email>> {
+//        return emailRepository.getEmails(sources)
+//    }
 }

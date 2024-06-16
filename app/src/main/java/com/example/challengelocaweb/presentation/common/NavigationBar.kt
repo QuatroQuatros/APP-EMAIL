@@ -80,7 +80,7 @@ fun CustomNavigationBar(
             selected = selectedItems == "Calendar",
             onClick = {
                 onItemSelected("Calendar")
-                navController.navigate(Route.CalendarScreen.route)
+                navController.navigate(Route.EventsScreen.route)
             },
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = colorResource(id = R.color.white),

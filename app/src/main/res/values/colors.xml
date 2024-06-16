@@ -21,7 +21,7 @@
     <color name="danger">#FFFF3256</color>
     <color name="primary">#85b9c6</color>
     <color name="selected">#538392</color>
-
+    <color name="favorite">#FFC96F</color>
     <color name="event">#AEF9B1</color>
     <color name="meeting">#A0D4FF</color>
     <color name="reminder">#FCA3AC</color>

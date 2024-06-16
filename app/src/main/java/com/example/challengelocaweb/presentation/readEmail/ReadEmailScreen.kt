@@ -3,33 +3,18 @@ package com.example.challengelocaweb.presentation.readEmail
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.paddingFromBaseline
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.Delete
-import androidx.compose.material.icons.outlined.Info
-import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
+import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.rounded.MailOutline
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -41,249 +26,256 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import coil.compose.rememberAsyncImagePainter
 import com.example.challengelocaweb.R
 import com.example.challengelocaweb.domain.model.Email
-import com.example.challengelocaweb.domain.model.Source
+import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.util.convertTimestampToDate
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun ReadEmailSreen(
-    email: Email
+fun ReadEmailScreen(
+    email: Email,
+    navController: NavHostController,
+    viewModel: HomeViewModel
 ) {
-    
+    var isFavorite by remember { mutableStateOf(email.isFavorite) }
+
     Column(
+        modifier = Modifier.padding(vertical = 30.dp, horizontal = 16.dp)
     ) {
         Row(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .paddingFromBaseline(19.dp, 0.dp)
+                .padding(bottom = 16.dp)
         ) {
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(Icons.AutoMirrored.Outlined.ArrowBack, tint = colorResource(id = R.color.selected), contentDescription = "Voltar")
+            IconButton(onClick = { navController.popBackStack() }) {
+                Icon(
+                    Icons.AutoMirrored.Outlined.ArrowBack,
+                    tint = colorResource(id = R.color.selected),
+                    contentDescription = "Voltar"
+                )
             }
 
-            IconButton(onClick = { /* doSomething() */ }) {
-                Icon(Icons.Outlined.Delete, tint = Color.Red, contentDescription = "Deletar")
+            Row {
+                IconButton(onClick = { /* Responder */ }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_reply),
+                        contentDescription = "Responder",
+                        tint = colorResource(id = R.color.primary)
+                    )
+                }
+                IconButton(onClick = { /* Encaminhar */ }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_forward),
+                        contentDescription = "Encaminhar",
+                        tint = colorResource(id = R.color.primary)
+                    )
+                }
+                IconButton(onClick = { /* Arquivar */ }) {
+                    Icon(
+                        imageVector = Icons.Rounded.MailOutline,
+                        contentDescription = "Arquivar",
+                        tint = colorResource(id = R.color.primary)
+                    )
+                }
+                IconButton(
+                    onClick = {
+                        isFavorite = !isFavorite
+                        email.isFavorite = isFavorite
+                        viewModel.updateEmail(email)
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = if (isFavorite) R.drawable.ic_star_favorite else R.drawable.ic_star),
+                        contentDescription = "Favoritar",
+                        tint = if (isFavorite) colorResource(id = R.color.favorite) else colorResource(id = R.color.selected),
+                    )
+                }
+                IconButton(onClick = {
+                    viewModel.deleteEmail(email)
+                    navController.popBackStack()
+                }) {
+                    Icon(
+                        Icons.Outlined.Delete,
+                        tint = Color.Red,
+                        contentDescription = "Deletar"
+                    )
+                }
             }
         }
 
-        Spacer(modifier = Modifier.size(19.dp))
+        Text(
+            text = email.title,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
+            modifier = Modifier.padding(bottom = 16.dp)
+        )
 
-        Column {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp)
+        ) {
+            val painter = if (!email.urlToImage.isEmpty()){
+                rememberAsyncImagePainter(model = email.urlToImage)
+            }else{
+                painterResource(id = R.drawable.logolocaweb)
+            }
+            Image(
+                painter = painter,
+                contentDescription = null,
+                modifier = Modifier
+                    .size(50.dp)
+                    .clip(CircleShape),
+                contentScale = ContentScale.Crop
+            )
+
+            Spacer(modifier = Modifier.width(8.dp))
+
+            Column(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(vertical = 5.dp),
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Text(modifier = Modifier.offset(12.dp, 0.dp), fontSize = 19.sp, fontWeight = FontWeight(500,), text = "Procurando por hospedagens de sites confiáveis? Venha conhecer a LocaWeb!")
-
-            }
-
-            Spacer(modifier = Modifier.size(15.dp))
-
-            Row {
-                Column(
+                Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
+                        .padding(horizontal = 10.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Spacer(modifier = Modifier.size(10.dp))
-
-                    Card(
-                        modifier = Modifier
-                            .height(80.dp)
-                            .fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0))
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(10.dp)
-                        ) {
-                            Image(
-                                painter = painterResource(id = R.drawable.logolocaweb),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(53.dp)
-                                    .clip(CircleShape),
-                                contentScale = ContentScale.Crop
-                            )
-
-                            Spacer(modifier = Modifier.width(10.dp))
-
-                            Column(
-                                modifier = Modifier
-                                    .weight(1f)
-                                    .padding(vertical = 5.dp),
-                                verticalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceBetween
-                                ) {
-                                    Text(
-                                        fontSize = 16.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        text = email.author
-                                    )
-                                    Text(
-                                        modifier = Modifier.offset(50.dp, 0.dp),
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        color = colorResource(id = R.color.selected),
-                                        text = convertTimestampToDate(email.publishedAt)
-                                    )
-
-                                    Icon(
-                                        painter = painterResource(id = R.drawable.ic_star),
-                                        contentDescription = null,
-                                        tint = colorResource(id = R.color.primary),
-                                        modifier = Modifier
-                                            .size(24.dp)
-                                            .offset(-3.dp, -5.dp)
-                                    )
-                                }
-
-                                Text(
-                                    fontSize = 15.sp,
-                                    text = "Para mim",
-                                    maxLines = 1
-                                )
-                            }
-
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.size(10.dp))
-                }
-            }
-
-            Row {
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 10.dp)
-                ) {
-
-                    Card(
-                        modifier = Modifier
-                            .height(120.dp)
-                            .fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = Color(0xFFCBE3E6))
-                    ) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier.padding(10.dp)
-                        ) {
-
-                            //Spacer(modifier = Modifier.width(10.dp))
-
-                            Column(
-                                modifier = Modifier
-                                    .height(120.dp)
-                                    .weight(1f)
-                                    .padding(vertical = 5.dp),
-                                verticalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceEvenly
-                                ) {
-                                    Text(
-                                        modifier = Modifier.offset(-50.dp, 0.dp),
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        text = "De:"
-                                    )
-                                    Text(
-                                        modifier = Modifier.offset(50.dp, 0.dp),
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.W400,
-                                        color = colorResource(id = R.color.small_text),
-                                        text = "locaweb@locaweb.com.br"
-                                    )
-
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceAround
-                                ) {
-                                    Text(
-                                        modifier = Modifier.offset(-16.dp, 0.dp),
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        text = "Responder para"
-                                    )
-                                    Text(
-                                        modifier = Modifier.offset(16.dp, 0.dp),
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.W400,
-                                        color = colorResource(id = R.color.small_text),
-                                        text = "locaweb@locaweb.com.br"
-                                    )
-
-                                }
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceAround
-                                ) {
-                                    Text(
-                                        modifier = Modifier.offset(-45.dp, 0.dp),
-                                        fontSize = 14.sp,
-                                        fontWeight = FontWeight.Bold,
-                                        text = "Cópia"
-                                    )
-                                    Text(
-                                        modifier = Modifier.offset(45.dp, 0.dp),
-                                        fontSize = 13.sp,
-                                        fontWeight = FontWeight.W400,
-                                        color = colorResource(id = R.color.small_text),
-                                        text = "fiap@fiap.com.br"
-                                    )
-                                }
-
-                                Row(
-                                    modifier = Modifier.fillMaxWidth(),
-                                    horizontalArrangement = Arrangement.SpaceAround
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Outlined.Info,
-                                        contentDescription = "Segurança",
-                                        modifier = Modifier.offset(-39.dp, 0.dp)
-                                    )
-
-                                    Text(
-                                        modifier = Modifier.offset(42.dp, 0.dp),
-                                        fontSize = 12.sp,
-                                        fontWeight = FontWeight.W400,
-                                        color = colorResource(id = R.color.small_text),
-                                        text = "Criptografia padrão (TLS)"
-                                    )
-                                }
-                            }
-
-                        }
-                    }
-
-                    Spacer(modifier = Modifier.size(10.dp))
+                    Text(
+                        text = email.author,
+                        fontSize = 16.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = convertTimestampToDate(email.publishedAt),
+                        fontSize = 12.sp,
+                        color = colorResource(id = R.color.selected)
+                    )
                 }
             }
         }
+
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(vertical = 8.dp),
+            colors = CardDefaults.cardColors(containerColor = Color(0xFFF0F0F0))
+        ) {
+            Column(
+                modifier = Modifier.padding(16.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "De:",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "locaweb@locaweb.com.br",
+                        fontSize = 14.sp,
+                        color = colorResource(id = R.color.small_text)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Responder para:",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "locaweb@locaweb.com.br",
+                        fontSize = 14.sp,
+                        color = colorResource(id = R.color.small_text)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Text(
+                        text = "Cópia:",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                    Text(
+                        text = "fiap@fiap.com.br",
+                        fontSize = 14.sp,
+                        color = colorResource(id = R.color.small_text)
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(10.dp))
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Info,
+                        contentDescription = "Segurança"
+                    )
+                    Text(
+                        text = "Criptografia padrão (TLS)",
+                        fontSize = 12.sp,
+                        color = colorResource(id = R.color.small_text)
+                    )
+                }
+            }
+        }
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp)
+        ){
+            Text(
+                text = email.content,
+                fontSize = 18.sp,
+                lineHeight = 25.sp,
+                textAlign = TextAlign.Justify
+            )
+        }
+
+
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun ReadEmailSreenPreview() {
-    ReadEmailSreen(email = Email(
-        author = "LocaWeb",
-        content = "Descubra as possibilidades...",
-        description = "Vaga para Desenvolvimento de Software...",
-        publishedAt = "2024-05-01T00:00:00Z",
-        source = Source(id = "id", name = "LocaWeb"),
-        title = "Vaga para Desenvolvimento de Software",
-        url = "",
-        urlToImage = ""
-    ))
-}
+//@RequiresApi(Build.VERSION_CODES.O)
+//@Preview(showBackground = true)
+//@Composable
+//fun ReadEmailScreenPreview() {
+//    ReadEmailScreen(
+//        email = Email(
+//            id = 685,
+//            author = "LocaWeb",
+//            content = "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
+//            description = "Vaga para Desenvolvimento de Software...",
+//            publishedAt = "2024-05-01T00:00:00Z",
+//            title = "Vaga para Desenvolvimento de Software",
+//            url = "",
+//            urlToImage = "https://ui-avatars.com/api/?background=random&name=LocaWeb"
+//        ),
+//        navController = rememberNavController() // Mocked NavController for preview
+//    )
+//}

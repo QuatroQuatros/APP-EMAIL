@@ -163,7 +163,8 @@ fun Header(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(16.dp, top = 30.dp),
+            .padding(top = 60.dp)
+            .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
@@ -450,66 +451,6 @@ fun EventsTimeline(
     }
 
 }
-
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Composable
-//fun TimelineEventCard(event: Event) {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(vertical = 8.dp),
-//        verticalAlignment = Alignment.CenterVertically
-//    ) {
-//        Box() {
-//
-//        }
-//        Column(
-//            horizontalAlignment = Alignment.CenterHorizontally,
-//            verticalArrangement = Arrangement.Center
-//        ) {
-//            Box(
-//                modifier = Modifier
-//                    .size(16.dp)
-//                    .clip(CircleShape)
-//                    .background(color = colorResource(id = R.color.primary))
-//            )
-//            Spacer(modifier = Modifier.height(4.dp))
-//            Box(
-//                modifier = Modifier
-//                    .width(2.dp)
-//                    .height(40.dp)
-//                    .background(color = colorResource(id = R.color.primary))
-//            )
-//        }
-//        Spacer(modifier = Modifier.width(16.dp))
-//        Card(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .padding(end = 16.dp),
-//        ) {
-//            Column(
-//                modifier = Modifier.padding(16.dp)
-//            ) {
-//                Text(
-//                    text = event.title,
-//                    fontWeight = FontWeight.Bold,
-//                    color = colorResource(id = R.color.primary)
-//                )
-//                if (event.description.isNotEmpty()) {
-//                    Text(text = event.description)
-//                }
-//                if (event.startTime != LocalTime.MIN) {
-//                    Text(
-//                        text = event.startTime.format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + event.endTime.format(DateTimeFormatter.ofPattern("HH:mm")),
-//
-//                        color = colorResource(id = R.color.selected)
-//                    )
-//                }
-//            }
-//        }
-//    }
-//}
-
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
