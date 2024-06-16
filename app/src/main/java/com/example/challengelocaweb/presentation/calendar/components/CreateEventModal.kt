@@ -1,57 +1,88 @@
 package com.example.challengelocaweb.presentation.calendar.components
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import android.annotation.SuppressLint
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import com.example.challengelocaweb.R
+import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
+import java.time.LocalDate
 
+@RequiresApi(Build.VERSION_CODES.O)
+@SuppressLint("UnrememberedMutableState")
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CreateEventModal(
+fun CreateModal(
     onDismiss: () -> Unit
 ) {
+    var selectedDate by remember { mutableStateOf<LocalDate>(LocalDate.now()) }
+    var showForm by remember { mutableStateOf(false) }
+
     Dialog(
         onDismissRequest = onDismiss,
         properties = DialogProperties(dismissOnClickOutside = true)
     ) {
-        Box(
-            modifier = Modifier
-                .padding(16.dp)
-                .background(Color.White, shape = RoundedCornerShape(8.dp))
-                .fillMaxWidth()
-                .padding(16.dp)
-        ) {
+        if (showForm) {
+            ModalForm(selectedDate = selectedDate, onDismiss = onDismiss)
 
-            Text(
-                text = "Novo Evento",
-                fontSize = 20.sp,
-                fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.primary)
-            )
+        } else {
+            val datePickerState = rememberDatePickerState()
 
-            Spacer(modifier = Modifier.height(16.dp))
+            DatePickerDialog(
+                onDismissRequest = { onDismiss() },
+                confirmButton = {
+                    TextButton(
+                        onClick = {
+                            datePickerState.selectedDateMillis?.let { millis ->
+                                selectedDate = LocalDate.ofEpochDay(millis / 86400000)
+                            }
+                            showForm = true
+                        },
+                        enabled = datePickerState.selectedDateMillis != null
+                    ) {
+                        Text(text = "Confirmar Data")
+                    }
+                },
 
-            Button(
-                onClick = { /* TODO Lógica para criar o evento */ },
-                modifier = Modifier.align(Alignment.Center)
             ) {
-                Text("Criar Evento")
+                DatePicker(
+                    state = datePickerState,
+                    title = { Text(text = "") },
+                    headline = {
+                        Text(
+                            modifier = Modifier.padding(16.dp),
+                            text = "Selecione uma data",
+                            fontSize = 25.sp
+                        )
+                    },
+                )
             }
         }
     }
 }
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun CreateModalPreview() {
+    ChallengeLocaWebTheme {
+        CreateModal(onDismiss = {})
+    }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun CreateEventFormPreview() {
+    ModalForm(LocalDate.now(), onDismiss = {})
+}
+
+
+

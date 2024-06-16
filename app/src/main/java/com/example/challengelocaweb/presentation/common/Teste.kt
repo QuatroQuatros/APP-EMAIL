@@ -124,16 +124,15 @@ fun NavigationButtons() {
 
 @Composable
 fun EventsTimeline() {
-    val today = 11
     val events = listOf(
-        Event("Reunião José Bezerra", "Sobre finanças", "09", "14:50"),
-        Event("Consulta Médica", "Levar documento e cartão SUS", "11", "11:10"),
-        Event("Aniversário Jully", "", "12", "00:00"),
-        Event("Reunião José Bezerra", "Sobre finanças", "14", "14:50"),
-        Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Aniversário Adalberto", "", "15", "12:35"),
-        Event("Aniversário Adalberto", "", "15", "12:35")
+        Event("Reunião José Bezerra", "Sobre finanças", "09", "14:50", "2023-05-01T00:00:00Z"),
+        Event("Consulta Médica", "Levar documento e cartão SUS", "11", "11:10", "2023-05-01T00:00:00Z"),
+        Event("Aniversário Jully", "", "12", "00:00", "2023-05-01T00:00:00Z"),
+        Event("Reunião José Bezerra", "Sobre finanças", "14", "14:50", "2023-05-01T00:00:00Z"),
+        Event("Aniversário Adalberto", "", "15", "12:35", "2023-05-01T00:00:00Z"),
+        Event("Aniversário Adalberto", "", "15", "12:35", "2023-05-01T00:00:00Z"),
+        Event("Aniversário Adalberto", "", "15", "12:35", "2023-05-01T00:00:00Z"),
+        Event("Aniversário Adalberto", "", "15", "12:35", "2023-05-01T00:00:00Z")
 
 
     )

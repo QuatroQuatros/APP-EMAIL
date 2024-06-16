@@ -2,13 +2,27 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary">#3FC7CF</color>
-    <color name="selected">#09757C</color>
-    <color name="input_background">#D4FDFF</color>
+<!--    <color name="primary">#3FC7CF</color>-->
+<!--    <color name="selected">#09757C</color>-->
+<!--    <color name="input_background">#D4FDFF</color>-->
     <color name="display_small">#000000</color>
     <color name="text_medium">#FF4E4B66</color>
     <color name="text_title">#000000</color>
     <color name="body">#4E4B66</color>
     <color name="placeholder">#A0A3BD</color>
     <color name="shimmer">#C3C3C3</color>
+    <color name="small_text">#1B1B1B</color>
+    <color name="delete_color">#DF3333</color>
+
+<!--    Azul -->
+<!--    <color name="primary">#5e87d8</color>-->
+<!--    <color name="selected">#4270c5</color>-->
+<!--    <color name="input_background">#7b9eec</color>-->
+
+<color name="primary">#85b9c6</color>
+<color name="selected">#72a7b3</color>
+<color name="input_background">#85b9c6</color>
+
+
+
 </resources>
