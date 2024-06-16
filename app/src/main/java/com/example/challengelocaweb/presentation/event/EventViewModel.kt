@@ -49,6 +49,13 @@ open class EventViewModel @Inject constructor(
         }
     }
 
+    fun deleteEvent(event: Event) {
+        viewModelScope.launch {
+            eventRepository.delete(event)
+            fetchEvents()
+        }
+    }
+
     @SuppressLint("MissingPermission")
     fun fetchCurrentLocation() {
         fusedLocationClient.lastLocation

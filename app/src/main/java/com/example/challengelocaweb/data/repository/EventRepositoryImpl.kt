@@ -17,4 +17,8 @@ class EventRepositoryImpl @Inject constructor(
         eventDao.insert(event)
     }
 
+    override suspend fun delete(event: Event) {
+        eventDao.delete(event)
+    }
+
 }

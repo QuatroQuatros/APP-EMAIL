@@ -34,6 +34,10 @@ fun mockEventRepository(application: Application): EventViewModel {
             )
         }
 
+        override suspend fun delete(event: Event) {
+            TODO("Not yet implemented")
+        }
+
         override suspend fun insert(event: Event) {
             // No-op
         }

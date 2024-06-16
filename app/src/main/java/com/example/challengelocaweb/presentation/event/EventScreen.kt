@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
@@ -406,7 +407,7 @@ fun EventsTimeline(
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(100.dp)
-                        .clickable { onEventClick(event) }
+
                 ) {
                     Column(
                         modifier = Modifier
@@ -441,7 +442,7 @@ fun EventsTimeline(
                         }
 
                     }
-                    TimelineEventCard(event)
+                    TimelineEventCard(event, onEventClick)
                 }
                 Spacer(modifier = Modifier.height(10.dp))
             }
@@ -450,62 +451,171 @@ fun EventsTimeline(
 
 }
 
+//@RequiresApi(Build.VERSION_CODES.O)
+//@Composable
+//fun TimelineEventCard(event: Event) {
+//    Row(
+//        modifier = Modifier
+//            .fillMaxWidth()
+//            .padding(vertical = 8.dp),
+//        verticalAlignment = Alignment.CenterVertically
+//    ) {
+//        Box() {
+//
+//        }
+//        Column(
+//            horizontalAlignment = Alignment.CenterHorizontally,
+//            verticalArrangement = Arrangement.Center
+//        ) {
+//            Box(
+//                modifier = Modifier
+//                    .size(16.dp)
+//                    .clip(CircleShape)
+//                    .background(color = colorResource(id = R.color.primary))
+//            )
+//            Spacer(modifier = Modifier.height(4.dp))
+//            Box(
+//                modifier = Modifier
+//                    .width(2.dp)
+//                    .height(40.dp)
+//                    .background(color = colorResource(id = R.color.primary))
+//            )
+//        }
+//        Spacer(modifier = Modifier.width(16.dp))
+//        Card(
+//            modifier = Modifier
+//                .fillMaxWidth()
+//                .padding(end = 16.dp),
+//        ) {
+//            Column(
+//                modifier = Modifier.padding(16.dp)
+//            ) {
+//                Text(
+//                    text = event.title,
+//                    fontWeight = FontWeight.Bold,
+//                    color = colorResource(id = R.color.primary)
+//                )
+//                if (event.description.isNotEmpty()) {
+//                    Text(text = event.description)
+//                }
+//                if (event.startTime != LocalTime.MIN) {
+//                    Text(
+//                        text = event.startTime.format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + event.endTime.format(DateTimeFormatter.ofPattern("HH:mm")),
+//
+//                        color = colorResource(id = R.color.selected)
+//                    )
+//                }
+//            }
+//        }
+//    }
+//}
+
+
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun TimelineEventCard(event: Event) {
+fun TimelineEventCard(
+    event: Event,
+    onEventClick: (Event) -> Unit
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Box() {
-
-        }
         Column(
-            horizontalAlignment = Alignment.CenterHorizontally
+            modifier = Modifier.padding(horizontal = 10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceAround
         ) {
+
+            Box(
+                modifier = Modifier
+                    .width(2.dp)
+                    .height(20.dp)
+                    .background(color = colorResource(id = R.color.primary))
+            )
             Box(
                 modifier = Modifier
                     .size(16.dp)
                     .clip(CircleShape)
                     .background(color = colorResource(id = R.color.primary))
             )
-            Spacer(modifier = Modifier.height(4.dp))
             Box(
                 modifier = Modifier
                     .width(2.dp)
-                    .height(40.dp)
+                    .height(20.dp)
                     .background(color = colorResource(id = R.color.primary))
             )
         }
-        Spacer(modifier = Modifier.width(16.dp))
+
+
+
+        Spacer(modifier = Modifier.width(10.dp))
         Card(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(end = 16.dp),
+                .padding(end = 10.dp)
+                .clickable { onEventClick(event) },
+            shape = RoundedCornerShape(8.dp),
+            colors = CardDefaults.cardColors(
+                containerColor = when (event.eventType) {
+                    EventTypeEnum.MEETING -> colorResource(id = R.color.meeting)
+                    EventTypeEnum.REMINDER -> colorResource(id = R.color.reminder)
+                    EventTypeEnum.EVENT -> colorResource(id = R.color.event)
+                }
+            )
         ) {
             Column(
-                modifier = Modifier.padding(16.dp)
+                modifier = Modifier.padding(10.dp)
             ) {
                 Text(
                     text = event.title,
                     fontWeight = FontWeight.Bold,
-                    color = colorResource(id = R.color.primary)
+                    color = colorResource(id = R.color.primary),
+                    fontSize = 16.sp
                 )
                 if (event.description.isNotEmpty()) {
-                    Text(text = event.description)
-                }
-                if (event.startTime != LocalTime.MIN) {
                     Text(
-                        text = event.startTime.format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + event.endTime.format(DateTimeFormatter.ofPattern("HH:mm")),
-
-                        color = colorResource(id = R.color.selected)
+                        text = event.description,
+                        color = colorResource(id = R.color.selected),
+                        fontSize = 14.sp
                     )
                 }
+//                Spacer(modifier = Modifier.height(8.dp))
+//                Text(
+//                    text = event.startTime.format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + event.endTime.format(DateTimeFormatter.ofPattern("HH:mm")),
+//                    color = colorResource(id = R.color.primary),
+//                    fontSize = 14.sp
+//                )
             }
         }
     }
+}
+
+@RequiresApi(Build.VERSION_CODES.O)
+@Preview(showBackground = true)
+@Composable
+fun timeLinePreview(){
+    val event = Event(
+        title = "Evento 1",
+        description = "Descrição do evento 1",
+        startTime = LocalTime.of(10, 0),
+        endTime = LocalTime.of(12, 0),
+        day = "Segunda",
+        location = "Local do evento 1",
+        link = "http://www.google.com",
+        isAllDay = false,
+        isUnique = false,
+        isNotifiable = false,
+        eventType = EventTypeEnum.MEETING,
+        createdAt = "2022-01-01T00:00:00Z"
+    )
+    TimelineEventCard(
+        event = event,
+        onEventClick = { event }
+    )
+
 }
 
 @SuppressLint("CoroutineCreationDuringComposition")
@@ -533,7 +643,7 @@ fun EventDetailsModal(
             event = event,
             onClose = onDismiss,
             onDelete = {
-                //viewModel.deleteEvent(event)
+                viewModel.deleteEvent(event)
                 onDismiss()
             },
             onEdit = {

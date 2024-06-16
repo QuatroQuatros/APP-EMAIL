@@ -72,7 +72,12 @@ fun EventDetails(
                         .height(12.dp)
                         .size(20.dp)
                         .background(
-                            color = colorResource(id = R.color.danger),
+                            color = when(event.eventType) {
+                                EventTypeEnum.MEETING -> colorResource(id = R.color.meeting)
+                                EventTypeEnum.REMINDER -> colorResource(id = R.color.reminder)
+                                EventTypeEnum.EVENT -> colorResource(id = R.color.event)
+                            },
+
                             shape = RoundedCornerShape(20.dp)
                         )
                 ){
