@@ -32,8 +32,8 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.challengelocaweb.R
+import com.example.challengelocaweb.presentation.calendar.components.CreateModal
 import com.example.challengelocaweb.presentation.common.TimelineEventCard
-import com.example.challengelocaweb.presentation.calendar.components.CreateEventModal
 import com.example.challengelocaweb.presentation.calendar.components.FloatingActionButton
 import java.time.DateTimeException
 import java.time.LocalDate
@@ -117,7 +117,7 @@ fun CalendarScreen(
             )
 
             if (showModal) {
-                CreateEventModal(onDismiss = { showModal = false })
+                CreateModal(onDismiss = { showModal = false })
             }
         }
     }
