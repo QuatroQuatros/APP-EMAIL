@@ -3,6 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("kotlin-kapt")
     id("com.google.dagger.hilt.android")
+    id("kotlinx-serialization")
 
 }
 
@@ -73,6 +74,8 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.5.1")
+
     //Splash
     implementation("androidx.core:core-splashscreen:1.0.1")
 
@@ -119,9 +122,10 @@ dependencies {
     //Room
 
     implementation("androidx.room:room-runtime:2.6.1")
+    implementation("androidx.room:room-paging:2.6.1")
+    implementation("androidx.room:room-ktx:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     kapt("androidx.room:room-compiler:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
 
     //Location
     implementation("com.google.android.gms:play-services-location:21.3.0")

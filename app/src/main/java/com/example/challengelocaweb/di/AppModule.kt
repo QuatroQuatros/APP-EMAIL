@@ -8,6 +8,7 @@ import com.example.challengelocaweb.data.manager.LocalUserManagerImpl
 import com.example.challengelocaweb.data.remote.EmailAPI
 import com.example.challengelocaweb.data.repository.EmailRepositoryImpl
 import com.example.challengelocaweb.data.repository.EventRepositoryImpl
+import com.example.challengelocaweb.domain.dao.EmailDao
 import com.example.challengelocaweb.domain.dao.EventDao
 import com.example.challengelocaweb.domain.manager.LocalUserManager
 import com.example.challengelocaweb.domain.repository.EmailRepository
@@ -15,13 +16,17 @@ import com.example.challengelocaweb.domain.repository.EventRepository
 import com.example.challengelocaweb.domain.useCases.appEntry.AppEntryUseCases
 import com.example.challengelocaweb.domain.useCases.appEntry.ReadAppEntry
 import com.example.challengelocaweb.domain.useCases.appEntry.SaveAppEntry
+import com.example.challengelocaweb.domain.useCases.emails.DeleteEmail
 import com.example.challengelocaweb.domain.useCases.emails.EmailUseCases
 import com.example.challengelocaweb.domain.useCases.emails.GetEmails
+import com.example.challengelocaweb.domain.useCases.emails.UpdateEmail
 import com.example.challengelocaweb.util.Constansts.BASE_URL
+import com.example.challengelocaweb.util.NetworkUtils
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Retrofit
@@ -49,9 +54,20 @@ object AppModule {
     }
 
     @Provides
+    fun provideEmailDao(database: AppDatabase): EmailDao {
+        return database.emailDao()
+    }
+
+    @Provides
     fun provideEventDao(database: AppDatabase): EventDao {
         return database.eventDao()
     }
+
+    @Provides
+    fun provideNetworkUtils(@ApplicationContext appContext: Context): NetworkUtils {
+        return NetworkUtils(appContext)
+    }
+
     @Provides
     @Singleton
     fun provideLocalUserManager(
@@ -80,17 +96,13 @@ object AppModule {
 
     @Provides
     @Singleton
-    fun provideEmailRepository(
-        emailAPI: EmailAPI
-    ): EmailRepository = EmailRepositoryImpl(emailAPI)
-
-    @Provides
-    @Singleton
     fun provideEmailUseCases(
         emailRepository: EmailRepository
     ): EmailUseCases {
         return EmailUseCases(
-            getEmails = GetEmails(emailRepository)
+            getEmails = GetEmails(emailRepository),
+            deleteEmail = DeleteEmail(emailRepository),
+            updateEmail = UpdateEmail(emailRepository)
         )
     }
 }
@@ -98,6 +110,12 @@ object AppModule {
 @Module
 @InstallIn(SingletonComponent::class)
 abstract class RepositoryModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindEmailRepository(
+        emailRepositoryImpl: EmailRepositoryImpl
+    ): EmailRepository
 
     @Binds
     @Singleton

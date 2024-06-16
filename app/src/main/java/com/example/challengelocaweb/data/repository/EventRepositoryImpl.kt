@@ -1,6 +1,7 @@
 package com.example.challengelocaweb.data.repository
 
 import com.example.challengelocaweb.domain.dao.EventDao
+import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.domain.model.Event
 import com.example.challengelocaweb.domain.repository.EventRepository
 import javax.inject.Inject

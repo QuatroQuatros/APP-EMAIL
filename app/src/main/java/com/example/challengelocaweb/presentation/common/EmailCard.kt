@@ -18,8 +18,13 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -31,10 +36,13 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import com.example.challengelocaweb.R
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.domain.model.Source
 import com.example.challengelocaweb.presentation.Dimens.SmallIconSize
+import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
 import com.example.challengelocaweb.util.convertTimestampToDate
 
@@ -42,8 +50,10 @@ import com.example.challengelocaweb.util.convertTimestampToDate
 @Composable
 fun EmailCard(
     email: Email,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    viewModel: HomeViewModel
 ) {
+    var isFavorite by remember { mutableStateOf(email.isFavorite) }
 
     Column(
         modifier = Modifier
@@ -63,8 +73,10 @@ fun EmailCard(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.padding(10.dp)
             ) {
+
+                val painter = rememberAsyncImagePainter(model = email.urlToImage)
                 Image(
-                    painter = painterResource(id = R.drawable.mulhersorrindo),
+                    painter = painter,
                     contentDescription = null,
                     modifier = Modifier
                         .size(60.dp)
@@ -85,20 +97,20 @@ fun EmailCard(
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Text(
-                            fontSize = 14.sp,
+                            fontSize = 16.sp,
                             fontWeight = FontWeight.Bold,
                             text = email.author
                         )
                         Text(
                             fontSize = 10.sp,
                             fontWeight = FontWeight.Bold,
-                            color = colorResource(id = R.color.primary),
+                            color = colorResource(id = R.color.selected),
                             text = convertTimestampToDate(email.publishedAt)
                         )
                     }
 
                     Text(
-                        fontSize = 12.sp,
+                        fontSize = 14.sp,
                         text = email.title,
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1
@@ -110,12 +122,18 @@ fun EmailCard(
                     )
                 }
 
-                Icon(
-                    painter = painterResource(id = R.drawable.ic_star),
-                    contentDescription = null,
-                    tint = colorResource(id = R.color.primary),
-                    modifier = Modifier.size(24.dp)
-                )
+                IconButton(onClick = {
+                    isFavorite = !isFavorite
+                    email.isFavorite = isFavorite
+                    viewModel.updateEmail(email)
+                    }) {
+                    Icon(
+                        painter = if (isFavorite) painterResource(id = R.drawable.ic_star_favorite) else painterResource(id = R.drawable.ic_star),
+                        contentDescription = null,
+                        tint = if (isFavorite) colorResource(id = R.color.favorite) else colorResource(id = R.color.selected),
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
             }
         }
 
@@ -123,24 +141,4 @@ fun EmailCard(
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Preview(showBackground = true, uiMode = UI_MODE_NIGHT_YES)
-@Composable
-fun EmailCardPreview() {
-    ChallengeLocaWebTheme {
-        EmailCard(
-            email = Email(
-                author = "InfoVagas",
-                content = "Vaga para Desenvolvimento de Software...",
-                description = "Vaga para Desenvolvimento de Software...",
-                publishedAt = "2023-05-01T00:00:00Z",
-                source = Source(id = "id", name = "InfoVagas"),
-                title = "Vaga para Desenvolvimento de Software",
-                url = "",
-                urlToImage = ""
-            ),
-            onClick = {}
-        )
-    }
-}
+
