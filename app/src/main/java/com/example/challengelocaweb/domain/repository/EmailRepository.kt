@@ -12,7 +12,7 @@ interface EmailRepository {
     suspend fun insert(email: Email)
     suspend fun deleteEmail(email: Email)
     suspend fun updateEmail(email: Email)
-//    suspend fun getEmails(): PagingSource<Int, Email>
+    fun getFavoritesEmails(): Flow<List<Email>>
 //
 //    suspend fun getEmailsList(): List<Email>
 }

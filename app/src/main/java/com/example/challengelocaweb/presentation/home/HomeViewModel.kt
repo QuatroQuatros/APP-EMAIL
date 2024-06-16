@@ -43,6 +43,7 @@ class HomeViewModel @Inject constructor(
         refreshEmails()
     }
 
+    val favoriteEmails: Flow<List<Email>> = emailUseCases.favoritesEmails()
 
     fun deleteEmail(email: Email) {
         viewModelScope.launch {
@@ -67,9 +68,5 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
-//    val emailPagingDataFlow: Flow<PagingData<Email>> = Pager(PagingConfig(pageSize = 10)) {
-//        MockEmailPagingSource()
-//    }.flow.cachedIn(viewModelScope)
 
 }

@@ -11,7 +11,7 @@ sealed class Route(
 
     object CategoriesScreen : Route("categoriesScreen")
 
-    object SearchScreen : Route("searchScreen")
+    object FavoriteEmailsScreen : Route("favoriteEmailScreen")
     object EmailDetailScreen : Route("readEmail/{email}"){
         fun createRoute(emailJson: String) = "readEmail/${Uri.encode(emailJson)}"
     }
