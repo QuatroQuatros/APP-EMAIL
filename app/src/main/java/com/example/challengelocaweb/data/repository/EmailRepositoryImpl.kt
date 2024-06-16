@@ -35,21 +35,10 @@ class EmailRepositoryImpl @Inject constructor(
         emailDao.updateEmail(email)
     }
 
+    override fun getFavoritesEmails(): Flow<List<Email>>
+    {
+        return emailDao.getFavoritesEmails()
+    }
 
-
-
-//    override fun getEmails(sources: List<String>): Flow<PagingData<Email>> {
-//        return Pager(
-//            config = PagingConfig(pageSize = 10),
-//            pagingSourceFactory ={
-//                EmailPagingSource(
-//                    emailAPI = emailApi,
-//                    sources = sources.joinToString(separator = ","),
-//                    searchTerm = ""
-//                )
-//            }
-//
-//        ).flow
-//    }
 
 }

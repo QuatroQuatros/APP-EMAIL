@@ -21,6 +21,7 @@ import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.presentation.event.CalendarScreen
 import com.example.challengelocaweb.presentation.event.EventViewModel
 import com.example.challengelocaweb.presentation.categories.CategoriesScreen
+import com.example.challengelocaweb.presentation.categories.FavoriteEmailsScreen
 import com.example.challengelocaweb.presentation.home.HomeScreen
 import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.presentation.readEmail.ReadEmailScreen
@@ -41,6 +42,15 @@ fun NavGraph(
             val homeViewModel: HomeViewModel = hiltViewModel()
             HomeScreen(navController = navController, viewModel = homeViewModel)
         }
+
+        composable(route = Route.CategoriesScreen.route) {
+            CategoriesScreen(navController = navController)
+        }
+        composable(route = Route.FavoriteEmailsScreen.route) {
+            val homeViewModel: HomeViewModel = hiltViewModel()
+            FavoriteEmailsScreen(navController = navController, viewModel = homeViewModel)
+        }
+
         composable(route = Route.EventsScreen.route) {
             val eventViewModel: EventViewModel = hiltViewModel()
             val events by eventViewModel.events.observeAsState(emptyList())
@@ -50,9 +60,7 @@ fun NavGraph(
                 viewModel = eventViewModel
             )
         }
-        composable(route = Route.CategoriesScreen.route) {
-            CategoriesScreen(navController = navController)
-        }
+
         composable(
             route = Route.EmailDetailScreen.route,
             arguments = listOf(navArgument("email") { type = NavType.StringType })
@@ -67,10 +75,6 @@ fun NavGraph(
                     email = email,
                     navController = navController,
                     viewModel = homeViewModel,
-//                    onFavoriteClick = {
-//                        email.isFavorite = !email.isFavorite
-//                        homeViewModel.updateEmail(email)
-//                    }
                 )
             }
         }

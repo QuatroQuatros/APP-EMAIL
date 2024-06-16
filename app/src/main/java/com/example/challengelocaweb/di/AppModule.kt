@@ -19,6 +19,7 @@ import com.example.challengelocaweb.domain.useCases.appEntry.SaveAppEntry
 import com.example.challengelocaweb.domain.useCases.emails.DeleteEmail
 import com.example.challengelocaweb.domain.useCases.emails.EmailUseCases
 import com.example.challengelocaweb.domain.useCases.emails.GetEmails
+import com.example.challengelocaweb.domain.useCases.emails.GetFavoritesEmails
 import com.example.challengelocaweb.domain.useCases.emails.UpdateEmail
 import com.example.challengelocaweb.util.Constansts.BASE_URL
 import com.example.challengelocaweb.util.NetworkUtils
@@ -102,7 +103,8 @@ object AppModule {
         return EmailUseCases(
             getEmails = GetEmails(emailRepository),
             deleteEmail = DeleteEmail(emailRepository),
-            updateEmail = UpdateEmail(emailRepository)
+            updateEmail = UpdateEmail(emailRepository),
+            favoritesEmails = GetFavoritesEmails(emailRepository)
         )
     }
 }
