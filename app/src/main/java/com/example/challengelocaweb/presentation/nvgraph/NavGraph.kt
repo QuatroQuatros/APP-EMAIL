@@ -21,6 +21,7 @@ import com.example.challengelocaweb.presentation.event.EventViewModel
 import com.example.challengelocaweb.presentation.categories.CategoriesScreen
 import com.example.challengelocaweb.presentation.categories.FavoriteEmailsScreen
 import com.example.challengelocaweb.presentation.categories.SpamEmailsScreen
+import com.example.challengelocaweb.presentation.email.AnswerEmailScreen
 import com.example.challengelocaweb.presentation.home.HomeScreen
 import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.presentation.email.ReadEmailScreen
@@ -86,6 +87,10 @@ fun NavGraph(
 
         composable(route = Route.WriteEmailScreen.route) {
             WriteEmailScreen(navController = navController)
+        }
+
+        composable(route = Route.AnswerEmail.route) {
+            AnswerEmailScreen(navController = navController)
         }
     }
 }

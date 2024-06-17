@@ -21,6 +21,9 @@ sealed class Route(
     object AppStartNavigationScreen : Route("appStartNavigationScreen")
     object WriteEmailScreen : Route("writeEmailScreen")
 
+    object AnswerEmail : Route("AnswerEmail")
+
+
     //object NewsNavigation : Route("newsNavigation")
 
 

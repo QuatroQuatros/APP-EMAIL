@@ -5,6 +5,7 @@ package com.example.challengelocaweb.presentation.email
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -36,6 +37,7 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.challengelocaweb.R
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.presentation.home.HomeViewModel
+import com.example.challengelocaweb.presentation.nvgraph.Route
 import com.example.challengelocaweb.util.convertTimestampToDate
 import kotlinx.coroutines.launch
 
@@ -94,13 +96,7 @@ fun ReadEmailScreen(
                     }
 
                     Row {
-                        IconButton(onClick = { /* Responder */ }) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_reply),
-                                contentDescription = "Responder",
-                                tint = colorResource(id = R.color.primary)
-                            )
-                        }
+
                         IconButton(onClick = { /* Encaminhar */ }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_forward),
@@ -339,7 +335,7 @@ fun ReadEmailScreen(
 
                 Box(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .height(320.dp)
                         .padding(10.dp)
                 ) {
                     Text(
@@ -348,6 +344,56 @@ fun ReadEmailScreen(
                         lineHeight = 25.sp,
                         textAlign = TextAlign.Justify
                     )
+                }
+
+                Box(
+                    contentAlignment = Alignment.BottomCenter,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(70.dp)
+                        .paddingFromBaseline(0.dp, 50.dp))
+                {
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceAround,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                    )
+                    {
+                        Column(
+                            verticalArrangement = Arrangement.Center,
+                            modifier = Modifier
+                                .absolutePadding(0.dp, 18.dp, 0.dp, 0.dp))
+                        {
+                            Icon(
+                                imageVector = Icons.Outlined.Add,
+                                contentDescription = "Anexar",
+                                tint = colorResource(id = R.color.primary)
+                            )
+                        }
+
+                        Column(modifier = Modifier
+                            .width(300.dp))
+                        {
+                            Button(
+                                onClick = { navController.navigate(Route.AnswerEmail.route) },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.Transparent),
+                                border = BorderStroke(2.dp, color = Color(0xFF80D1CF)),
+                                modifier = Modifier
+                                    .width(250.dp)
+                                    .height(50.dp))
+                            {
+                                Text(text = "Responder", color = colorResource(id = R.color.selected), fontSize = 17.sp)
+
+                                Spacer(modifier = Modifier.width(70.dp))
+
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_reply),
+                                    contentDescription = "Responder",
+                                    tint = colorResource(id = R.color.primary)
+                                )
+                            }
+                        }
+                    }
                 }
             }
         }
