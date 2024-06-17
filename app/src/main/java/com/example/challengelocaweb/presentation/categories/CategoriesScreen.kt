@@ -104,6 +104,9 @@ fun CategoriesScreen(
                             if (category.name == "Favoritos") {
                                 navController.navigate(Route.FavoriteEmailsScreen.route)
                             }
+                            if (category.name == "Spam") {
+                                navController.navigate(Route.SpamEmailsScreen.route)
+                            }
                         }
                     )
                 }

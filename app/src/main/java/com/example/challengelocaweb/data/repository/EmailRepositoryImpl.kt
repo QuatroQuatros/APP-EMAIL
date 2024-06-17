@@ -40,6 +40,11 @@ class EmailRepositoryImpl @Inject constructor(
         return emailDao.getFavoritesEmails()
     }
 
+    override fun getSpamEmails(): Flow<List<Email>>
+    {
+        return emailDao.getSpamEmails()
+    }
+
     override suspend fun markAsRead(id: Int) {
         emailDao.markAsRead(id)
     }
@@ -50,6 +55,10 @@ class EmailRepositoryImpl @Inject constructor(
 
     override suspend fun markAsSpam(id: Int) {
         emailDao.markAsSpam(id)
+    }
+
+    override suspend fun markAsNotSpam(id: Int) {
+        emailDao.markAsNotSpam(id)
     }
 
     override suspend fun markAsSecure(id: Int) {

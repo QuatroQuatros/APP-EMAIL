@@ -47,6 +47,8 @@ class HomeViewModel @Inject constructor(
 
     val favoriteEmails: Flow<List<Email>> = emailUseCases.favoritesEmails()
 
+    val spamEmails: Flow<List<Email>> = emailUseCases.spamEmails()
+
     fun deleteEmail(email: Email) {
         viewModelScope.launch {
             emailUseCases.deleteEmail(email)
@@ -78,6 +80,13 @@ class HomeViewModel @Inject constructor(
     fun markAsSpam(id: Int) {
         viewModelScope.launch {
             emailUseCases.markAsSpam(id)
+            refreshEmails()
+        }
+    }
+
+    fun markAsNotSpam(id: Int) {
+        viewModelScope.launch {
+            emailUseCases.markAsNotSpam(id)
             refreshEmails()
         }
     }

@@ -20,6 +20,7 @@ import com.example.challengelocaweb.presentation.event.CalendarScreen
 import com.example.challengelocaweb.presentation.event.EventViewModel
 import com.example.challengelocaweb.presentation.categories.CategoriesScreen
 import com.example.challengelocaweb.presentation.categories.FavoriteEmailsScreen
+import com.example.challengelocaweb.presentation.categories.SpamEmailsScreen
 import com.example.challengelocaweb.presentation.home.HomeScreen
 import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.presentation.email.ReadEmailScreen
@@ -48,6 +49,11 @@ fun NavGraph(
         composable(route = Route.FavoriteEmailsScreen.route) {
             val homeViewModel: HomeViewModel = hiltViewModel()
             FavoriteEmailsScreen(navController = navController, viewModel = homeViewModel)
+        }
+
+        composable(route = Route.SpamEmailsScreen.route) {
+            val homeViewModel: HomeViewModel = hiltViewModel()
+            SpamEmailsScreen(navController = navController, viewModel = homeViewModel)
         }
 
         composable(route = Route.EventsScreen.route) {

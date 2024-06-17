@@ -54,6 +54,7 @@ fun EmailCard(
     viewModel: HomeViewModel
 ) {
     var isFavorite by remember { mutableStateOf(email.isFavorite) }
+    var isRead by remember { mutableStateOf(email.isRead) }
 
     Column(
         modifier = Modifier
@@ -69,7 +70,7 @@ fun EmailCard(
                 .fillMaxWidth(),
 
             colors = CardDefaults.cardColors(
-                containerColor = if(email.isRead)  Color(0x9AE1EBFC) else Color(0xABBCD4FF)
+                containerColor = if(isRead) colorResource(id = R.color.email_read) else colorResource(id = R.color.email_not_read)
             )
         ) {
             Row(

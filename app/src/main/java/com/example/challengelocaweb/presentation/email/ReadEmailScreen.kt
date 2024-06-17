@@ -49,6 +49,7 @@ fun ReadEmailScreen(
 ) {
     var isFavorite by remember { mutableStateOf(email.isFavorite) }
     var isRead by remember { mutableStateOf(email.isRead) }
+    var isSpam by remember { mutableStateOf(email.isSpam) }
     val snackbarHostState = remember { SnackbarHostState() }
     var isButtonEnabled by remember { mutableStateOf(true) }
     val scope = rememberCoroutineScope()
@@ -117,14 +118,28 @@ fun ReadEmailScreen(
 
                         IconButton(
                             onClick = {
-                                viewModel.markAsSpam(email.id)
-                                scope.launch {
-                                    snackbarHostState.showSnackbar("Email marcado como SPAM")
+                                if (isButtonEnabled) {
+                                    isButtonEnabled = false
+                                    if (isSpam) {
+                                        isSpam = !isSpam
+                                        viewModel.markAsNotSpam(email.id)
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar("Email marcado como não spam")
+                                            isButtonEnabled = true
+                                        }
+                                    } else {
+                                        isSpam = !isSpam
+                                        viewModel.markAsSpam(email.id)
+                                        scope.launch {
+                                            snackbarHostState.showSnackbar("Email marcado como spam")
+                                            isButtonEnabled = true
+                                        }
+                                    }
                                 }
-                            }
+                            },
                         ) {
                             Icon(
-                                painter = painterResource(id = R.drawable.ic_spam),//if(email.isRead) painterResource(id = R.drawable.ic_mark_unread) else painterResource(id = R.drawable.ic_mark_read),
+                                painter = if(isSpam) painterResource(id = R.drawable.ic_check) else painterResource(id = R.drawable.ic_spam),
                                 contentDescription = "SPAM",
                                 tint = colorResource(id = R.color.primary)
                             )

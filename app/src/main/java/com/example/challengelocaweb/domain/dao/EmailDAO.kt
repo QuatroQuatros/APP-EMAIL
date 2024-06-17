@@ -20,6 +20,9 @@ interface EmailDao {
     @Query("SELECT * FROM emails WHERE isFavorite = 1 ORDER BY publishedAt DESC")
     fun getFavoritesEmails(): Flow<List<Email>>
 
+    @Query("SELECT * FROM emails WHERE isSpam = 1 ORDER BY publishedAt DESC")
+    fun getSpamEmails(): Flow<List<Email>>
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(emails: List<Email>)
 
@@ -47,6 +50,10 @@ interface EmailDao {
     @Transaction
     @Query("UPDATE emails SET isSpam = 1 WHERE id = :id")
     suspend fun markAsSpam(id: Int)
+
+    @Transaction
+    @Query("UPDATE emails SET isSpam = 0 WHERE id = :id")
+    suspend fun markAsNotSpam(id: Int)
 
     @Transaction
     @Query("UPDATE emails SET isSecure = 1 WHERE id = :id")

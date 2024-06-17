@@ -68,16 +68,25 @@ fun CustomNavigationBar(
             ),
             label = { Text("Home") },
             icon = {
-
-                BadgedBox(
-                    badge = {
-                        Badge(content = {
-                            Text(
-                                text = unreadCount.toString(),
-                                //color = colorResource(id = R.color.white)
-                            )
-                        })
-                    }){
+                if (unreadCount > 0) {
+                    BadgedBox(
+                        badge = {
+                            Badge {
+                                Text(
+                                    text = unreadCount.toString(),
+                                    color = colorResource(id = R.color.white)
+                                )
+                            }
+                        }
+                    ) {
+                        Icon(
+                            modifier = Modifier.size(30.dp),
+                            imageVector = ImageVector.vectorResource(id = R.drawable.ic_email),
+                            tint = colorResource(id = R.color.white),
+                            contentDescription = "Home"
+                        )
+                    }
+                } else {
                     Icon(
                         modifier = Modifier.size(30.dp),
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_email),
@@ -85,12 +94,6 @@ fun CustomNavigationBar(
                         contentDescription = "Home"
                     )
                 }
-//                Icon(
-//                    modifier = Modifier.size(30.dp),
-//                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_email),
-//                    tint = colorResource(id = R.color.white),
-//                    contentDescription = "Home"
-//                )
             }
         )
 
