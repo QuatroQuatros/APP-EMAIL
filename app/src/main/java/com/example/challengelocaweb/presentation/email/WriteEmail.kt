@@ -154,7 +154,11 @@ fun EmailTextField(label: String, value: String, onValueChange: (String) -> Unit
 @Composable
 fun EmailBodyField(value: String, onValueChange: (String) -> Unit) {
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
-        Text(text = "Escrever e-mail", fontSize = 16.sp, fontWeight = FontWeight.Bold)
+        Text(
+            text = "Escrever e-mail",
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold
+        )
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
