@@ -27,6 +27,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.navigation.compose.rememberNavController
 import com.example.challengelocaweb.presentation.common.CustomNavigationBar
 import com.example.challengelocaweb.presentation.nvgraph.NavGraph

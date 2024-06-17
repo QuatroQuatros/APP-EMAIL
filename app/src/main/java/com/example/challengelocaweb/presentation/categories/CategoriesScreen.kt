@@ -1,5 +1,6 @@
 package com.example.challengelocaweb.presentation.categories
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -17,6 +18,7 @@ import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -37,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import com.example.challengelocaweb.R
+import com.example.challengelocaweb.presentation.event.components.FloatingActionButton
 import com.example.challengelocaweb.presentation.nvgraph.Route
 
 data class Category(
@@ -47,6 +50,7 @@ data class Category(
     val onClick: () -> Unit
 )
 
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun CategoriesScreen(
     navController: NavHostController
@@ -60,54 +64,56 @@ fun CategoriesScreen(
         ),
         Category("Favoritos", painterResource(id = R.drawable.ic_star_favorite), colorResource(id = R.color.favorite), onClick = {}),
         Category("Rascunhos", painterResource(id = R.drawable.ic_draft), color= colorResource(id = R.color.reminder), onClick = {}),
+        Category("Spam", painterResource(id = R.drawable.ic_spam), color= colorResource(id = R.color.delete_color), onClick = {}),
         Category("FIAP", painterResource(id = R.drawable.ic_bookmark), color= Color.Red, onClick = {}),
         Category("Alura", painterResource(id = R.drawable.ic_bookmark), color= Color(0xFF007BFF), onClick = {}),
         Category("Vagas de emprego", painterResource(id = R.drawable.ic_bookmark), color= colorResource(
             id = R.color.meeting), listOf("InfoJobs", "Linkedin"), onClick = {}),
-        Category("Interesses", painterResource(id = R.drawable.ic_bookmark), color= Color.Gray, onClick = {})
+        Category("Interesses", painterResource(id = R.drawable.ic_bookmark), color= Color.Gray, onClick = {}),
+        Category("Lixeira", painterResource(id = R.drawable.ic_delete_outline), color= colorResource(
+            id = R.color.danger), onClick = {})
     )
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(50.dp)
-    ) {
-        Text(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp),
-            text = "Categorias",
-            fontSize = 24.sp,
-            color = colorResource(id = R.color.primary),
-            fontWeight = FontWeight.Bold,
-            textAlign = TextAlign.Center
-
-        )
-
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            items(categories) { category ->
-                CategoryItem(
-                    category = category,
-                    onClick = {
-                        if (category.name == "Favoritos") {
-                            navController.navigate(Route.FavoriteEmailsScreen.route)
-                        }
-                    }
-                )
-            }
+    Scaffold(
+        floatingActionButton = {
+            FloatingActionButton(onClick = {  })
         }
-
-        Button(
-            onClick = { /* Navegar para a tela de adicionar categoria */ },
+    ) {
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 80.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007BFF))
+                .fillMaxSize()
+                .padding(50.dp)
         ) {
-            Text(text = "Adicionar Categoria")
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp),
+                text = "Categorias",
+                fontSize = 24.sp,
+                color = colorResource(id = R.color.primary),
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
+
+            )
+
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(categories) { category ->
+                    CategoryItem(
+                        category = category,
+                        onClick = {
+                            if (category.name == "Favoritos") {
+                                navController.navigate(Route.FavoriteEmailsScreen.route)
+                            }
+                        }
+                    )
+                }
+            }
+
         }
     }
 }
+
+
 
 @Composable
 fun CategoryItem(category: Category, onClick: () -> Unit) {

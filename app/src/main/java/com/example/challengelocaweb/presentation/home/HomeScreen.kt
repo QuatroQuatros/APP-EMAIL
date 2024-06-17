@@ -16,12 +16,14 @@ import androidx.paging.compose.LazyPagingItems
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.presentation.common.EmailsList
 import com.example.challengelocaweb.presentation.common.TopBarWithSearchBar
+import com.example.challengelocaweb.presentation.event.components.FloatingActionButton
 import com.example.challengelocaweb.presentation.nvgraph.Route
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
@@ -52,6 +54,7 @@ fun HomeScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
+                    .padding(bottom = 90.dp)
             ) {
                 EmailsList(
                     modifier = Modifier.weight(1f),
@@ -65,6 +68,9 @@ fun HomeScreen(
                     }
                 )
             }
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = {  })
         }
     )
 }

@@ -1,4 +1,6 @@
-package com.example.challengelocaweb.presentation.readEmail
+package com.example.challengelocaweb.presentation.common
+
+
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -23,17 +25,14 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberAsyncImagePainter
 import com.example.challengelocaweb.R
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.util.convertTimestampToDate
-
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun ReadEmailScreen(
@@ -120,9 +119,9 @@ fun ReadEmailScreen(
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
         ) {
-            val painter = if (!email.urlToImage.isEmpty()){
+            val painter = if (email.urlToImage.isNotEmpty()) {
                 rememberAsyncImagePainter(model = email.urlToImage)
-            }else{
+            } else {
                 painterResource(id = R.drawable.logolocaweb)
             }
             Image(
@@ -248,7 +247,7 @@ fun ReadEmailScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .padding(10.dp)
-        ){
+        ) {
             Text(
                 text = email.content,
                 fontSize = 18.sp,
@@ -256,26 +255,8 @@ fun ReadEmailScreen(
                 textAlign = TextAlign.Justify
             )
         }
-
-
     }
+
 }
 
-//@RequiresApi(Build.VERSION_CODES.O)
-//@Preview(showBackground = true)
-//@Composable
-//fun ReadEmailScreenPreview() {
-//    ReadEmailScreen(
-//        email = Email(
-//            id = 685,
-//            author = "LocaWeb",
-//            content = "is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum",
-//            description = "Vaga para Desenvolvimento de Software...",
-//            publishedAt = "2024-05-01T00:00:00Z",
-//            title = "Vaga para Desenvolvimento de Software",
-//            url = "",
-//            urlToImage = "https://ui-avatars.com/api/?background=random&name=LocaWeb"
-//        ),
-//        navController = rememberNavController() // Mocked NavController for preview
-//    )
-//}
+

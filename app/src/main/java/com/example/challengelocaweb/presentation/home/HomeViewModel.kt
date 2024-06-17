@@ -52,13 +52,41 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
     fun updateEmail(email: Email) {
         viewModelScope.launch {
             emailUseCases.updateEmail(email)
             refreshEmails()
         }
     }
+
+
+    fun markAsRead(id: Int) {
+        viewModelScope.launch {
+            emailUseCases.markAsRead(id)
+            refreshEmails()
+        }
+    }
+
+    fun markAsUnread(id: Int) {
+        viewModelScope.launch {
+            emailUseCases.markAsUnread(id)
+            refreshEmails()
+        }
+    }
+    fun markAsSpam(id: Int) {
+        viewModelScope.launch {
+            emailUseCases.markAsSpam(id)
+            refreshEmails()
+        }
+    }
+
+    fun markAsSecure(id: Int) {
+        viewModelScope.launch {
+            emailUseCases.markAsSecure(id)
+            refreshEmails()
+        }
+    }
+
 
     private fun refreshEmails() {
         viewModelScope.launch {

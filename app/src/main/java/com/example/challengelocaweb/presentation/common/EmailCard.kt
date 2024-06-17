@@ -67,7 +67,10 @@ fun EmailCard(
             modifier = Modifier
                 .height(100.dp)
                 .fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0x9AE1EBFC))
+
+            colors = CardDefaults.cardColors(
+                containerColor = if(email.isRead)  Color(0x9AE1EBFC) else Color(0xABBCD4FF)
+            )
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

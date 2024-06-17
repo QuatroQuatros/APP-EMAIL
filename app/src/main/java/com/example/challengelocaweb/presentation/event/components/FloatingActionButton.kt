@@ -2,6 +2,7 @@ package com.example.challengelocaweb.presentation.event.components
 
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -16,12 +17,15 @@ fun FloatingActionButton(
 ) {
     androidx.compose.material3.FloatingActionButton(
         modifier = Modifier
-            .padding(40.dp, bottom = 80.dp),
+            .padding(40.dp, bottom = 80.dp)
+            .size(50.dp),
+
         onClick = onClick,
+        shape = RoundedCornerShape(40.dp),
         containerColor = colorResource(id = R.color.primary)
     ) {
         Icon(
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier.size(50.dp),
             painter = painterResource(id = R.drawable.ic_add),
             contentDescription = "Add",
             tint = colorResource(id = R.color.white)
