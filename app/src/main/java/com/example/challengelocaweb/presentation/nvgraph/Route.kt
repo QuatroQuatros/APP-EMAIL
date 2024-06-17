@@ -16,7 +16,9 @@ sealed class Route(
         fun createRoute(emailJson: String) = "readEmail/${Uri.encode(emailJson)}"
     }
     object AppStartNavigationScreen : Route("appStartNavigationScreen")
-    object NewsNavigation : Route("newsNavigation")
+    object WriteEmailScreen : Route("writeEmailScreen")
+
+    //object NewsNavigation : Route("newsNavigation")
 
 
 }

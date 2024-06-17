@@ -1,4 +1,4 @@
-package com.example.challengelocaweb.presentation.common
+package com.example.challengelocaweb.presentation.email
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build

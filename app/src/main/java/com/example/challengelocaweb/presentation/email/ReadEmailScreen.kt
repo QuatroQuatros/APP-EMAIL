@@ -1,4 +1,4 @@
-package com.example.challengelocaweb.presentation.common
+package com.example.challengelocaweb.presentation.email
 
 
 
@@ -81,6 +81,31 @@ fun ReadEmailScreen(
                         tint = colorResource(id = R.color.primary)
                     )
                 }
+
+                IconButton(
+                    onClick = {
+                        if(!email.isSpam) viewModel.markAsSpam(email.id)
+                    }
+                ) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_spam),//if(email.isRead) painterResource(id = R.drawable.ic_mark_unread) else painterResource(id = R.drawable.ic_mark_read),
+                        contentDescription = "SPAM",
+                        tint = colorResource(id = R.color.primary)
+                    )
+                }
+
+                IconButton(
+                    onClick = {
+                        if(email.isRead) viewModel.markAsUnread(email.id) else viewModel.markAsRead(email.id)
+                    }
+                ) {
+                    Icon(
+                        painter = if(email.isRead) painterResource(id = R.drawable.ic_mark_unread) else painterResource(id = R.drawable.ic_mark_read),
+                        contentDescription = "",
+                        tint = colorResource(id = R.color.primary)
+                    )
+                }
+
                 IconButton(
                     onClick = {
                         isFavorite = !isFavorite

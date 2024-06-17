@@ -26,8 +26,7 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.challengelocaweb.domain.model.Email
-import com.example.challengelocaweb.presentation.common.EmailsList
-import com.example.challengelocaweb.presentation.common.TopBarWithSearchBar
+import com.example.challengelocaweb.presentation.email.EmailsList
 import com.example.challengelocaweb.presentation.event.components.FloatingActionButton
 import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.presentation.nvgraph.Route

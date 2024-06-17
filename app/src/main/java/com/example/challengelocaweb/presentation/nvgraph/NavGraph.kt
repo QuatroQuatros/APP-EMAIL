@@ -22,7 +22,8 @@ import com.example.challengelocaweb.presentation.categories.CategoriesScreen
 import com.example.challengelocaweb.presentation.categories.FavoriteEmailsScreen
 import com.example.challengelocaweb.presentation.home.HomeScreen
 import com.example.challengelocaweb.presentation.home.HomeViewModel
-import com.example.challengelocaweb.presentation.common.ReadEmailScreen
+import com.example.challengelocaweb.presentation.email.ReadEmailScreen
+import com.example.challengelocaweb.presentation.email.WriteEmailScreen
 import kotlinx.serialization.json.Json
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -69,13 +70,16 @@ fun NavGraph(
             emailJson?.let {
                 val email = Json.decodeFromString<Email>(Uri.decode(it))
                 val homeViewModel: HomeViewModel = hiltViewModel()
-                homeViewModel.markAsRead(email.id)
                 ReadEmailScreen(
                     email = email,
                     navController = navController,
                     viewModel = homeViewModel,
                 )
             }
+        }
+
+        composable(route = Route.WriteEmailScreen.route) {
+            WriteEmailScreen(navController = navController)
         }
     }
 }
