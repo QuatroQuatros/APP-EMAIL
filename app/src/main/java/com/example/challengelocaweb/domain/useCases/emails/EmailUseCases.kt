@@ -4,5 +4,14 @@ data class EmailUseCases(
     val getEmails: GetEmails,
     val deleteEmail: DeleteEmail,
     val updateEmail: UpdateEmail,
-    val favoritesEmails: GetFavoritesEmails
+    val spamEmails: GetSpamEmails,
+    val favoritesEmails: GetFavoritesEmails,
+    val markAsRead: MarkAsRead,
+    val markAsUnread: MarkAsUnread,
+    val markAsSpam: MarkAsSpam,
+    val markAsNotSpam: MarkAsNotSpam,
+    val markAsSecure: MarkAsSecure,
+    val getUnreadEmailCount: GetUnreadEmailCount
+
+
 )

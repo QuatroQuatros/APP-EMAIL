@@ -20,6 +20,13 @@ import com.example.challengelocaweb.domain.useCases.emails.DeleteEmail
 import com.example.challengelocaweb.domain.useCases.emails.EmailUseCases
 import com.example.challengelocaweb.domain.useCases.emails.GetEmails
 import com.example.challengelocaweb.domain.useCases.emails.GetFavoritesEmails
+import com.example.challengelocaweb.domain.useCases.emails.GetSpamEmails
+import com.example.challengelocaweb.domain.useCases.emails.GetUnreadEmailCount
+import com.example.challengelocaweb.domain.useCases.emails.MarkAsNotSpam
+import com.example.challengelocaweb.domain.useCases.emails.MarkAsRead
+import com.example.challengelocaweb.domain.useCases.emails.MarkAsSecure
+import com.example.challengelocaweb.domain.useCases.emails.MarkAsSpam
+import com.example.challengelocaweb.domain.useCases.emails.MarkAsUnread
 import com.example.challengelocaweb.domain.useCases.emails.UpdateEmail
 import com.example.challengelocaweb.util.Constansts.BASE_URL
 import com.example.challengelocaweb.util.NetworkUtils
@@ -104,7 +111,14 @@ object AppModule {
             getEmails = GetEmails(emailRepository),
             deleteEmail = DeleteEmail(emailRepository),
             updateEmail = UpdateEmail(emailRepository),
-            favoritesEmails = GetFavoritesEmails(emailRepository)
+            favoritesEmails = GetFavoritesEmails(emailRepository),
+            spamEmails = GetSpamEmails(emailRepository),
+            markAsRead = MarkAsRead(emailRepository),
+            markAsUnread = MarkAsUnread(emailRepository),
+            markAsSpam = MarkAsSpam(emailRepository),
+            markAsNotSpam = MarkAsNotSpam(emailRepository),
+            markAsSecure = MarkAsSecure(emailRepository),
+            getUnreadEmailCount = GetUnreadEmailCount(emailRepository)
         )
     }
 }

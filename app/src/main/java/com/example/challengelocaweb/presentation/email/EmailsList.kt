@@ -1,8 +1,7 @@
 
-package com.example.challengelocaweb.presentation.common
+package com.example.challengelocaweb.presentation.email
 
 import android.os.Build
-import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,6 +28,8 @@ import com.example.challengelocaweb.R
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.presentation.Dimens.ExtraSmallPadding2
 import com.example.challengelocaweb.presentation.Dimens.MediumPadding1
+import com.example.challengelocaweb.presentation.common.EmailCardShimmer
+import com.example.challengelocaweb.presentation.common.EmptyScreen
 import com.example.challengelocaweb.presentation.home.HomeViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -76,16 +77,11 @@ fun EmailsList(
                 items(filteredEmails) { email ->
                     EmailCard(
                         email = email,
-                        //isFavorite = favoriteEmails.contains(email),
                         onClick = { onClick(email) },
                         viewModel = viewModel
                     )
                 }
             }
-
-
-
-
         }
     } else {
         EmptyScreen()

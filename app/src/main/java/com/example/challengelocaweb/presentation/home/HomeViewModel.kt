@@ -43,7 +43,11 @@ class HomeViewModel @Inject constructor(
         refreshEmails()
     }
 
+    val unreadEmailCount: Flow<Int> = emailUseCases.getUnreadEmailCount()
+
     val favoriteEmails: Flow<List<Email>> = emailUseCases.favoritesEmails()
+
+    val spamEmails: Flow<List<Email>> = emailUseCases.spamEmails()
 
     fun deleteEmail(email: Email) {
         viewModelScope.launch {
@@ -52,13 +56,48 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-
     fun updateEmail(email: Email) {
         viewModelScope.launch {
             emailUseCases.updateEmail(email)
             refreshEmails()
         }
     }
+
+
+    fun markAsRead(id: Int) {
+        viewModelScope.launch {
+            emailUseCases.markAsRead(id)
+            refreshEmails()
+        }
+    }
+
+    fun markAsUnread(id: Int) {
+        viewModelScope.launch {
+            emailUseCases.markAsUnread(id)
+            refreshEmails()
+        }
+    }
+    fun markAsSpam(id: Int) {
+        viewModelScope.launch {
+            emailUseCases.markAsSpam(id)
+            refreshEmails()
+        }
+    }
+
+    fun markAsNotSpam(id: Int) {
+        viewModelScope.launch {
+            emailUseCases.markAsNotSpam(id)
+            refreshEmails()
+        }
+    }
+
+    fun markAsSecure(id: Int) {
+        viewModelScope.launch {
+            emailUseCases.markAsSecure(id)
+            refreshEmails()
+        }
+    }
+
 
     private fun refreshEmails() {
         viewModelScope.launch {

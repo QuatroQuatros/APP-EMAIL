@@ -1,4 +1,4 @@
-package com.example.challengelocaweb.presentation.common
+package com.example.challengelocaweb.presentation.email
 
 import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
@@ -54,6 +54,7 @@ fun EmailCard(
     viewModel: HomeViewModel
 ) {
     var isFavorite by remember { mutableStateOf(email.isFavorite) }
+    var isRead by remember { mutableStateOf(email.isRead) }
 
     Column(
         modifier = Modifier
@@ -67,7 +68,10 @@ fun EmailCard(
             modifier = Modifier
                 .height(100.dp)
                 .fillMaxWidth(),
-            colors = CardDefaults.cardColors(containerColor = Color(0x9AE1EBFC))
+
+            colors = CardDefaults.cardColors(
+                containerColor = if(isRead) colorResource(id = R.color.email_read) else colorResource(id = R.color.email_not_read)
+            )
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,

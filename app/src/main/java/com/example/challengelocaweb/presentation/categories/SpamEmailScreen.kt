@@ -36,16 +36,16 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun FavoriteEmailsScreen(
+fun SpamEmailsScreen(
     navController: NavHostController,
     viewModel: HomeViewModel
 ) {
-    val favoriteEmails by viewModel.favoriteEmails.collectAsState(initial = emptyList())
+    val spamEmails by viewModel.spamEmails.collectAsState(initial = emptyList())
     val pager = Pager(PagingConfig(pageSize = 20)) {
         object : PagingSource<Int, Email>() {
             override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Email> {
                 return LoadResult.Page(
-                    data = favoriteEmails,
+                    data = spamEmails,
                     prevKey = null,
                     nextKey = null
                 )
@@ -63,7 +63,7 @@ fun FavoriteEmailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Favoritos") },
+                title = { Text("Marcados como SPAM") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)

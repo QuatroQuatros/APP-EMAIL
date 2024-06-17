@@ -23,7 +23,8 @@ data class Email(
     val attachments: List<String> = listOf(),
     var isFavorite: Boolean = false,
     var isSpam: Boolean = false,
-    var isSecure: Boolean = false
+    var isSecure: Boolean = false,
+    var isRead: Boolean = false
 
 
 ){

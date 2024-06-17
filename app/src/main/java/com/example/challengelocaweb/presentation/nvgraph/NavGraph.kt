@@ -15,16 +15,16 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import androidx.navigation.navigation
-import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.presentation.event.CalendarScreen
 import com.example.challengelocaweb.presentation.event.EventViewModel
 import com.example.challengelocaweb.presentation.categories.CategoriesScreen
 import com.example.challengelocaweb.presentation.categories.FavoriteEmailsScreen
+import com.example.challengelocaweb.presentation.categories.SpamEmailsScreen
 import com.example.challengelocaweb.presentation.home.HomeScreen
 import com.example.challengelocaweb.presentation.home.HomeViewModel
-import com.example.challengelocaweb.presentation.readEmail.ReadEmailScreen
+import com.example.challengelocaweb.presentation.email.ReadEmailScreen
+import com.example.challengelocaweb.presentation.email.WriteEmailScreen
 import kotlinx.serialization.json.Json
 
 @RequiresApi(Build.VERSION_CODES.O)
@@ -49,6 +49,11 @@ fun NavGraph(
         composable(route = Route.FavoriteEmailsScreen.route) {
             val homeViewModel: HomeViewModel = hiltViewModel()
             FavoriteEmailsScreen(navController = navController, viewModel = homeViewModel)
+        }
+
+        composable(route = Route.SpamEmailsScreen.route) {
+            val homeViewModel: HomeViewModel = hiltViewModel()
+            SpamEmailsScreen(navController = navController, viewModel = homeViewModel)
         }
 
         composable(route = Route.EventsScreen.route) {
@@ -77,6 +82,10 @@ fun NavGraph(
                     viewModel = homeViewModel,
                 )
             }
+        }
+
+        composable(route = Route.WriteEmailScreen.route) {
+            WriteEmailScreen(navController = navController)
         }
     }
 }

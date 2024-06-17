@@ -40,5 +40,35 @@ class EmailRepositoryImpl @Inject constructor(
         return emailDao.getFavoritesEmails()
     }
 
+    override fun getSpamEmails(): Flow<List<Email>>
+    {
+        return emailDao.getSpamEmails()
+    }
+
+    override suspend fun markAsRead(id: Int) {
+        emailDao.markAsRead(id)
+    }
+
+    override suspend fun markAsUnread(id: Int) {
+        emailDao.markAsUnread(id)
+    }
+
+    override suspend fun markAsSpam(id: Int) {
+        emailDao.markAsSpam(id)
+    }
+
+    override suspend fun markAsNotSpam(id: Int) {
+        emailDao.markAsNotSpam(id)
+    }
+
+    override suspend fun markAsSecure(id: Int) {
+        emailDao.markAsSecure(id)
+    }
+
+
+    override fun getUnreadEmailCount(): Flow<Int> {
+        return emailDao.getUnreadEmailCount()
+    }
+
 
 }
