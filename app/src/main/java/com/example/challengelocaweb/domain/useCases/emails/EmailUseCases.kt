@@ -8,7 +8,8 @@ data class EmailUseCases(
     val markAsRead: MarkAsRead,
     val markAsUnread: MarkAsUnread,
     val markAsSpam: MarkAsSpam,
-    val markAsSecure: MarkAsSecure
+    val markAsSecure: MarkAsSecure,
+    val getUnreadEmailCount: GetUnreadEmailCount
 
 
 )

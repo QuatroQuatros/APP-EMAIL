@@ -17,5 +17,6 @@ interface EmailRepository {
     suspend fun markAsUnread(id: Int)
     suspend fun markAsSpam(id: Int)
     suspend fun markAsSecure(id: Int)
+    fun getUnreadEmailCount(): Flow<Int>
 
 }

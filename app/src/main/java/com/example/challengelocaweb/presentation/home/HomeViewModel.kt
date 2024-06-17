@@ -43,6 +43,8 @@ class HomeViewModel @Inject constructor(
         refreshEmails()
     }
 
+    val unreadEmailCount: Flow<Int> = emailUseCases.getUnreadEmailCount()
+
     val favoriteEmails: Flow<List<Email>> = emailUseCases.favoritesEmails()
 
     fun deleteEmail(email: Email) {

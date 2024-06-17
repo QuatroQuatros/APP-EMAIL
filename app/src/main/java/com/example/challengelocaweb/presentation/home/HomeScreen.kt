@@ -37,7 +37,6 @@ fun HomeScreen(
 ) {
     val (searchTerm, setSearchTerm) = remember { mutableStateOf("") }
 
-    //val emails = viewModel.emails.collectAsState().value
     val emails = viewModel.emailPagingDataFlow.collectAsLazyPagingItems()
 
 

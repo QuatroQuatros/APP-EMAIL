@@ -33,6 +33,8 @@ interface EmailDao {
     @Update
     suspend fun updateEmail(email: Email)
 
+    @Query("SELECT COUNT(*) FROM emails WHERE isRead = 0")
+    fun getUnreadEmailCount(): Flow<Int>
 
     @Transaction
     @Query("UPDATE emails SET isRead = 1 WHERE id = :id")

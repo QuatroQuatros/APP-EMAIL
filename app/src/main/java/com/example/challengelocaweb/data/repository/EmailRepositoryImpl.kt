@@ -57,4 +57,9 @@ class EmailRepositoryImpl @Inject constructor(
     }
 
 
+    override fun getUnreadEmailCount(): Flow<Int> {
+        return emailDao.getUnreadEmailCount()
+    }
+
+
 }

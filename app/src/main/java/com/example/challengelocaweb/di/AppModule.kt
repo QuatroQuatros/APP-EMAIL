@@ -20,6 +20,7 @@ import com.example.challengelocaweb.domain.useCases.emails.DeleteEmail
 import com.example.challengelocaweb.domain.useCases.emails.EmailUseCases
 import com.example.challengelocaweb.domain.useCases.emails.GetEmails
 import com.example.challengelocaweb.domain.useCases.emails.GetFavoritesEmails
+import com.example.challengelocaweb.domain.useCases.emails.GetUnreadEmailCount
 import com.example.challengelocaweb.domain.useCases.emails.MarkAsRead
 import com.example.challengelocaweb.domain.useCases.emails.MarkAsSecure
 import com.example.challengelocaweb.domain.useCases.emails.MarkAsSpam
@@ -112,7 +113,8 @@ object AppModule {
             markAsRead = MarkAsRead(emailRepository),
             markAsUnread = MarkAsUnread(emailRepository),
             markAsSpam = MarkAsSpam(emailRepository),
-            markAsSecure = MarkAsSecure(emailRepository)
+            markAsSecure = MarkAsSecure(emailRepository),
+            getUnreadEmailCount = GetUnreadEmailCount(emailRepository)
         )
     }
 }

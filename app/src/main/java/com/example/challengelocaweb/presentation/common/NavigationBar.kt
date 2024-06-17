@@ -15,6 +15,7 @@ import com.example.challengelocaweb.presentation.nvgraph.Route
 @Composable
 fun CustomNavigationBar(
     navController: NavHostController,
+    unreadCount: Int,
     selectedItems: String,
     onItemSelected: (String) -> Unit
 ) {
@@ -67,12 +68,29 @@ fun CustomNavigationBar(
             ),
             label = { Text("Home") },
             icon = {
-                Icon(
-                    modifier = Modifier.size(30.dp),
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_email),
-                    tint = colorResource(id = R.color.white),
-                    contentDescription = "Home"
-                )
+
+                BadgedBox(
+                    badge = {
+                        Badge(content = {
+                            Text(
+                                text = unreadCount.toString(),
+                                //color = colorResource(id = R.color.white)
+                            )
+                        })
+                    }){
+                    Icon(
+                        modifier = Modifier.size(30.dp),
+                        imageVector = ImageVector.vectorResource(id = R.drawable.ic_email),
+                        tint = colorResource(id = R.color.white),
+                        contentDescription = "Home"
+                    )
+                }
+//                Icon(
+//                    modifier = Modifier.size(30.dp),
+//                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_email),
+//                    tint = colorResource(id = R.color.white),
+//                    contentDescription = "Home"
+//                )
             }
         )
 
