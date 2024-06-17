@@ -1,14 +1,14 @@
 package com.example.challengelocaweb.domain.repository
 
-import androidx.paging.PagingData
-import androidx.paging.PagingSource
 import com.example.challengelocaweb.domain.model.Email
+import com.example.challengelocaweb.domain.model.EmailWithAttachments
 import kotlinx.coroutines.flow.Flow
 
 
 interface EmailRepository {
 
     suspend fun getEmails(): List<Email>
+    fun getEmailsWithAttachments(id: Int): Flow<EmailWithAttachments>
     suspend fun insert(email: Email)
     suspend fun deleteEmail(email: Email)
     suspend fun updateEmail(email: Email)

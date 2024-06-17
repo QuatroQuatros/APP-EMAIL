@@ -1,7 +1,7 @@
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.challengelocaweb.domain.model.Email
-import com.example.challengelocaweb.domain.model.Source
+import com.example.challengelocaweb.domain.model.EmailWithAttachments
 
 class MockEmailPagingSource : PagingSource<Int, Email>() {
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Email> {
@@ -38,8 +38,8 @@ class MockEmailPagingSource : PagingSource<Int, Email>() {
                 publishedAt = "2024-06-13T00:00:00Z",
                 title = generateRandomTitle(),
                 url = "https://example.com/email$id",
-                urlToImage = generateRandomImageUrl(id, name),
-                attachments = generateRandomAttachments()
+                urlToImage = generateRandomImageUrl(id, name)
+                //attachments = generateRandomAttachments()
             )
         }
     }

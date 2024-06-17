@@ -2,6 +2,7 @@ package com.example.challengelocaweb.domain.useCases.emails
 
 data class EmailUseCases(
     val getEmails: GetEmails,
+    val getEmailsWithAttachments: GetEmailsWithAttachments,
     val deleteEmail: DeleteEmail,
     val updateEmail: UpdateEmail,
     val spamEmails: GetSpamEmails,

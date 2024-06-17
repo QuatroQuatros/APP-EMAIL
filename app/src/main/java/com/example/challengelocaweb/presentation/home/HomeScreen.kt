@@ -29,7 +29,6 @@ fun HomeScreen(
     viewModel: HomeViewModel
 ) {
     val (searchTerm, setSearchTerm) = remember { mutableStateOf("") }
-
     val emails = viewModel.emailPagingDataFlow.collectAsLazyPagingItems()
 
 
@@ -53,9 +52,8 @@ fun HomeScreen(
                     emails = emails,
                     searchTerm = searchTerm,
                     viewModel = viewModel,
-                    onClick = {email->
-                        val emailJson = Json.encodeToString(email)
-                        val route = Route.EmailDetailScreen.createRoute(emailJson)
+                    onClick = { email ->
+                        val route = Route.EmailDetailScreen.createRoute(email.id)
                         viewModel.markAsRead(email.id)
                         navController.navigate(route)
                     }

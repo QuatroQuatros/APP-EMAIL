@@ -9,6 +9,7 @@ import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
 import com.example.challengelocaweb.domain.model.Email
+import com.example.challengelocaweb.domain.model.EmailWithAttachments
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -17,12 +18,24 @@ interface EmailDao {
     @Query("SELECT * FROM emails ORDER BY publishedAt DESC")
     suspend fun getEmails(): List<Email>
 
+    @Transaction
+    @Query("SELECT * FROM emails WHERE id = :emailId")
+    fun getEmailWithAttachments(emailId: Int): Flow<EmailWithAttachments>
+
     @Query("SELECT * FROM emails WHERE isFavorite = 1 ORDER BY publishedAt DESC")
     fun getFavoritesEmails(): Flow<List<Email>>
 
     @Query("SELECT * FROM emails WHERE isSpam = 1 ORDER BY publishedAt DESC")
     fun getSpamEmails(): Flow<List<Email>>
 
+    @Query("SELECT COUNT(*) FROM emails WHERE isRead = 0")
+    fun getUnreadEmailCount(): Flow<Int>
+
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insert(email: Email)
+
+    @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(emails: List<Email>)
 
@@ -35,9 +48,6 @@ interface EmailDao {
 
     @Update
     suspend fun updateEmail(email: Email)
-
-    @Query("SELECT COUNT(*) FROM emails WHERE isRead = 0")
-    fun getUnreadEmailCount(): Flow<Int>
 
     @Transaction
     @Query("UPDATE emails SET isRead = 1 WHERE id = :id")

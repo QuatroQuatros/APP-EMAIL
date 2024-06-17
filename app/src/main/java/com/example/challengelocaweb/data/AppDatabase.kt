@@ -5,17 +5,20 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
+import com.example.challengelocaweb.domain.dao.AttachmentDao
 import com.example.challengelocaweb.domain.dao.EmailDao
 import com.example.challengelocaweb.domain.dao.EventDao
+import com.example.challengelocaweb.domain.model.Attachment
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.domain.model.Event
 import com.example.challengelocaweb.domain.model.Participant
 import com.example.challengelocaweb.util.Converters
 
-@Database(entities = [Email::class, Event::class, Participant::class], version = 1, exportSchema = false)
+@Database(entities = [Attachment::class, Email::class, Event::class, Participant::class], version = 1, exportSchema = false)
 @TypeConverters(Converters::class)
 abstract class AppDatabase: RoomDatabase(){
 
+    abstract fun attachmentDao(): AttachmentDao
     abstract fun emailDao(): EmailDao
     abstract fun eventDao(): EventDao
 

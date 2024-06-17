@@ -1,6 +1,5 @@
 package com.example.challengelocaweb.presentation.home
 
-import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
@@ -9,8 +8,8 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.challengelocaweb.data.remote.EmailPagingSource
 import com.example.challengelocaweb.domain.model.Email
+import com.example.challengelocaweb.domain.model.EmailWithAttachments
 import com.example.challengelocaweb.domain.useCases.emails.EmailUseCases
-import com.example.challengelocaweb.util.NetworkUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.Flow
@@ -39,6 +38,12 @@ class HomeViewModel @Inject constructor(
     private val _emails = MutableStateFlow<List<Email>>(emptyList())
     val emails: StateFlow<List<Email>> = _emails.asStateFlow()
 
+
+    private val _emailsWithAttachments = MutableStateFlow<List<EmailWithAttachments>>(emptyList())
+    val emailsWithAttachments: StateFlow<List<EmailWithAttachments>> = _emailsWithAttachments.asStateFlow()
+
+
+
     init {
         refreshEmails()
     }
@@ -62,7 +67,6 @@ class HomeViewModel @Inject constructor(
             refreshEmails()
         }
     }
-
 
     fun markAsRead(id: Int) {
         viewModelScope.launch {
@@ -106,6 +110,11 @@ class HomeViewModel @Inject constructor(
             _refreshTrigger.value = Unit
         }
     }
+    fun getEmailWithAttachments(emailId: Int): Flow<EmailWithAttachments> {
+        return emailUseCases.getEmailsWithAttachments(emailId)
+    }
+
+
 
 
 }

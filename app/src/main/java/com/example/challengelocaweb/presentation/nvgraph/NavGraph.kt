@@ -15,6 +15,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.presentation.event.CalendarScreen
 import com.example.challengelocaweb.presentation.event.EventViewModel
@@ -68,22 +69,15 @@ fun NavGraph(
 
         composable(
             route = Route.EmailDetailScreen.route,
-            arguments = listOf(navArgument("email") { type = NavType.StringType })
+            arguments = listOf(navArgument("emailId") { type = NavType.IntType }),
+            deepLinks = listOf(navDeepLink { uriPattern = "android-app://androidx.navigation/readEmail/{emailId}" })
         ) { backStackEntry ->
-            val emailJson = backStackEntry.arguments?.getString("email")
-            val email = Email.fromJson(emailJson)
-            var favoriteEmails by remember { mutableStateOf(listOf<Email>()) }
-            emailJson?.let {
-                val email = Json.decodeFromString<Email>(Uri.decode(it))
-                val homeViewModel: HomeViewModel = hiltViewModel()
-                ReadEmailScreen(
-                    email = email,
-                    navController = navController,
-                    viewModel = homeViewModel,
-                )
+            val emailId = backStackEntry.arguments?.getInt("emailId")
+            val homeViewModel: HomeViewModel = hiltViewModel()
+            emailId?.let {
+                ReadEmailScreen(emailId = it, navController = navController, viewModel = homeViewModel)
             }
         }
-
         composable(route = Route.WriteEmailScreen.route) {
             WriteEmailScreen(navController = navController)
         }
