@@ -27,9 +27,9 @@ fun CustomNavigationBar(
     
     ) {
         NavigationBarItem(
-            selected = selectedItems == "Categories",
+            selected = selectedItems == "Categorias",
             onClick = {
-                onItemSelected("Categories")
+                onItemSelected("Categorias")
                 navController.navigate(Route.CategoriesScreen.route)
             },
             colors = NavigationBarItemDefaults.colors(
@@ -41,13 +41,13 @@ fun CustomNavigationBar(
                 disabledIconColor = colorResource(id = R.color.body),
                 disabledTextColor = colorResource(id = R.color.body)
             ),
-            label = { Text("Categories") },
+            label = { Text("Categorias") },
             icon = {
                 Icon(
                     modifier = Modifier.size(30.dp),
-                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_flag),
+                    imageVector = ImageVector.vectorResource(id = R.drawable.ic_bookmark),
                     tint = colorResource(id = R.color.white),
-                    contentDescription = "Home"
+                    contentDescription = "Categorias"
                 )
             }
         )
@@ -98,9 +98,9 @@ fun CustomNavigationBar(
         )
 
         NavigationBarItem(
-            selected = selectedItems == "Calendar",
+            selected = selectedItems == "Calendario",
             onClick = {
-                onItemSelected("Calendar")
+                onItemSelected("Calendario")
                 navController.navigate(Route.EventsScreen.route)
             },
             colors = NavigationBarItemDefaults.colors(
@@ -112,13 +112,13 @@ fun CustomNavigationBar(
                 disabledIconColor = colorResource(id = R.color.body),
                 disabledTextColor = colorResource(id = R.color.body)
             ),
-            label = { Text("Calendar") },
+            label = { Text("Calendario") },
             icon = {
                 Icon(
                     modifier = Modifier.size(30.dp),
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_calendar),
                     tint = colorResource(id = R.color.white),
-                    contentDescription = "Home2"
+                    contentDescription = "Calendario"
                 )
             })
 

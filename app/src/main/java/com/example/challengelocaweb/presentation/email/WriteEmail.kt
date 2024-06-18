@@ -67,7 +67,6 @@ fun WriteEmailScreen(
     ) { uri: Uri? ->
         uri?.let {
             attachments.add(it)
-            Toast.makeText(context, "Documento selecionado: $uri", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -77,7 +76,6 @@ fun WriteEmailScreen(
     ) { uri: Uri? ->
         uri?.let {
             attachments.add(it)
-            Toast.makeText(context, "Imagem selecionada: $uri", Toast.LENGTH_SHORT).show()
         }
     }
 

@@ -13,6 +13,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "ChallengeLocaWeb"
+rootProject.name = "Pombita Mail"
 include(":app")
  

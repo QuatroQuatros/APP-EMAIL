@@ -75,9 +75,9 @@ fun CategoriesScreen(
     )
 
     Scaffold(
-        floatingActionButton = {
-            FloatingActionButton(onClick = {  })
-        }
+//        floatingActionButton = {
+//            FloatingActionButton(onClick = {  })
+//        }
     ) {
         Column(
             modifier = Modifier
