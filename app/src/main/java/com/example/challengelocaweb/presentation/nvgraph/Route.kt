@@ -15,6 +15,8 @@ sealed class Route(
 
     object SpamEmailsScreen : Route("SpamEmailsScreen")
 
+    object SentEmailsScreen: Route("SentEmailsScreen")
+
     object EmailDetailScreen : Route("readEmail/{emailId}"){
         fun createRoute(emailId: Int) = "readEmail/$emailId"
     }

@@ -101,11 +101,10 @@ fun CategoriesScreen(
                     CategoryItem(
                         category = category,
                         onClick = {
-                            if (category.name == "Favoritos") {
-                                navController.navigate(Route.FavoriteEmailsScreen.route)
-                            }
-                            if (category.name == "Spam") {
-                                navController.navigate(Route.SpamEmailsScreen.route)
+                            when (category.name) {
+                                "Enviados" -> navController.navigate(Route.SentEmailsScreen.route)
+                                "Favoritos" -> navController.navigate(Route.FavoriteEmailsScreen.route)
+                                "Spam" -> navController.navigate(Route.SpamEmailsScreen.route)
                             }
                         }
                     )

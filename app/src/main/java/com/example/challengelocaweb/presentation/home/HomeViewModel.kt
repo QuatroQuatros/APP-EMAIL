@@ -58,6 +58,8 @@ class HomeViewModel @Inject constructor(
 
     val spamEmails: Flow<List<Email>> = emailUseCases.spamEmails()
 
+    val getSendEmails: Flow<List<Email>> = emailUseCases.getSendEmails()
+
     val draftEmails: Flow<List<Email>> = emailUseCases.draftEmails()
 
 
