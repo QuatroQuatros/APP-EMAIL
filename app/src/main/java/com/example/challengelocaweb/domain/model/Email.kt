@@ -22,6 +22,7 @@ data class Email(
     val title: String,
     val url: String,
     val urlToImage: String,
+    var isDraft: Boolean = false,
     var isFavorite: Boolean = false,
     var isSpam: Boolean = false,
     var isSecure: Boolean = false,

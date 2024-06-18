@@ -308,7 +308,7 @@ fun ReadEmailScreen(
                                     fontWeight = FontWeight.Bold
                                 )
                                 Text(
-                                    text = email.sender,
+                                    text = email.recipient,
                                     fontSize = 14.sp,
                                     color = colorResource(id = R.color.small_text)
                                 )

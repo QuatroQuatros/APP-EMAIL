@@ -79,7 +79,8 @@ fun NavGraph(
             }
         }
         composable(route = Route.WriteEmailScreen.route) {
-            WriteEmailScreen(navController = navController)
+            val homeViewModel: HomeViewModel = hiltViewModel()
+            WriteEmailScreen(navController = navController, viewModel = homeViewModel)
         }
     }
 }

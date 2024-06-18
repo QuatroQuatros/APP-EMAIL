@@ -1,7 +1,12 @@
 package com.example.challengelocaweb.presentation.email
 
+import android.net.Uri
 import android.os.Build
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
+import androidx.camera.core.Camera
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -11,11 +16,13 @@ import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -27,20 +34,52 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.challengelocaweb.R
+import com.example.challengelocaweb.domain.model.Attachment
+import com.example.challengelocaweb.domain.model.Email
+import com.example.challengelocaweb.presentation.AttachmentOption
+import com.example.challengelocaweb.presentation.AttachmentOptionsDialog
+import com.example.challengelocaweb.presentation.home.HomeViewModel
+import java.time.LocalDateTime
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun WriteEmailScreen(
-    navController: NavHostController
+    navController: NavHostController,
+    viewModel: HomeViewModel
 ) {
-    val from = remember { mutableStateOf("") }
+//    val from = remember { mutableStateOf("") }
     val to = remember { mutableStateOf("") }
     val cc = remember { mutableStateOf("") }
     val bcc = remember { mutableStateOf("") }
     val subject = remember { mutableStateOf("") }
     val body = remember { mutableStateOf("") }
+
+    val showAttachmentDialog = remember { mutableStateOf(false) }
+    val attachments = remember { mutableStateListOf<Uri>() }
+    val context = LocalContext.current
+
+    val documentLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            attachments.add(it)
+            Toast.makeText(context, "Documento selecionado: $uri", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    // Launcher for selecting images
+    val imageLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.GetContent()
+    ) { uri: Uri? ->
+        uri?.let {
+            attachments.add(it)
+            Toast.makeText(context, "Imagem selecionada: $uri", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -83,7 +122,7 @@ fun WriteEmailScreen(
                     .padding(paddingValues)
                     .padding(30.dp)
             ) {
-                EmailTextField(label = "De:", value = from.value) { from.value = it }
+//                EmailTextField(label = "De:", value = from.value) { from.value = it }
                 EmailTextField(label = "Para:", value = to.value) { to.value = it }
                 //EmailTextField(label = "Cc:", value = cc.value) { cc.value = it }
                 //EmailTextField(label = "Cco:", value = bcc.value) { bcc.value = it }
@@ -97,7 +136,9 @@ fun WriteEmailScreen(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 80.dp)
                 ) {
                     FloatingActionButton(
-                        onClick = { /* Attach action */ },
+                        onClick = {
+                             showAttachmentDialog.value = true
+                        },
                         containerColor = colorResource(id = R.color.primary),
 
                     ) {
@@ -109,7 +150,34 @@ fun WriteEmailScreen(
 
                     }
                     FloatingActionButton(
-                        onClick = { /* Send action */ },
+                        onClick = {
+                            val name = "Teste FIAP";
+                            val sender = "fiap@fiap.com"
+                            val nameNoEspace = name.replace(" ", "")
+                            val currentDateTime = LocalDateTime.now()
+                            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
+                            val formattedDateTime = currentDateTime.format(formatter)
+
+                            val email = Email(
+                                author = name,
+                                sender = sender,
+                                recipient = to.value,
+                                cc = null,
+                                bcc = null,
+                                content = body.value,
+                                description = body.value,
+                                publishedAt = formattedDateTime,
+                                title = subject.value,
+                                url = "https://ui-avatars.com/api/?background=random&name=$nameNoEspace",
+                                urlToImage = "https://ui-avatars.com/api/?background=random&name=$nameNoEspace",
+                                isFavorite = false,
+                                isSpam = false,
+                                isSecure = false,
+                                isRead = false
+                            )
+                            viewModel.sendEmail(email, attachments)
+                            navController.popBackStack()
+                        },
                         containerColor = colorResource(id = R.color.primary),
                     ) {
                         Icon(
@@ -123,6 +191,28 @@ fun WriteEmailScreen(
             }
         }
     )
+
+    if (showAttachmentDialog.value) {
+        AttachmentOptionsDialog(
+            onDismiss = { showAttachmentDialog.value = false },
+                onOptionSelected = { option ->
+                    showAttachmentDialog.value = false
+                    when (option) {
+                        AttachmentOption.Document -> {
+                            documentLauncher.launch("application/pdf")
+                        }
+                        AttachmentOption.Camera -> {
+                            imageLauncher.launch("image/*")
+                        }
+                        AttachmentOption.Gallery -> {
+                            imageLauncher.launch("image/*")
+                        }
+                    }
+                }
+            )
+        }
+
+
 }
 
 @Composable
@@ -173,9 +263,3 @@ fun EmailBodyField(value: String, onValueChange: (String) -> Unit) {
     }
 }
 
-@RequiresApi(Build.VERSION_CODES.O)
-@Preview(showBackground = true)
-@Composable
-fun WriteEmailScreenPreview(){
-    WriteEmailScreen(navController = rememberNavController())
-}

@@ -8,6 +8,7 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
+import com.example.challengelocaweb.domain.model.Attachment
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.domain.model.EmailWithAttachments
 import kotlinx.coroutines.flow.Flow
@@ -15,8 +16,20 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface EmailDao {
 
-    @Query("SELECT * FROM emails ORDER BY publishedAt DESC")
+//    @Query("SELECT * FROM emails ORDER BY publishedAt DESC")
+//    suspend fun getEmails(): List<Email>
+
+    @Transaction
+    @Query("SELECT * FROM emails WHERE sender != 'fiap@fiap.com' ORDER BY publishedAt DESC")
     suspend fun getEmails(): List<Email>
+
+    @Transaction
+    @Query("SELECT * FROM emails ORDER BY publishedAt DESC")
+    suspend fun getAllEmails(): List<Email>
+
+    @Transaction
+    @Query("SELECT * FROM emails WHERE sender = 'fiap@fiap.com' ORDER BY publishedAt DESC")
+    fun getSendEmails():  Flow<List<Email>>
 
     @Transaction
     @Query("SELECT * FROM emails WHERE id = :emailId")
@@ -24,6 +37,9 @@ interface EmailDao {
 
     @Query("SELECT * FROM emails WHERE isFavorite = 1 ORDER BY publishedAt DESC")
     fun getFavoritesEmails(): Flow<List<Email>>
+
+    @Query("SELECT * FROM emails WHERE isDraft = 1 ORDER BY publishedAt DESC")
+    fun getDraftEmails(): Flow<List<Email>>
 
     @Query("SELECT * FROM emails WHERE isSpam = 1 ORDER BY publishedAt DESC")
     fun getSpamEmails(): Flow<List<Email>>
@@ -33,7 +49,15 @@ interface EmailDao {
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insert(email: Email)
+    suspend fun insert(email: Email): Long
+
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAttachment(attachment: Attachment)
+
+    @Transaction
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun sendEmail(email: Email): Long
 
     @Transaction
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -48,6 +72,14 @@ interface EmailDao {
 
     @Update
     suspend fun updateEmail(email: Email)
+
+    @Transaction
+    @Query("UPDATE emails SET isDraft = 1 WHERE id = :id")
+    suspend fun markAsDraft(id: Int)
+
+    @Transaction
+    @Query("UPDATE emails SET isDraft = 0 WHERE id = :id")
+    suspend fun markAsNotDraft(id: Int)
 
     @Transaction
     @Query("UPDATE emails SET isRead = 1 WHERE id = :id")
