@@ -4,7 +4,6 @@ import android.app.Application
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -339,23 +338,6 @@ fun ModalForm(
                             checkedThumbColor = Color.White,
                             uncheckedThumbColor = Color.Gray)
                     )
-//                    OutlinedTextField(
-//                        value = isNotifiable,
-//                        onValueChange = {isNotifiable = it},
-//                        label = { Text("Notificação") },
-//                        leadingIcon = {
-//                            Icon(
-//                                imageVector = Icons.Default.Notifications,
-//                                contentDescription = null,
-//                                tint = colorResource(id = R.color.primary)
-//                            )
-//                        },
-//                        keyboardOptions = KeyboardOptions(
-//                            keyboardType = KeyboardType.Text,
-//                            imeAction = ImeAction.Done
-//                        ),
-//                        modifier = Modifier.fillMaxWidth()
-//                    )
                 }
                 ClickableRow(
                     text = "Adicionar descrição",

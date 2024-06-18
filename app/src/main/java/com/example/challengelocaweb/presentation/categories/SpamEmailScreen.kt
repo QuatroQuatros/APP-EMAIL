@@ -82,9 +82,13 @@ fun SpamEmailsScreen(
                     emails = lazyFavoriteEmails,
                     searchTerm = "",
                     viewModel = viewModel,
-                    onClick = { email ->
-                        val emailJson = Json.encodeToString(email)
-                        val route = Route.EmailDetailScreen.createRoute(emailJson)
+//                    onClick = { email ->
+//                        val emailJson = Json.encodeToString(email)
+//                        val route = Route.EmailDetailScreen.createRoute(emailJson)
+//                        navController.navigate(route)
+//                    }
+                      onClick = { email ->
+                        val route = Route.EmailDetailScreen.createRoute(email.id)
                         navController.navigate(route)
                     }
                 )

@@ -1,6 +1,5 @@
 package com.example.challengelocaweb.presentation.email
 
-import android.content.res.Configuration.UI_MODE_NIGHT_YES
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
@@ -28,22 +27,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.compose.rememberAsyncImagePainter
-import coil.compose.rememberImagePainter
 import com.example.challengelocaweb.R
 import com.example.challengelocaweb.domain.model.Email
-import com.example.challengelocaweb.domain.model.Source
-import com.example.challengelocaweb.presentation.Dimens.SmallIconSize
 import com.example.challengelocaweb.presentation.home.HomeViewModel
-import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
 import com.example.challengelocaweb.util.convertTimestampToDate
 
 @RequiresApi(Build.VERSION_CODES.O)

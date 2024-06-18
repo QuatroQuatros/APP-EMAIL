@@ -1,14 +1,16 @@
 package com.example.challengelocaweb.domain.model
 
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import androidx.room.Relation
 import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 @Serializable
 @Entity(tableName = "emails")
 data class Email(
-    @PrimaryKey val id: Int,
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val author: String,
     val sender: String, // Remetente
     val recipient: String, // Destinatário
@@ -20,7 +22,7 @@ data class Email(
     val title: String,
     val url: String,
     val urlToImage: String,
-    val attachments: List<String> = listOf(),
+    var isDraft: Boolean = false,
     var isFavorite: Boolean = false,
     var isSpam: Boolean = false,
     var isSecure: Boolean = false,
@@ -34,3 +36,12 @@ data class Email(
         }
     }
 }
+
+data class EmailWithAttachments(
+    @Embedded val email: Email,
+    @Relation(
+        parentColumn = "id",
+        entityColumn = "emailId"
+    )
+    val attachments: List<Attachment>
+)
