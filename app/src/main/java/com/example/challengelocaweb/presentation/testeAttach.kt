@@ -67,9 +67,9 @@ fun AttachmentOptionsDialog(
 }
 
 enum class AttachmentOption(val label: String, val icon: Int, val color: Color) {
-    Document("Documento", R.drawable.ic_attach, Color(0xFF9C27B0)),
-    Camera("Câmera", R.drawable.ic_photo, Color(0xFFE91E63)),
-    Gallery("Galeria", R.drawable.ic_image, Color(0xFF673AB7)),
+    Document("Documento", R.drawable.ic_attach, Color(0xFFDB50A3)),
+    Camera("Câmera", R.drawable.ic_photo, Color(0xFFF38E58)),
+    Gallery("Galeria", R.drawable.ic_image, Color(0xFF57A6A1)),
 }
 
 

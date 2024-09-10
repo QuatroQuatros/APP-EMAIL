@@ -1,4 +1,4 @@
-package com.example.challengelocaweb.presentation.categories
+package com.example.challengelocaweb.presentation.categories.components
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -63,7 +64,7 @@ fun ModalFormCategory() {
 
     Column(
         modifier = Modifier
-            .fillMaxWidth()
+            .fillMaxSize()
             .background(Color.White, shape = RoundedCornerShape(8.dp))
             .padding(50.dp),
         horizontalAlignment = Alignment.CenterHorizontally
