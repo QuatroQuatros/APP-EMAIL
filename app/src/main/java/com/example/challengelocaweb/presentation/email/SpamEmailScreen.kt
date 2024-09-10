@@ -1,6 +1,5 @@
-package com.example.challengelocaweb.presentation.categories
+package com.example.challengelocaweb.presentation.email
 
-import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.Column
@@ -31,21 +30,22 @@ import com.example.challengelocaweb.presentation.email.EmailsList
 import com.example.challengelocaweb.presentation.event.components.FloatingActionButton
 import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.presentation.nvgraph.Route
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
-@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun SentEmailScreen(
+fun SpamEmailsScreen(
     navController: NavHostController,
     viewModel: HomeViewModel
 ) {
-    val favoriteEmails by viewModel.getSendEmails.collectAsState(initial = emptyList())
+    val spamEmails by viewModel.spamEmails.collectAsState(initial = emptyList())
     val pager = Pager(PagingConfig(pageSize = 20)) {
         object : PagingSource<Int, Email>() {
             override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Email> {
                 return LoadResult.Page(
-                    data = favoriteEmails,
+                    data = spamEmails,
                     prevKey = null,
                     nextKey = null
                 )
@@ -63,7 +63,7 @@ fun SentEmailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Enviados") },
+                title = { Text("Marcados como SPAM") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
@@ -82,11 +82,15 @@ fun SentEmailScreen(
                     emails = lazyFavoriteEmails,
                     searchTerm = "",
                     viewModel = viewModel,
-                    onClick = { email ->
+//                    onClick = { email ->
+//                        val emailJson = Json.encodeToString(email)
+//                        val route = Route.EmailDetailScreen.createRoute(emailJson)
+//                        navController.navigate(route)
+//                    }
+                      onClick = { email ->
                         val route = Route.EmailDetailScreen.createRoute(email.id)
                         navController.navigate(route)
                     }
-
                 )
             }
         },

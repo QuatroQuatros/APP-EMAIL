@@ -2,7 +2,11 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-<!--    <color name="primary">#3FC7CF</color>-->
+    <color name="gray">#454545</color>
+    <color name="lighterGray">#939393</color>
+
+
+    <!--    <color name="primary">#3FC7CF</color>-->
 <!--    <color name="selected">#09757C</color>-->
 <!--    <color name="input_background">#D4FDFF</color>-->
     <color name="display_small">#000000</color>
@@ -11,6 +15,7 @@
     <color name="body">#4E4B66</color>
     <color name="placeholder">#A0A3BD</color>
     <color name="shimmer">#C3C3C3</color>
+    <color name="shimmer2">#DDDDDD</color>
     <color name="small_text">#1B1B1B</color>
     <color name="delete_color">#DF3333</color>
     <color name="email_read">#9AE1EBFC</color>
@@ -22,6 +27,10 @@
 <!--    <color name="input_background">#7b9eec</color>-->
     <color name="danger">#FFFF3256</color>
     <color name="primary">#85b9c6</color>
+    <color name="lighBlue">#E1E9F1</color>
+    <color name="formBlue">#F1F8FF</color>
+    <color name="detailsFirst">#4ABBAE</color>
+    <color name="detailsSecond">#E28653</color>
     <color name="selected">#538392</color>
     <color name="favorite">#FFC96F</color>
     <color name="event">#AEF9B1</color>
@@ -32,6 +41,27 @@
 <!--<color name="selected">#72a7b3</color>-->
     <color name="input_background">#85b9c6</color>
 
+    <!-- DARK THEME -->
 
+     <color name="mainDetailsDark">#4ABBAE</color>
+     <color name="secondaryDetailsDark">#E27B7B</color>
+     <color name="tertiaryDetailsDark">#BB86FC</color>
+     <color name="dangerDark">#FF4466</color>
+     <color name="mainButtonsDark">#57A6A1</color>
+     <color name="secondaryButtonsDark">#956FC5</color>
+     <color name="navDark">#273B60</color>
+     <color name="textDark">#CFCFCF</color>
 
-</resources>
+    <!-- LIGHT THEME -->
+
+    <color name="mainDetailsLight">#54AEA3</color>
+    <color name="secondaryDetailsLight">#E27B7B</color>
+    <color name="tertiaryDetailsLight">#BB86FC</color>
+    <color name="dangerLight">#FF4466</color>
+    <color name="mainButtonsLight">#57A6A1</color>
+    <color name="secondaryButtonsLight">#B6715C</color>
+    <color name="navLight">#415A77</color>
+    <color name="selectedNav">#273B60</color>
+    <color name="textLight">#0A405B</color>
+
+ </resources>

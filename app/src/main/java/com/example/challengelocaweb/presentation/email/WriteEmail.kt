@@ -7,7 +7,12 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.camera.core.Camera
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -21,7 +26,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -86,10 +94,10 @@ fun WriteEmailScreen(
                 title = {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Enviar E-mail",
-                        fontSize = 24.sp,
-                        color = colorResource(id = R.color.primary),
-                        fontWeight = FontWeight.Bold,
+                        text = " ",
+                        fontSize = 22.sp,
+                        color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.textLight),
+                        fontWeight = FontWeight.SemiBold,
                         textAlign = TextAlign.Center
                     )
                 },
@@ -97,7 +105,7 @@ fun WriteEmailScreen(
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
                             imageVector = Icons.Default.Clear,
-                            tint = colorResource(id = R.color.delete_color),
+                            tint = if (isSystemInDarkTheme()) colorResource(id = R.color.tertiaryDetailsDark) else colorResource(id = R.color.textLight),
                             contentDescription = "Close"
                         )
                     }
@@ -106,7 +114,7 @@ fun WriteEmailScreen(
                     IconButton(onClick = { /* Delete action */ }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
-                            tint = colorResource(id = R.color.danger),
+                            tint = if (isSystemInDarkTheme()) colorResource(id = R.color.dangerDark) else colorResource(id = R.color.dangerLight),
                             contentDescription = "Delete"
                         )
                     }
@@ -120,10 +128,8 @@ fun WriteEmailScreen(
                     .padding(paddingValues)
                     .padding(30.dp)
             ) {
-//                EmailTextField(label = "De:", value = from.value) { from.value = it }
                 EmailTextField(label = "Para:", value = to.value) { to.value = it }
-                //EmailTextField(label = "Cc:", value = cc.value) { cc.value = it }
-                //EmailTextField(label = "Cco:", value = bcc.value) { bcc.value = it }
+                EmailTextField(label = "Cc:", value = to.value) { to.value = it }
                 EmailTextField(label = "Assunto:", value = subject.value) { subject.value = it }
                 EmailBodyField(value = body.value) { body.value = it }
 
@@ -131,13 +137,15 @@ fun WriteEmailScreen(
 
                 Row(
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = 80.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 80.dp)
                 ) {
                     FloatingActionButton(
                         onClick = {
                              showAttachmentDialog.value = true
                         },
-                        containerColor = colorResource(id = R.color.primary),
+                        containerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.secondaryButtonsDark) else colorResource(id = R.color.secondaryButtonsLight),
 
                     ) {
                         Icon(
@@ -176,7 +184,7 @@ fun WriteEmailScreen(
                             viewModel.sendEmail(email, attachments)
                             navController.popBackStack()
                         },
-                        containerColor = colorResource(id = R.color.primary),
+                        containerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.mainButtonsDark) else colorResource(id = R.color.mainButtonsLight)
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_send),
@@ -217,12 +225,24 @@ fun WriteEmailScreen(
 fun EmailTextField(label: String, value: String, onValueChange: (String) -> Unit) {
     Row(
         modifier = Modifier
-            .padding(vertical = 6.dp),
+            .padding(vertical = 7.dp)
+            .background(if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(id = R.color.lighBlue), shape = RoundedCornerShape(10.dp))
+            .border(
+                BorderStroke(
+                    1.dp,
+                    color = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
+                        id = R.color.lighBlue
+                    )
+                ),
+                shape = RoundedCornerShape(10.dp)
+            )
+            .height(40.dp)
     ) {
         Text(
+            modifier = Modifier.padding(9.dp),
             text = label,
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold,
+            fontSize = 16.sp,
+            fontWeight = FontWeight.SemiBold,
         )
         BasicTextField(
             value = value,
@@ -243,18 +263,20 @@ fun EmailTextField(label: String, value: String, onValueChange: (String) -> Unit
 fun EmailBodyField(value: String, onValueChange: (String) -> Unit) {
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
         Text(
+            modifier = Modifier.padding(top = 9.dp),
             text = "Escrever e-mail",
-            fontSize = 20.sp,
-            fontWeight = FontWeight.Bold
+            fontSize = 15.sp,
+            fontWeight = FontWeight.Normal,
         )
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(8.dp)
+                .padding(top = 12.dp)
                 .height(200.dp),
-            textStyle = TextStyle(fontSize = 16.sp),
+            textStyle = TextStyle(fontSize = 16.sp, color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.small_text)),
+            cursorBrush = SolidColor(if (isSystemInDarkTheme()) Color.White else Color.Black),
             keyboardOptions = KeyboardOptions.Default.copy(autoCorrect = true),
             keyboardActions = KeyboardActions.Default
         )

@@ -1,4 +1,4 @@
-package com.example.challengelocaweb.presentation.categories
+package com.example.challengelocaweb.presentation.email
 
 import android.os.Build
 import androidx.annotation.RequiresApi
@@ -36,16 +36,16 @@ import kotlinx.serialization.json.Json
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
-fun SpamEmailsScreen(
+fun FavoriteEmailsScreen(
     navController: NavHostController,
     viewModel: HomeViewModel
 ) {
-    val spamEmails by viewModel.spamEmails.collectAsState(initial = emptyList())
+    val favoriteEmails by viewModel.favoriteEmails.collectAsState(initial = emptyList())
     val pager = Pager(PagingConfig(pageSize = 20)) {
         object : PagingSource<Int, Email>() {
             override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Email> {
                 return LoadResult.Page(
-                    data = spamEmails,
+                    data = favoriteEmails,
                     prevKey = null,
                     nextKey = null
                 )
@@ -63,7 +63,7 @@ fun SpamEmailsScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Marcados como SPAM") },
+                title = { Text("Favoritos") },
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(imageVector = Icons.Default.ArrowBack, contentDescription = null)
@@ -87,10 +87,11 @@ fun SpamEmailsScreen(
 //                        val route = Route.EmailDetailScreen.createRoute(emailJson)
 //                        navController.navigate(route)
 //                    }
-                      onClick = { email ->
+                    onClick = { email ->
                         val route = Route.EmailDetailScreen.createRoute(email.id)
                         navController.navigate(route)
                     }
+
                 )
             }
         },
