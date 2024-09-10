@@ -1,5 +1,6 @@
 package com.example.challengelocaweb.presentation.common
 
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -22,7 +23,9 @@ fun CustomNavigationBar(
 
     NavigationBar(
         //modifier = Modifier,
-        containerColor = colorResource(id = R.color.primary),
+        containerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
+            id = R.color.navLight
+        ),
         contentColor = colorResource(id = R.color.ic_launcher_background)
     
     ) {
@@ -35,7 +38,7 @@ fun CustomNavigationBar(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = colorResource(id = R.color.white),
                 selectedTextColor = colorResource(id = R.color.white),
-                indicatorColor = colorResource(id = R.color.selected),
+                indicatorColor = if (isSystemInDarkTheme()) colorResource(id = R.color.selected) else colorResource(id = R.color.selectedNav),
                 unselectedIconColor = colorResource(id = R.color.white),
                 unselectedTextColor = colorResource(id = R.color.white),
                 disabledIconColor = colorResource(id = R.color.body),
@@ -60,7 +63,7 @@ fun CustomNavigationBar(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = colorResource(id = R.color.white),
                 selectedTextColor = colorResource(id = R.color.white),
-                indicatorColor = colorResource(id = R.color.selected),
+                if (isSystemInDarkTheme()) colorResource(id = R.color.selected) else colorResource(id = R.color.selectedNav),
                 unselectedIconColor = colorResource(id = R.color.white),
                 unselectedTextColor = colorResource(id = R.color.white),
                 disabledIconColor = colorResource(id = R.color.body),
@@ -106,7 +109,7 @@ fun CustomNavigationBar(
             colors = NavigationBarItemDefaults.colors(
                 selectedIconColor = colorResource(id = R.color.white),
                 selectedTextColor = colorResource(id = R.color.white),
-                indicatorColor = colorResource(id = R.color.selected),
+                if (isSystemInDarkTheme()) colorResource(id = R.color.selected) else colorResource(id = R.color.selectedNav),
                 unselectedIconColor = colorResource(id = R.color.white),
                 unselectedTextColor = colorResource(id = R.color.white),
                 disabledIconColor = colorResource(id = R.color.body),

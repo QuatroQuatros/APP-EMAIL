@@ -16,9 +16,9 @@ import androidx.navigation.navDeepLink
 import com.example.challengelocaweb.presentation.event.CalendarScreen
 import com.example.challengelocaweb.presentation.event.EventViewModel
 import com.example.challengelocaweb.presentation.categories.CategoriesScreen
-import com.example.challengelocaweb.presentation.categories.FavoriteEmailsScreen
-import com.example.challengelocaweb.presentation.categories.SentEmailScreen
-import com.example.challengelocaweb.presentation.categories.SpamEmailsScreen
+import com.example.challengelocaweb.presentation.email.FavoriteEmailsScreen
+import com.example.challengelocaweb.presentation.email.SentEmailScreen
+import com.example.challengelocaweb.presentation.email.SpamEmailsScreen
 import com.example.challengelocaweb.presentation.home.HomeScreen
 import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.presentation.email.ReadEmailScreen
