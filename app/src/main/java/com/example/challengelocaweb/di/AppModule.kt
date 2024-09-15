@@ -3,6 +3,7 @@ package com.example.challengelocaweb.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
+import com.example.challengelocaweb.AuthViewModel
 import com.example.challengelocaweb.data.AppDatabase
 import com.example.challengelocaweb.data.manager.LocalUserManagerImpl
 import com.example.challengelocaweb.data.remote.EmailAPI
@@ -37,7 +38,7 @@ import com.example.challengelocaweb.domain.useCases.emails.SendEmail
 import com.example.challengelocaweb.domain.useCases.emails.UpdateEmail
 import com.example.challengelocaweb.domain.useCases.emails.UploadFile
 import com.example.challengelocaweb.util.Constansts.BASE_URL
-import com.example.challengelocaweb.util.NetworkUtils
+import com.example.challengelocaweb.util.TokenManager
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -56,6 +57,12 @@ object AppModule {
     @Singleton
     fun provideApplicationContext(application: Application): Context {
         return application.applicationContext
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenManager(@ApplicationContext context: Context): TokenManager {
+        return TokenManager(context)
     }
 
     @Provides
@@ -81,11 +88,6 @@ object AppModule {
     @Provides
     fun provideEventDao(database: AppDatabase): EventDao {
         return database.eventDao()
-    }
-
-    @Provides
-    fun provideNetworkUtils(@ApplicationContext appContext: Context): NetworkUtils {
-        return NetworkUtils(appContext)
     }
 
     @Provides

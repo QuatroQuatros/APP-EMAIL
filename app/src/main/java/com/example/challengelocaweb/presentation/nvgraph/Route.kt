@@ -5,6 +5,9 @@ import android.net.Uri
 sealed class Route(
     val route: String
 ) {
+
+    object LoginScreen : Route("loginScreen")
+    object SingUpScreen : Route("singUpScreen")
     object HomeScreen : Route("homeScreen")
 
     object EventsScreen : Route("eventsScreen")

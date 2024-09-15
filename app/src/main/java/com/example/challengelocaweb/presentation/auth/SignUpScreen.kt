@@ -1,4 +1,4 @@
-package com.example.challengelocaweb.presentation.signup
+package com.example.challengelocaweb.presentation.auth
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -30,10 +30,11 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,10 +42,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -53,27 +52,41 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import com.example.challengelocaweb.AuthViewModel
 import com.example.challengelocaweb.R
+import com.example.challengelocaweb.presentation.nvgraph.Route
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(
+    navController: NavHostController,
+    authViewModel: AuthViewModel,
+) {
 
+    var email by remember { mutableStateOf("") }
     var user by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
+
+    val isUserLoggedIn by authViewModel.isUserLoggedIn.collectAsState()
+
+
+    LaunchedEffect(isUserLoggedIn) {
+        if (isUserLoggedIn) {
+            navController.navigate(Route.HomeScreen.route) {
+                popUpTo(Route.SingUpScreen.route) { inclusive = true }
+            }
+            authViewModel.resetRegisterSuccess()
+        }
+    }
 
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier
             .fillMaxSize()
-            //.padding(30.dp)
     ) {
-
-
-
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center,
@@ -89,34 +102,27 @@ fun SignUpScreen() {
 
             Spacer(modifier = Modifier.height(50.dp))
 
-
             OutlinedTextField(
-                value = user,
-                onValueChange = {
-                    user = it
-                },
-                placeholder = { Text(
-                    lineHeight = 2.sp,
-                    fontSize = 15.sp,
-                    text = "Crie seu usuário")
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Person,
-                        contentDescription = null,
-                        tint = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.mainDetailsLight)
-                    )
-                },
-
+                value = email,
+                onValueChange = { email = it },
+                placeholder = { Text(text = "Crie seu e-mail", fontSize = 15.sp) },
+                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
                 modifier = Modifier
                     .width(300.dp)
                     .height(50.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedPlaceholderColor = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.textLight),
-                    unfocusedPlaceholderColor = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.textLight),
-                    unfocusedBorderColor = if (isSystemInDarkTheme()) colorResource(id = R.color.lighterGray) else colorResource(id = R.color.selected),
-                    focusedBorderColor = if (isSystemInDarkTheme()) colorResource(id = R.color.lighterGray) else colorResource(id = R.color.primary)
-                ),
+                shape = RoundedCornerShape(10.dp)
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            OutlinedTextField(
+                value = user,
+                onValueChange = { user = it },
+                placeholder = { Text(text = "Crie seu usuário", fontSize = 15.sp) },
+                leadingIcon = { Icon(Icons.Default.Person, contentDescription = null) },
+                modifier = Modifier
+                    .width(300.dp)
+                    .height(50.dp),
                 shape = RoundedCornerShape(10.dp)
             )
 
@@ -124,59 +130,39 @@ fun SignUpScreen() {
 
             OutlinedTextField(
                 value = password,
-                onValueChange = {
-                    password = it
-                },
-                placeholder = { Text(
-                    lineHeight = 2.sp,
-                    fontSize = 15.sp,
-                    text = "Crie sua senha")
-                },
-                leadingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.Lock,
-                        contentDescription = null,
-                        tint = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.mainDetailsLight)
-                    )
-                },
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Password,
-                    imeAction = ImeAction.Done
-                ),
+                onValueChange = { password = it },
+                placeholder = { Text(text = "Crie sua senha", fontSize = 15.sp) },
+                leadingIcon = { Icon(Icons.Default.Lock, contentDescription = null) },
                 trailingIcon = {
-                    val iconImage = if(isPasswordVisible) {
-                        Icons.Filled.Visibility
-                    }else {
-                        Icons.Filled.VisibilityOff
-                    }
-                    val description = if(isPasswordVisible){ "Esconder senha"
-                    } else { "Mostrar senha" }
-
                     IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
-                        Icon(imageVector = iconImage, contentDescription = description, tint = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(id = R.color.navDark))
+                        val icon = if (isPasswordVisible) Icons.Default.Visibility else Icons.Default.VisibilityOff
+                        Icon(imageVector = icon, contentDescription = if (isPasswordVisible) "Esconder senha" else "Mostrar senha")
                     }
                 },
                 visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
-
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
                 modifier = Modifier
                     .width(300.dp)
                     .height(50.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedPlaceholderColor = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.textLight),
-                    unfocusedPlaceholderColor = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.textLight),
-                    unfocusedBorderColor = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(id = R.color.selected),
-                    focusedBorderColor = if (isSystemInDarkTheme()) colorResource(id = R.color.lighterGray) else colorResource(id = R.color.primary)
-                ),
                 shape = RoundedCornerShape(10.dp)
             )
+
+            Spacer(modifier = Modifier.height(20.dp))
 
             TermsAndConditions("Concordo com a Política de Privacidade e os Termos de uso.")
 
             Spacer(modifier = Modifier.height(30.dp))
 
-            RegisterAndLoginButton("Entrar")
-        }
+            RegisterAndLoginButton(value = "Cadastrar") {
+                authViewModel.register(user, email, password)
+            }
 
+            Spacer(modifier = Modifier.height(20.dp))
+
+            RegisterAndLoginButton("Faça Login") {
+                navController.navigate(Route.LoginScreen.route)
+            }
+        }
     }
 }
 
@@ -242,8 +228,8 @@ fun TermsAndConditions(value: String){
 }
 
 @Composable
-fun RegisterAndLoginButton(value: String) {
-    Button(onClick = { /*TODO*/ },
+fun RegisterAndLoginButton(value: String, onClick: () -> Unit) {
+    Button(onClick = { onClick() },
         modifier = Modifier
             .width(150.dp)
             .heightIn(48.dp),
@@ -285,8 +271,8 @@ fun iconSignUpScreen() {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun SignUpScreenPreview(){
-    SignUpScreen()
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun SignUpScreenPreview(){
+//    SignUpScreen()
+//}

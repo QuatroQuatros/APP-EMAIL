@@ -1,17 +1,20 @@
 package com.example.challengelocaweb.presentation.home
 
 import android.net.Uri
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
+import com.example.challengelocaweb.api.Endpoint
 import com.example.challengelocaweb.data.remote.EmailPagingSource
 import com.example.challengelocaweb.domain.model.Attachment
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.domain.model.EmailWithAttachments
 import com.example.challengelocaweb.domain.useCases.emails.EmailUseCases
+import com.google.gson.JsonObject
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -22,6 +25,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
 
 @HiltViewModel
