@@ -1,5 +1,6 @@
 package com.example.challengelocaweb.presentation.signup
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
@@ -17,6 +18,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Lock
@@ -42,10 +44,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
@@ -53,15 +59,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.min
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.room.paging.util.getOffset
 import com.example.challengelocaweb.R
+import com.example.challengelocaweb.presentation.nvgraph.Route
+import kotlin.math.log
 
 @Composable
-fun SignUpScreen() {
+fun SignUpScreen(
+    navController: NavHostController
+) {
 
-    var user by remember { mutableStateOf("") }
+    var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
 
@@ -91,14 +105,14 @@ fun SignUpScreen() {
 
 
             OutlinedTextField(
-                value = user,
+                value = email,
                 onValueChange = {
-                    user = it
+                    email = it
                 },
                 placeholder = { Text(
                     lineHeight = 2.sp,
                     fontSize = 15.sp,
-                    text = "Crie seu usuário")
+                    text = "Digite seu email")
                 },
                 leadingIcon = {
                     Icon(
@@ -175,6 +189,9 @@ fun SignUpScreen() {
             Spacer(modifier = Modifier.height(30.dp))
 
             RegisterAndLoginButton("Entrar")
+
+            Spacer(modifier = Modifier.height(30.dp))
+
         }
 
     }
@@ -233,7 +250,7 @@ fun TermsAndConditions(value: String){
                 .fillMaxWidth()
                 .padding(top = 5.dp),
             style = TextStyle(
-                fontSize = 12.sp,
+                fontSize = 13.sp,
                 fontStyle = FontStyle.Normal),
             textAlign = TextAlign.Center,
             color = if (isSystemInDarkTheme()) colorResource(id = R.color.formBlue) else colorResource(id = R.color.textLight),
@@ -288,5 +305,5 @@ fun iconSignUpScreen() {
 @Preview(showBackground = true)
 @Composable
 fun SignUpScreenPreview(){
-    SignUpScreen()
+    SignUpScreen(navController = NavHostController(LocalContext.current))
 }

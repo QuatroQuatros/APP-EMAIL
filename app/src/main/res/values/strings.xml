@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">Pombita Mail</string>
+
+
+    <string name="ja_tenho_conta">Já tem uma conta?</string>
+    <string name="nao_tenho_conta">Ainda não tem uma conta?</string>
 </resources>

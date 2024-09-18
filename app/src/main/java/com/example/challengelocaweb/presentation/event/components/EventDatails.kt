@@ -3,6 +3,7 @@ package com.example.challengelocaweb.presentation.event.components
 import android.os.Build
 import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -73,9 +74,15 @@ fun EventDetails(
                         .size(20.dp)
                         .background(
                             color = when(event.eventType) {
-                                EventTypeEnum.MEETING -> colorResource(id = R.color.meeting)
-                                EventTypeEnum.REMINDER -> colorResource(id = R.color.reminder)
-                                EventTypeEnum.EVENT -> colorResource(id = R.color.event)
+                                EventTypeEnum.MEETING -> if (isSystemInDarkTheme()) colorResource(id = R.color.meetingDark) else colorResource(
+                                    id = R.color.meetingLight
+                                )
+                                EventTypeEnum.REMINDER -> if (isSystemInDarkTheme()) colorResource(id = R.color.reminderDark) else colorResource(
+                                    id = R.color.reminderLight
+                                )
+                                EventTypeEnum.EVENT -> if (isSystemInDarkTheme()) colorResource(id = R.color.eventDark) else colorResource(
+                                    id = R.color.eventLight
+                                )
                             },
 
                             shape = RoundedCornerShape(20.dp)

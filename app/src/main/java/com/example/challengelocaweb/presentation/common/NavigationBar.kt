@@ -23,9 +23,7 @@ fun CustomNavigationBar(
 
     NavigationBar(
         //modifier = Modifier,
-        containerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
-            id = R.color.navLight
-        ),
+        containerColor = MaterialTheme.colorScheme.secondary,
         contentColor = colorResource(id = R.color.ic_launcher_background)
     
     ) {

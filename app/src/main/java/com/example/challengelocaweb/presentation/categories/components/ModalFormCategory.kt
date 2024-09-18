@@ -117,8 +117,8 @@ fun ModalFormCategory() {
                         errorIndicatorColor = colorResource(id = R.color.dangerDark),
                         unfocusedContainerColor = Color.Transparent,
                         focusedContainerColor = Color.Transparent,
-                        focusedIndicatorColor = colorResource(id = R.color.lighBlue),
-                        unfocusedIndicatorColor = colorResource(id = R.color.lighBlue)
+                        focusedIndicatorColor = colorResource(id = R.color.lightBlue),
+                        unfocusedIndicatorColor = colorResource(id = R.color.lightBlue)
                     ),
                     shape = RoundedCornerShape(10.dp)
                 )
@@ -160,8 +160,8 @@ fun ModalFormCategory() {
                     colors = TextFieldDefaults.colors(
                         unfocusedIndicatorColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedContainerColor = colorResource(id = R.color.lighBlue),
-                        focusedContainerColor = colorResource(id = R.color.lighBlue)
+                        unfocusedContainerColor = colorResource(id = R.color.lightBlue),
+                        focusedContainerColor = colorResource(id = R.color.lightBlue)
                     ),
                     shape = RoundedCornerShape(10.dp)
                 )
@@ -194,8 +194,8 @@ fun ModalFormCategory() {
                     colors = TextFieldDefaults.colors(
                         unfocusedIndicatorColor = Color.Transparent,
                         focusedIndicatorColor = Color.Transparent,
-                        unfocusedContainerColor = colorResource(id = R.color.lighBlue),
-                        focusedContainerColor = colorResource(id = R.color.lighBlue)
+                        unfocusedContainerColor = colorResource(id = R.color.lightBlue),
+                        focusedContainerColor = colorResource(id = R.color.lightBlue)
                     ),
                     shape = RoundedCornerShape(10.dp)
                 )
@@ -208,7 +208,7 @@ fun ModalFormCategory() {
                         .fillMaxWidth()
                         .height(50.dp)
                         .border(
-                            BorderStroke(2.dp, colorResource(id = R.color.lighBlue)),
+                            BorderStroke(2.dp, colorResource(id = R.color.lightBlue)),
                             shape = RoundedCornerShape(17.dp)
                         )
                         .padding(start = 11.dp, end = 11.dp)
@@ -231,10 +231,10 @@ fun ModalFormCategory() {
                     checked = notificationsEnabled,
                     onCheckedChange = { notificationsEnabled = it },
                     colors = SwitchDefaults.colors(
-                        checkedThumbColor = colorResource(id = R.color.lighBlue),
+                        checkedThumbColor = colorResource(id = R.color.lightBlue),
                         uncheckedThumbColor = colorResource(id = R.color.selected),
                         checkedTrackColor = colorResource(id = R.color.selected),
-                        uncheckedTrackColor = colorResource(id = R.color.lighBlue),
+                        uncheckedTrackColor = colorResource(id = R.color.lightBlue),
                         checkedBorderColor = colorResource(id = R.color.primary),
                         uncheckedBorderColor = colorResource(id = R.color.selected)
                     )
@@ -249,7 +249,7 @@ fun ModalFormCategory() {
                         .fillMaxWidth()
                         .height(50.dp)
                         .border(
-                            BorderStroke(2.dp, colorResource(id = R.color.lighBlue)),
+                            BorderStroke(2.dp, colorResource(id = R.color.lightBlue)),
                             shape = RoundedCornerShape(17.dp)
                         )
                         .padding(start = 11.dp, end = 11.dp)
@@ -272,10 +272,10 @@ fun ModalFormCategory() {
                         checked = privacyEnabled,
                         onCheckedChange = { privacyEnabled = it },
                         colors = SwitchDefaults.colors(
-                            checkedThumbColor = colorResource(id = R.color.lighBlue),
+                            checkedThumbColor = colorResource(id = R.color.lightBlue),
                             uncheckedThumbColor = colorResource(id = R.color.selected),
                             checkedTrackColor = colorResource(id = R.color.selected),
-                            uncheckedTrackColor = colorResource(id = R.color.lighBlue),
+                            uncheckedTrackColor = colorResource(id = R.color.lightBlue),
                             checkedBorderColor = colorResource(id = R.color.primary),
                             uncheckedBorderColor = colorResource(id = R.color.selected)
                         )

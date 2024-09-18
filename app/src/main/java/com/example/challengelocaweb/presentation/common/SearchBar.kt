@@ -118,7 +118,7 @@ fun Modifier.searchBarBorder() = composed{
     if(!isSystemInDarkTheme()){
         border(
 //            BorderStroke(width = 1.dp, color = Color.Black),
-            BorderStroke(width = 1.dp, color = Color(0xFF09757C)),
+            BorderStroke(width = 1.dp, color = MaterialTheme.colorScheme.primary),
             shape = RoundedCornerShape(20)
         )
     }else{
