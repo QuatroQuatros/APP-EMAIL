@@ -44,6 +44,7 @@ import androidx.navigation.compose.rememberNavController
 import com.example.challengelocaweb.R
 import com.example.challengelocaweb.domain.model.Attachment
 import com.example.challengelocaweb.domain.model.Email
+import com.example.challengelocaweb.domain.model.SendEmail
 import com.example.challengelocaweb.presentation.AttachmentOption
 import com.example.challengelocaweb.presentation.AttachmentOptionsDialog
 import com.example.challengelocaweb.presentation.home.HomeViewModel
@@ -59,10 +60,9 @@ fun WriteEmailScreen(
     navController: NavHostController,
     viewModel: HomeViewModel
 ) {
-//    val from = remember { mutableStateOf("") }
     val to = remember { mutableStateOf("") }
     val cc = remember { mutableStateOf("") }
-    val bcc = remember { mutableStateOf("") }
+    val cco = remember { mutableStateOf("") }
     val subject = remember { mutableStateOf("") }
     val body = remember { mutableStateOf("") }
 
@@ -78,7 +78,7 @@ fun WriteEmailScreen(
         }
     }
 
-    // Launcher for selecting images
+    // Launcher para selecionar imagens
     val imageLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
@@ -90,11 +90,10 @@ fun WriteEmailScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-
                 title = {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = " ",
+                        text = "Novo Email",
                         fontSize = 22.sp,
                         color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.textLight),
                         fontWeight = FontWeight.SemiBold,
@@ -106,16 +105,16 @@ fun WriteEmailScreen(
                         Icon(
                             imageVector = Icons.Default.Clear,
                             tint = if (isSystemInDarkTheme()) colorResource(id = R.color.tertiaryDetailsDark) else colorResource(id = R.color.textLight),
-                            contentDescription = "Close"
+                            contentDescription = "Fechar"
                         )
                     }
                 },
                 actions = {
-                    IconButton(onClick = { /* Delete action */ }) {
+                    IconButton(onClick = { /* Ação de deletar */ }) {
                         Icon(
                             imageVector = Icons.Default.Delete,
                             tint = if (isSystemInDarkTheme()) colorResource(id = R.color.dangerDark) else colorResource(id = R.color.dangerLight),
-                            contentDescription = "Delete"
+                            contentDescription = "Deletar"
                         )
                     }
                 }
@@ -129,7 +128,8 @@ fun WriteEmailScreen(
                     .padding(30.dp)
             ) {
                 EmailTextField(label = "Para:", value = to.value) { to.value = it }
-                EmailTextField(label = "Cc:", value = to.value) { to.value = it }
+                EmailTextField(label = "CC:", value = cc.value) { cc.value = it }
+                EmailTextField(label = "CCO:", value = cco.value) { cco.value = it }
                 EmailTextField(label = "Assunto:", value = subject.value) { subject.value = it }
                 EmailBodyField(value = body.value) { body.value = it }
 
@@ -143,45 +143,38 @@ fun WriteEmailScreen(
                 ) {
                     FloatingActionButton(
                         onClick = {
-                             showAttachmentDialog.value = true
+                            showAttachmentDialog.value = true
                         },
                         containerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.secondaryButtonsDark) else colorResource(id = R.color.secondaryButtonsLight),
-
                     ) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_attach),
                             tint = Color.White,
-                            contentDescription = "Attach File"
+                            contentDescription = "Anexar arquivo"
                         )
-
                     }
                     FloatingActionButton(
                         onClick = {
-                            val name = "Teste FIAP";
-                            val sender = "fiap@fiap.com"
-                            val nameNoEspace = name.replace(" ", "")
-                            val currentDateTime = LocalDateTime.now()
-                            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss'Z'")
-                            val formattedDateTime = currentDateTime.format(formatter)
+                            val htmlContent = """
+                                <html>
+                                <body>
+                                    <p>De: ${to.value}</p>
+                                    <p>Assunto: ${subject.value}</p>
+                                    <p>${body.value.replace("\n", "<br>")}</p>
+                                </body>
+                                </html>
+                            """.trimIndent()
 
-                            val email = Email(
-                                author = name,
-                                sender = sender,
-                                recipient = to.value,
-                                cc = null,
-                                bcc = null,
-                                content = body.value,
-                                description = body.value,
-                                publishedAt = formattedDateTime,
-                                title = subject.value,
-                                url = "https://ui-avatars.com/api/?background=random&name=$nameNoEspace",
-                                urlToImage = "https://ui-avatars.com/api/?background=random&name=$nameNoEspace",
-                                isFavorite = false,
-                                isSpam = false,
-                                isSecure = false,
-                                isRead = false
+                            // Enviar e-mail
+                            val email = SendEmail(
+                                sender = "seu_email@gmail.com",
+                                subject = subject.value,
+                                contentHtml = htmlContent,
+                                contentPlain = body.value,
+                                isConfidential = false
                             )
                             viewModel.sendEmail(email, attachments)
+
                             navController.popBackStack()
                         },
                         containerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.mainButtonsDark) else colorResource(id = R.color.mainButtonsLight)
@@ -189,10 +182,9 @@ fun WriteEmailScreen(
                         Icon(
                             painter = painterResource(id = R.drawable.ic_send),
                             tint = Color.White,
-                            contentDescription = "Send"
+                            contentDescription = "Enviar"
                         )
                     }
-
                 }
             }
         }
@@ -201,25 +193,17 @@ fun WriteEmailScreen(
     if (showAttachmentDialog.value) {
         AttachmentOptionsDialog(
             onDismiss = { showAttachmentDialog.value = false },
-                onOptionSelected = { option ->
-                    showAttachmentDialog.value = false
-                    when (option) {
-                        AttachmentOption.Document -> {
-                            documentLauncher.launch("application/pdf")
-                        }
-                        AttachmentOption.Camera -> {
-                            imageLauncher.launch("image/*")
-                        }
-                        AttachmentOption.Gallery -> {
-                            imageLauncher.launch("image/*")
-                        }
-                    }
+            onOptionSelected = { option ->
+                showAttachmentDialog.value = false
+                when (option) {
+                    AttachmentOption.Document -> documentLauncher.launch("application/pdf")
+                    AttachmentOption.Camera, AttachmentOption.Gallery -> imageLauncher.launch("image/*")
                 }
-            )
-        }
-
-
+            }
+        )
+    }
 }
+
 
 @Composable
 fun EmailTextField(label: String, value: String, onValueChange: (String) -> Unit) {

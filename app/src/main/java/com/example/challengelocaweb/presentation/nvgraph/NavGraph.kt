@@ -7,14 +7,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import com.example.challengelocaweb.AuthViewModel
+import com.example.challengelocaweb.presentation.auth.AuthViewModel
 import com.example.challengelocaweb.presentation.auth.LoginScreen
 import com.example.challengelocaweb.presentation.event.CalendarScreen
 import com.example.challengelocaweb.presentation.event.EventViewModel
@@ -27,6 +26,8 @@ import com.example.challengelocaweb.presentation.home.HomeViewModel
 import com.example.challengelocaweb.presentation.email.ReadEmailScreen
 import com.example.challengelocaweb.presentation.email.WriteEmailScreen
 import com.example.challengelocaweb.presentation.auth.SignUpScreen
+import com.example.challengelocaweb.presentation.settings.SettingsScreen
+import com.example.challengelocaweb.presentation.settings.SettingsViewModel
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -47,6 +48,11 @@ fun NavGraph(
         composable(route = Route.LoginScreen.route) {
             val authViewModel: AuthViewModel = hiltViewModel();
             LoginScreen(navController = navController, authViewModel = authViewModel)
+        }
+
+        composable(route = Route.SettingsScreen.route) {
+            val settingsViewModel: SettingsViewModel = hiltViewModel()
+            SettingsScreen(navController = navController, viewModel = settingsViewModel)
         }
 
         composable(route = Route.HomeScreen.route) {

@@ -10,6 +10,8 @@ sealed class Route(
     object SingUpScreen : Route("singUpScreen")
     object HomeScreen : Route("homeScreen")
 
+    object SettingsScreen : Route("settingsScreen")
+
     object EventsScreen : Route("eventsScreen")
 
     object CategoriesScreen : Route("categoriesScreen")

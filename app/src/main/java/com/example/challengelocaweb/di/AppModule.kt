@@ -3,7 +3,6 @@ package com.example.challengelocaweb.di
 import android.app.Application
 import android.content.Context
 import androidx.room.Room
-import com.example.challengelocaweb.AuthViewModel
 import com.example.challengelocaweb.data.AppDatabase
 import com.example.challengelocaweb.data.manager.LocalUserManagerImpl
 import com.example.challengelocaweb.data.remote.EmailAPI
@@ -38,6 +37,8 @@ import com.example.challengelocaweb.domain.useCases.emails.SendEmail
 import com.example.challengelocaweb.domain.useCases.emails.UpdateEmail
 import com.example.challengelocaweb.domain.useCases.emails.UploadFile
 import com.example.challengelocaweb.util.Constansts.BASE_URL
+import com.example.challengelocaweb.util.ThemeSetting
+import com.example.challengelocaweb.util.ThemeSettingPreference
 import com.example.challengelocaweb.util.TokenManager
 import dagger.Binds
 import dagger.Module
@@ -163,4 +164,15 @@ abstract class RepositoryModule {
     abstract fun bindEventRepository(
         eventRepositoryImpl: EventRepositoryImpl
     ): EventRepository
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class SettingModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindThemeSetting(
+        themeSettingPreference: ThemeSettingPreference
+    ): ThemeSetting
 }
