@@ -45,3 +45,21 @@ data class EmailWithAttachments(
     )
     val attachments: List<Attachment>
 )
+
+@Serializable
+@Entity(tableName = "emails")
+data class SendEmail(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val sender: String,
+    val subject: String?,
+    val contentHtml: String?,
+    val contentPlain: String,
+    val isConfidential: Boolean = false
+
+){
+    companion object {
+        fun fromJson(json: String?): SendEmail {
+            return Json.decodeFromString(json!!)
+        }
+    }
+}

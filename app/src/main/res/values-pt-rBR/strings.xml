@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Pombita Mail</string>
+    <string name="teste">Batata</string>
+    <string name="welcome_message">Bem vindo(a) ao PombitaMail!</string>
+    <string name="sign_up_now">Cadastre-se agora</string>
+    <string name="create_email">Crie seu e-mail</string>
+    <string name="create_username">Digite seu nome</string>
+    <string name="create_password">Crie sua senha</string>
+    <string name="update_password">Atualizar senha</string>
+    <string name="hide_password">Esconder senha</string>
+    <string name="show_password">Mostrar senha</string>
+    <string name="agree_terms">Concordo com a Política de Privacidade e os Termos de uso.</string>
+    <string name="register">Cadastrar</string>
+    <string name="login">Entrar</string>
+    <string name="msg_possui_conta_login">Já possui uma conta? Clique aqui para fazer login</string>
+    <string name="msg_nao_possui_conta_login">Ainda não possui uma conta? Clique aqui e cadastre-se agora!</string>
+    <string name="welcome_back">Bem vindo(a) de volta!</string>
+    <string name="enter_email">Digite seu e-mail</string>
+    <string name="enter_password">Digite sua senha</string>
+    <string name="login_greeting_msg">É bom te ver de novo</string>
+    <string name="categories">Categorias</string>
+    <string name="emails">Emails</string>
+    <string name="calendar">Calendario</string>
+    <string name="search_here">Pesquise aqui...</string>
+    <string name="user_settings">Configurações do Usuário</string>
+    <string name="change_settings">Altere suas configurações</string>
+    <string name="select_theme">Selecionar Tema</string>
+    <string name="light_theme">Claro</string>
+    <string name="dark_theme">Escuro</string>
+    <string name="system_default_theme">Padrão do Sistema</string>
+    <string name="save_changes">Salvar Alterações</string>
+
+
+
+</resources>

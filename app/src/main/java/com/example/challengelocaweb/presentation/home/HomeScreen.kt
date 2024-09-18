@@ -37,7 +37,10 @@ fun HomeScreen(
             TopBarWithSearchBar(
                 text = searchTerm,
                 onValueChange = setSearchTerm,
-                onSearch = { }
+                onSearch = { },
+                onSetting = {
+                    navController.navigate(Route.SettingsScreen.route)
+                }
             )
         },
         content = { paddingValues ->
