@@ -5,6 +5,7 @@ import androidx.annotation.RequiresApi
 import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -77,7 +78,7 @@ fun CalendarScreen(
         Column(
             modifier = modifier
                 .fillMaxSize()
-                .padding(bottom = 90.dp)
+                .padding(bottom = 60.dp)
         ) {
             Header(
                 selectedDate = selectedDate,
@@ -163,16 +164,11 @@ fun Header(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(top = 60.dp)
+            .padding(top = 70.dp)
             .padding(horizontal = 16.dp),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Text(
-            text = "Meus Eventos",
-            fontSize = 24.sp,
-            fontWeight = FontWeight.Bold,
-            color = colorResource(id = R.color.primary)
-        )
+
         val months = java.time.Month.values().map { it.getDisplayName(TextStyle.FULL, Locale("pt", "BR")).capitalize() }
         val years = (1980..2100).toList()
         var selectedMonthIndex by remember { mutableStateOf(selectedDate.monthValue - 1) }
@@ -184,7 +180,7 @@ fun Header(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 8.dp),
+                .padding(bottom = 13.dp),
             horizontalArrangement = Arrangement.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -221,6 +217,10 @@ fun Header(
                 labelFontSize = 20.sp
             )
         }
+
+        HorizontalDivider(Modifier.width(500.dp))
+        Spacer(modifier = Modifier.height(20.dp))
+
     }
 }
 
@@ -250,12 +250,16 @@ fun DropdownSelector(
                 text = items[selectedIndex],
                 style = MaterialTheme.typography.labelLarge.copy(fontSize = labelFontSize),
                 fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.primary)
+                color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(
+                    id = R.color.textLight
+                )
             )
             Icon(
                 imageVector = if (expanded) Icons.Filled.KeyboardArrowUp else Icons.Filled.KeyboardArrowDown,
                 contentDescription = null,
-                tint = Color.Black
+                tint = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(
+                    id = R.color.textLight
+                )
             )
         }
 
@@ -296,14 +300,16 @@ fun WeekDaysHeader(
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 10.dp, vertical = 0.dp),
+            .padding(10.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
         listOf("D", "S", "T", "Q", "Q", "S", "S").forEach { day ->
             Text(
                 text = day,
                 fontWeight = FontWeight.Bold,
-                color = colorResource(id = R.color.primary)
+                color = if (isSystemInDarkTheme()) colorResource(id = R.color.secondaryButtonsDark) else colorResource(
+                    id = R.color.textLight
+                )
             )
         }
     }
@@ -317,13 +323,20 @@ fun WeekDaysHeader(
     ) {
         daysOfWeek.forEach { date ->
             val isSelected = date.dayOfMonth == selectedDay
+
+            val backgroundColor = when {
+                isSelected && isSystemInDarkTheme() -> colorResource(id = R.color.selected)
+                !isSelected && isSystemInDarkTheme() -> colorResource(id = R.color.primary)
+                isSelected && !isSystemInDarkTheme() -> colorResource(id = R.color.selectedDay)
+                !isSelected && !isSystemInDarkTheme() -> colorResource(id = R.color.unselectedDay)
+                else -> colorResource(id = R.color.primary)
+            }
             Box(
                 Modifier
                     .size(36.dp)
                     .clip(CircleShape)
                     .background(
-                        color = if (isSelected) colorResource(id = R.color.selected)
-                        else colorResource(id = R.color.primary)
+                        color = backgroundColor
                     )
                     .clickable {
                         onDaySelected(date.dayOfMonth)
@@ -351,11 +364,27 @@ fun NavigationButtons(
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
 
-        Button(onClick = { onPreviousClick() }){
-            Text("Dias anteriores")
+        Button(onClick = { onPreviousClick() },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
+                    id = R.color.navLight
+                )
+            )){
+            Text("Dias anteriores",
+                color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(
+                    id = R.color.white
+                ))
         }
-        Button(onClick = { onNextClick() }) {
-            Text("Próximos dias")
+        Button(onClick = { onNextClick() },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
+                    id = R.color.navLight
+                )
+            )) {
+            Text("Próximos dias",
+                color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(
+                    id = R.color.white
+                ))
         }
     }
 }
@@ -426,7 +455,9 @@ fun EventsTimeline(
                                 modifier = Modifier
                                     .fillMaxHeight(1f),
                                 text = event.day,
-                                color = colorResource(id = R.color.selected),
+                                color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(
+                                    id = R.color.textLight
+                                ),
                                 fontSize = 20.sp,
                                 fontWeight = FontWeight.Bold,
 
@@ -435,7 +466,9 @@ fun EventsTimeline(
                                 modifier = Modifier
                                     .fillMaxWidth(1f),
                                 text = event.startTime.format(DateTimeFormatter.ofPattern("HH:mm")),
-                                color = colorResource(id = R.color.selected),
+                                color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(
+                                    id = R.color.textLight
+                                ),
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
                                 textAlign = TextAlign.Center
@@ -474,19 +507,25 @@ fun TimelineEventCard(
                 modifier = Modifier
                     .width(2.dp)
                     .height(20.dp)
-                    .background(color = colorResource(id = R.color.primary))
+                    .background(color = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
+                        id = R.color.navLight
+                    ))
             )
             Box(
                 modifier = Modifier
                     .size(16.dp)
                     .clip(CircleShape)
-                    .background(color = colorResource(id = R.color.primary))
+                    .background(color = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
+                        id = R.color.navLight
+                    ))
             )
             Box(
                 modifier = Modifier
                     .width(2.dp)
                     .height(20.dp)
-                    .background(color = colorResource(id = R.color.primary))
+                    .background(color = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
+                        id = R.color.navLight
+                    ))
             )
         }
 
@@ -501,9 +540,15 @@ fun TimelineEventCard(
             shape = RoundedCornerShape(8.dp),
             colors = CardDefaults.cardColors(
                 containerColor = when (event.eventType) {
-                    EventTypeEnum.MEETING -> colorResource(id = R.color.meeting)
-                    EventTypeEnum.REMINDER -> colorResource(id = R.color.reminder)
-                    EventTypeEnum.EVENT -> colorResource(id = R.color.event)
+                    EventTypeEnum.MEETING -> if (isSystemInDarkTheme()) colorResource(id = R.color.meetingDark) else colorResource(
+                        id = R.color.meetingLight
+                    )
+                    EventTypeEnum.REMINDER -> if (isSystemInDarkTheme()) colorResource(id = R.color.reminderDark) else colorResource(
+                        id = R.color.reminderLight
+                    )
+                    EventTypeEnum.EVENT -> if (isSystemInDarkTheme()) colorResource(id = R.color.eventDark) else colorResource(
+                        id = R.color.eventLight
+                    )
                 }
             )
         ) {
@@ -512,8 +557,10 @@ fun TimelineEventCard(
             ) {
                 Text(
                     text = event.title,
-                    fontWeight = FontWeight.Bold,
-                    color = colorResource(id = R.color.primary),
+                    fontWeight = FontWeight.Normal,
+                    color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(
+                        id = R.color.white
+                    ),
                     fontSize = 16.sp
                 )
                 if (event.description.isNotEmpty()) {

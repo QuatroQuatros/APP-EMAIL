@@ -2,11 +2,9 @@ package com.example.challengelocaweb.presentation.email
 
 import android.net.Uri
 import android.os.Build
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.camera.core.Camera
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,37 +17,36 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import com.example.challengelocaweb.R
-import com.example.challengelocaweb.domain.model.Attachment
 import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.domain.model.SendEmail
 import com.example.challengelocaweb.presentation.AttachmentOption
 import com.example.challengelocaweb.presentation.AttachmentOptionsDialog
 import com.example.challengelocaweb.presentation.home.HomeViewModel
+import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
 import java.time.LocalDateTime
-import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
 
@@ -65,6 +62,7 @@ fun WriteEmailScreen(
     val cco = remember { mutableStateOf("") }
     val subject = remember { mutableStateOf("") }
     val body = remember { mutableStateOf("") }
+    var titleError by remember { mutableStateOf(false) }
 
     val showAttachmentDialog = remember { mutableStateOf(false) }
     val attachments = remember { mutableStateListOf<Uri>() }
@@ -86,6 +84,7 @@ fun WriteEmailScreen(
             attachments.add(it)
         }
     }
+    ChallengeLocaWebTheme(dynamicColor = true, darkTheme = isSystemInDarkTheme()) {
 
     Scaffold(
         topBar = {
@@ -187,8 +186,7 @@ fun WriteEmailScreen(
                     }
                 }
             }
-        }
-    )
+        )
 
     if (showAttachmentDialog.value) {
         AttachmentOptionsDialog(
@@ -241,7 +239,7 @@ fun EmailTextField(label: String, value: String, onValueChange: (String) -> Unit
             keyboardActions = KeyboardActions.Default
         )
     }
-}
+    }
 
 @Composable
 fun EmailBodyField(value: String, onValueChange: (String) -> Unit) {

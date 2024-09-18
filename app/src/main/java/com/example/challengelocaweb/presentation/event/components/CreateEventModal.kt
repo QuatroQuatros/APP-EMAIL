@@ -3,15 +3,19 @@ package com.example.challengelocaweb.presentation.event.components
 import android.annotation.SuppressLint
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.challengelocaweb.R
 import com.example.challengelocaweb.data.repository.mocks.mockEventRepository
 import com.example.challengelocaweb.presentation.event.EventViewModel
 import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
@@ -52,7 +56,10 @@ fun CreateModal(
                         },
                         enabled = datePickerState.selectedDateMillis != null
                     ) {
-                        Text(text = "Confirmar Data")
+                        Text(text = "Confirmar Data",
+                            color = if (isSystemInDarkTheme()) colorResource(id = R.color.mainButtonsDark) else colorResource(
+                                id = R.color.secondaryButtonsLight
+                            ))
                     }
                 },
 
@@ -67,6 +74,18 @@ fun CreateModal(
                             fontSize = 25.sp
                         )
                     },
+                    colors = DatePickerDefaults.colors(containerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
+                        id = R.color.white),
+                        selectedDayContainerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.mainButtonsDark) else colorResource(
+                            id = R.color.secondaryButtonsLight
+                        ),
+                        todayDateBorderColor = if (isSystemInDarkTheme()) colorResource(id = R.color.mainButtonsDark) else colorResource(
+                            id = R.color.secondaryButtonsLight
+                        ),
+                        todayContentColor = if (isSystemInDarkTheme()) colorResource(id = R.color.mainButtonsDark) else colorResource(
+                            id = R.color.secondaryButtonsLight
+                        )
+                    )
                 )
             }
         }
