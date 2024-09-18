@@ -7,6 +7,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -20,7 +21,9 @@ fun CustomNavigationBar(
     selectedItems: String,
     onItemSelected: (String) -> Unit
 ) {
-
+    val categoriesLabel = stringResource(id = R.string.categories)
+    val emailLabel = stringResource(id = R.string.emails)
+    val calendarLabel = stringResource(id = R.string.calendar)
     NavigationBar(
         //modifier = Modifier,
         containerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
@@ -30,9 +33,9 @@ fun CustomNavigationBar(
     
     ) {
         NavigationBarItem(
-            selected = selectedItems == "Categorias",
+            selected = selectedItems == categoriesLabel,
             onClick = {
-                onItemSelected("Categorias")
+                onItemSelected(categoriesLabel)
                 navController.navigate(Route.CategoriesScreen.route)
             },
             colors = NavigationBarItemDefaults.colors(
@@ -44,20 +47,20 @@ fun CustomNavigationBar(
                 disabledIconColor = colorResource(id = R.color.body),
                 disabledTextColor = colorResource(id = R.color.body)
             ),
-            label = { Text("Categorias") },
+            label = { Text(categoriesLabel) },
             icon = {
                 Icon(
                     modifier = Modifier.size(30.dp),
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_bookmark),
                     tint = colorResource(id = R.color.white),
-                    contentDescription = "Categorias"
+                    contentDescription = categoriesLabel
                 )
             }
         )
         NavigationBarItem(
-            selected = selectedItems == "Home",
+            selected = selectedItems == emailLabel,
             onClick = {
-                onItemSelected("Home")
+                onItemSelected(emailLabel)
                 navController.navigate(Route.HomeScreen.route)
             },
             colors = NavigationBarItemDefaults.colors(
@@ -69,7 +72,7 @@ fun CustomNavigationBar(
                 disabledIconColor = colorResource(id = R.color.body),
                 disabledTextColor = colorResource(id = R.color.body)
             ),
-            label = { Text("Home") },
+            label = { Text(emailLabel) },
             icon = {
                 if (unreadCount > 0) {
                     BadgedBox(
@@ -86,7 +89,7 @@ fun CustomNavigationBar(
                             modifier = Modifier.size(30.dp),
                             imageVector = ImageVector.vectorResource(id = R.drawable.ic_email),
                             tint = colorResource(id = R.color.white),
-                            contentDescription = "Home"
+                            contentDescription = emailLabel
                         )
                     }
                 } else {
@@ -94,16 +97,16 @@ fun CustomNavigationBar(
                         modifier = Modifier.size(30.dp),
                         imageVector = ImageVector.vectorResource(id = R.drawable.ic_email),
                         tint = colorResource(id = R.color.white),
-                        contentDescription = "Home"
+                        contentDescription = emailLabel
                     )
                 }
             }
         )
 
         NavigationBarItem(
-            selected = selectedItems == "Calendario",
+            selected = selectedItems == calendarLabel,
             onClick = {
-                onItemSelected("Calendario")
+                onItemSelected(calendarLabel)
                 navController.navigate(Route.EventsScreen.route)
             },
             colors = NavigationBarItemDefaults.colors(
@@ -115,13 +118,13 @@ fun CustomNavigationBar(
                 disabledIconColor = colorResource(id = R.color.body),
                 disabledTextColor = colorResource(id = R.color.body)
             ),
-            label = { Text("Calendario") },
+            label = { Text(calendarLabel) },
             icon = {
                 Icon(
                     modifier = Modifier.size(30.dp),
                     imageVector = ImageVector.vectorResource(id = R.drawable.ic_calendar),
                     tint = colorResource(id = R.color.white),
-                    contentDescription = "Calendario"
+                    contentDescription = calendarLabel
                 )
             })
 

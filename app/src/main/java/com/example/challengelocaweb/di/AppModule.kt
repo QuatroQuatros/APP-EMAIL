@@ -37,7 +37,9 @@ import com.example.challengelocaweb.domain.useCases.emails.SendEmail
 import com.example.challengelocaweb.domain.useCases.emails.UpdateEmail
 import com.example.challengelocaweb.domain.useCases.emails.UploadFile
 import com.example.challengelocaweb.util.Constansts.BASE_URL
-import com.example.challengelocaweb.util.NetworkUtils
+import com.example.challengelocaweb.util.ThemeSetting
+import com.example.challengelocaweb.util.ThemeSettingPreference
+import com.example.challengelocaweb.util.TokenManager
 import dagger.Binds
 import dagger.Module
 import dagger.Provides
@@ -56,6 +58,12 @@ object AppModule {
     @Singleton
     fun provideApplicationContext(application: Application): Context {
         return application.applicationContext
+    }
+
+    @Provides
+    @Singleton
+    fun provideTokenManager(@ApplicationContext context: Context): TokenManager {
+        return TokenManager(context)
     }
 
     @Provides
@@ -81,11 +89,6 @@ object AppModule {
     @Provides
     fun provideEventDao(database: AppDatabase): EventDao {
         return database.eventDao()
-    }
-
-    @Provides
-    fun provideNetworkUtils(@ApplicationContext appContext: Context): NetworkUtils {
-        return NetworkUtils(appContext)
     }
 
     @Provides
@@ -161,4 +164,15 @@ abstract class RepositoryModule {
     abstract fun bindEventRepository(
         eventRepositoryImpl: EventRepositoryImpl
     ): EventRepository
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+abstract class SettingModule {
+
+    @Binds
+    @Singleton
+    abstract fun bindThemeSetting(
+        themeSettingPreference: ThemeSettingPreference
+    ): ThemeSetting
 }
