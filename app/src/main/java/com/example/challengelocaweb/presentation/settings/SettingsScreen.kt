@@ -1,6 +1,7 @@
 package com.example.challengelocaweb.presentation.settings
 
 import android.annotation.SuppressLint
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -44,6 +45,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
@@ -54,6 +56,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.example.challengelocaweb.R
 import com.example.challengelocaweb.presentation.auth.components.HeadingText
 import com.example.challengelocaweb.presentation.auth.components.NormalText
@@ -68,7 +71,6 @@ fun SettingsScreen(
     navController: NavHostController,
     viewModel: SettingsViewModel
 ) {
-
     var name by remember { mutableStateOf(viewModel.userName.value) }
     var password by remember { mutableStateOf("") }
     var isPasswordVisible by remember { mutableStateOf(false) }
@@ -76,9 +78,9 @@ fun SettingsScreen(
     val userId by viewModel.userId.collectAsState()
     val userName by viewModel.userName.collectAsState()
     val userPhoto by viewModel.userPhoto.collectAsState()
+    Log.d("userPhoto", userPhoto.toString())
     val selectedTheme by viewModel.selectedTheme.collectAsState()
 
-    // Estado para o Snackbar
     val snackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
 
@@ -96,7 +98,6 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            // Componente de idioma no topo
             SelectIdiomas()
 
             Column(
@@ -107,7 +108,13 @@ fun SettingsScreen(
                     .padding(20.dp)
             ) {
                 Image(
-                    painter = rememberAsyncImagePainter(model = userPhoto),
+                    painter = rememberAsyncImagePainter(
+                        model = ImageRequest.Builder(LocalContext.current)
+                            .data(userPhoto)
+                            .crossfade(true)
+                            .error(R.drawable.user)
+                            .build()
+                    ),
                     contentDescription = "Profile Picture",
                     modifier = Modifier
                         .size(80.dp)
@@ -118,7 +125,6 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(16.dp))
 
-                // Nome do usuário abaixo da imagem
                 Text(
                     text = userName,
                     style = MaterialTheme.typography.titleMedium.copy(
@@ -132,7 +138,6 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(50.dp))
 
-                // Campo para editar o nome
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
@@ -146,7 +151,6 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Campo para editar a senha
                 OutlinedTextField(
                     value = password,
                     onValueChange = { password = it },
@@ -168,12 +172,10 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(20.dp))
 
-                // Seção de tema
                 NormalText(value = stringResource(id = R.string.select_theme))
 
                 Spacer(modifier = Modifier.height(10.dp))
 
-                // Radio buttons para seleção de tema
                 Column {
                     listOf("light", "dark", "system_default").forEach { theme ->
                         Row(
@@ -192,13 +194,11 @@ fun SettingsScreen(
 
                 Spacer(modifier = Modifier.height(30.dp))
 
-                // Botão para salvar as alterações
                 RegisterButton(
                     value = stringResource(id = R.string.save_changes),
                     onClick = {
                         viewModel.updateUser(userId, name)
 
-                        // Exibir mensagem de sucesso ao salvar
                         coroutineScope.launch {
                             snackbarHostState.showSnackbar(
                                 message = "Usuário atualizado com sucesso!",
@@ -230,3 +230,5 @@ fun SettingsScreen(
         }
     }
 }
+
+

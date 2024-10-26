@@ -7,16 +7,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.example.challengelocaweb.R
 import com.example.challengelocaweb.data.repository.mocks.mockEventRepository
 import com.example.challengelocaweb.presentation.event.EventViewModel
 import com.example.challengelocaweb.ui.theme.ChallengeLocaWebTheme
 import java.time.LocalDate
-
 @RequiresApi(Build.VERSION_CODES.O)
 @SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
@@ -52,18 +53,18 @@ fun CreateModal(
                         },
                         enabled = datePickerState.selectedDateMillis != null
                     ) {
-                        Text(text = "Confirmar Data")
+                        Text(text = stringResource(id = R.string.confirm_date))
                     }
                 },
 
-            ) {
+                ) {
                 DatePicker(
                     state = datePickerState,
                     title = { Text(text = "") },
                     headline = {
                         Text(
                             modifier = Modifier.padding(16.dp),
-                            text = "Selecione uma data",
+                            text = stringResource(id = R.string.select_date),
                             fontSize = 25.sp
                         )
                     },

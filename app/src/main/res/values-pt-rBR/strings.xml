@@ -19,6 +19,12 @@
     <string name="enter_password">Digite sua senha</string>
     <string name="login_greeting_msg">É bom te ver de novo</string>
     <string name="categories">Categorias</string>
+    <string name="settings">Configurações</string>
+    <string name="sent">Enviados</string>
+    <string name="favorites">Favoritos</string>
+    <string name="spam">Spam</string>
+    <string name="drafts">Rascunhos</string>
+    <string name="trash">Lixeira</string>
     <string name="emails">Emails</string>
     <string name="calendar">Calendario</string>
     <string name="search_here">Pesquise aqui...</string>
@@ -29,6 +35,28 @@
     <string name="dark_theme">Escuro</string>
     <string name="system_default_theme">Padrão do Sistema</string>
     <string name="save_changes">Salvar Alterações</string>
+    <string name="my_events">Meus Eventos</string>
+    <string name="month">Mês</string>
+    <string name="year">Ano</string>
+    <string name="sunday_as_s">D</string>
+    <string name="monday_as_m">S</string>
+    <string name="tuesday_as_t">T</string>
+    <string name="wednesday_as_w">Q</string>
+    <string name="thursday_as_t">Q</string>
+    <string name="friday_as_f">S</string>
+    <string name="saturday_as_s">S</string>
+    <string name="previous_days">Dias anteriores</string>
+    <string name="next_days">Próximos dias</string>
+    <string name="no_events_this_day">Nenhum evento para o dia selecionado.</string>
+    <string name="job_vacancies">Vagas de emprego</string>
+    <string name="new_mail">Novo Email</string>
+    <string name="to">Para</string>
+    <string name="bcc">CCO</string>
+    <string name="subject">Assunto</string>
+    <string name="write_mail">Escrever e-mail</string>
+    <string name="confirm_date">Confirmar Data</string>
+    <string name="select_date">Selecione uma data</string>
+
 
 
 

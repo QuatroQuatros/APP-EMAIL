@@ -21,6 +21,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.stringResource
 import java.time.format.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -53,7 +54,7 @@ fun CalendarScreen(
     navController: NavHostController,
     events: List<Event>,
     viewModel: EventViewModel
-    ) {
+) {
 
     var selectedEvent by remember { mutableStateOf<Event?>(null) }
     var showModal by remember { mutableStateOf(false) }
@@ -67,7 +68,6 @@ fun CalendarScreen(
         skipPartiallyExpanded = true
     )
     var showBottomSheet by remember { mutableStateOf(false) }
-
 
     Scaffold(
         floatingActionButton = {
@@ -100,7 +100,6 @@ fun CalendarScreen(
                     try {
                         selectedDate = selectedDate.minusWeeks(1)
                             .with(java.time.temporal.TemporalAdjusters.previousOrSame(java.time.DayOfWeek.SUNDAY))
-                            //.with(java.time.temporal.TemporalAdjusters.firstDayOfMonth())
                         selectedDay = selectedDate.dayOfMonth
                         selectedMonth = selectedDate.monthValue
                         selectedYear = selectedDate.year
@@ -141,17 +140,14 @@ fun CalendarScreen(
                 EventDetailsModal(
                     event = it,
                     onDismiss = { showBottomSheet = false; selectedEvent = null },
-                    sheetState= sheetState,
+                    sheetState = sheetState,
                     scope = scope,
                     viewModel = viewModel
                 )
             }
         }
     }
-    
 }
-
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -168,18 +164,21 @@ fun Header(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = "Meus Eventos",
+            text = stringResource(id = R.string.my_events),
             fontSize = 24.sp,
             fontWeight = FontWeight.Bold,
             color = colorResource(id = R.color.primary)
         )
-        val months = java.time.Month.values().map { it.getDisplayName(TextStyle.FULL, Locale("pt", "BR")).capitalize() }
+        val currentLocale = Locale.getDefault()
+        val months = java.time.Month.values().map {
+            it.getDisplayName(TextStyle.FULL, currentLocale).capitalize(currentLocale)
+        }
+        //val months = java.time.Month.values().map { it.getDisplayName(TextStyle.FULL, Locale("pt", "BR")).capitalize() }
         val years = (1980..2100).toList()
         var selectedMonthIndex by remember { mutableStateOf(selectedDate.monthValue - 1) }
         var selectedYearIndex by remember { mutableStateOf(years.indexOf(selectedDate.year)) }
 
-
-        selectedMonthIndex = selectedDate.monthValue -1
+        selectedMonthIndex = selectedDate.monthValue - 1
         selectedYearIndex = years.indexOf(selectedDate.year)
         Row(
             modifier = Modifier
@@ -192,16 +191,16 @@ fun Header(
                 items = months,
                 selectedIndex = selectedMonthIndex,
                 onItemSelected = { index ->
-                    try{
+                    try {
                         val newDate = selectedDate.withMonth(index + 1).withDayOfMonth(1)
                         onDateChange(newDate)
-                    }catch (e: DateTimeException){
+                    } catch (e: DateTimeException) {
                         val newDate = selectedDate.withDayOfMonth(1)
                         onDateChange(newDate)
                     }
 
                 },
-                label = "Mês",
+                label = stringResource(id = R.string.month),
                 labelFontSize = 20.sp
             )
 
@@ -217,7 +216,7 @@ fun Header(
                         onDateChange(newDate)
                     }
                 },
-                label = "Ano",
+                label = stringResource(id = R.string.year),
                 labelFontSize = 20.sp
             )
         }
@@ -299,7 +298,15 @@ fun WeekDaysHeader(
             .padding(horizontal = 10.dp, vertical = 0.dp),
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        listOf("D", "S", "T", "Q", "Q", "S", "S").forEach { day ->
+        listOf(
+            stringResource(id = R.string.sunday_as_s),
+            stringResource(id = R.string.monday_as_m),
+            stringResource(id = R.string.tuesday_as_t),
+            stringResource(id = R.string.wednesday_as_w),
+            stringResource(id = R.string.thursday_as_t),
+            stringResource(id = R.string.friday_as_f),
+            stringResource(id = R.string.saturday_as_s)
+        ).forEach { day ->
             Text(
                 text = day,
                 fontWeight = FontWeight.Bold,
@@ -307,7 +314,6 @@ fun WeekDaysHeader(
             )
         }
     }
-
 
     Row(
         modifier = Modifier
@@ -343,19 +349,18 @@ fun WeekDaysHeader(
 fun NavigationButtons(
     onPreviousClick: () -> Unit,
     onNextClick: () -> Unit
-){
+) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
-
-        Button(onClick = { onPreviousClick() }){
-            Text("Dias anteriores")
+        Button(onClick = { onPreviousClick() }) {
+            Text(stringResource(id = R.string.previous_days))
         }
         Button(onClick = { onNextClick() }) {
-            Text("Próximos dias")
+            Text(stringResource(id = R.string.next_days))
         }
     }
 }
@@ -364,16 +369,16 @@ fun NavigationButtons(
 @Composable
 fun EventsTimeline(
     selectedDay: Int,
-    selectedMonth: Int ,
+    selectedMonth: Int,
     selectedYear: Int,
     events: List<Event>,
     onEventClick: (Event) -> Unit
 ) {
     val selectedDate = try {
-        if(selectedMonth  > 12 || selectedMonth < 1){
+        if (selectedMonth > 12 || selectedMonth < 1) {
             LocalDate.of(selectedYear, 1, 1)
         }
-        if(selectedMonth <= 12){
+        if (selectedMonth <= 12) {
             LocalDate.of(selectedYear, selectedMonth, selectedDay)
         } else {
             LocalDate.of(selectedYear, 1, 1)
@@ -382,14 +387,14 @@ fun EventsTimeline(
         LocalDate.of(selectedYear, selectedMonth, 1)
     }
 
-    val filteredEvents  = events.filter { event ->
+    val filteredEvents = events.filter { event ->
         val eventDate = LocalDate.parse(event.createdAt.substringBefore("T"))
         eventDate == selectedDate
     }
 
     if (filteredEvents.isEmpty()) {
         Text(
-            text = "Nenhum evento para o dia selecionado.",
+            text = stringResource(id = R.string.no_events_this_day),
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
@@ -441,7 +446,6 @@ fun EventsTimeline(
                                 textAlign = TextAlign.Center
                             )
                         }
-
                     }
                     TimelineEventCard(event, onEventClick)
                 }
@@ -490,8 +494,6 @@ fun TimelineEventCard(
             )
         }
 
-
-
         Spacer(modifier = Modifier.width(10.dp))
         Card(
             modifier = Modifier
@@ -523,12 +525,6 @@ fun TimelineEventCard(
                         fontSize = 14.sp
                     )
                 }
-//                Spacer(modifier = Modifier.height(8.dp))
-//                Text(
-//                    text = event.startTime.format(DateTimeFormatter.ofPattern("HH:mm")) + " - " + event.endTime.format(DateTimeFormatter.ofPattern("HH:mm")),
-//                    color = colorResource(id = R.color.primary),
-//                    fontSize = 14.sp
-//                )
             }
         }
     }

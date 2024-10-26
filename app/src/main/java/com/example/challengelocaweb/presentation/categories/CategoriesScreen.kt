@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
@@ -74,160 +75,170 @@ data class Category(
 fun CategoriesScreen(
     navController: NavHostController
 ) {
-
     val mainCategories = listOf(
         Category(
-            "Enviados",
+            stringResource(id = R.string.sent),
             painterResource(id = R.drawable.ic_send),
             color = colorResource(id = R.color.detailsFirst),
             onClick = {}
         ),
-        Category("Rascunhos", painterResource(id = R.drawable.ic_draft), color= colorResource(id = R.color.detailsFirst), onClick = {}),
+        Category(
+            stringResource(id = R.string.drafts),
+            painterResource(id = R.drawable.ic_draft),
+            color = colorResource(id = R.color.detailsFirst),
+            onClick = {}
+        ),
     )
 
     val categories = listOf(
-        Category("Favoritos", painterResource(id = R.drawable.ic_star_favorite), colorResource(id = R.color.favorite), onClick = {}),
-        Category("Spam", painterResource(id = R.drawable.ic_spam), color= colorResource(id = R.color.delete_color), onClick = {}),
-        Category("FIAP", painterResource(id = R.drawable.ic_bookmark), color= Color.Red, onClick = {}),
-        Category("Alura", painterResource(id = R.drawable.ic_bookmark), color= Color(0xFF007BFF), onClick = {}),
-        Category("Vagas de emprego", painterResource(id = R.drawable.ic_bookmark), color= colorResource(
-            id = R.color.detailsSecond), listOf("InfoJobs", "Linkedin"), onClick = {}),
-        Category("Interesses", painterResource(id = R.drawable.ic_bookmark), color= Color.Gray, onClick = {}),
-        Category("Lixeira", painterResource(id = R.drawable.ic_delete_outline), color= colorResource(
-            id = R.color.danger), onClick = {})
+        Category(
+            stringResource(id = R.string.favorites),
+            painterResource(id = R.drawable.ic_star_favorite),
+            colorResource(id = R.color.favorite),
+            onClick = {}
+        ),
+        Category(
+            stringResource(id = R.string.spam),
+            painterResource(id = R.drawable.ic_spam),
+            color = colorResource(id = R.color.delete_color),
+            onClick = {}
+        ),
+        Category(
+            "FIAP",
+            painterResource(id = R.drawable.ic_bookmark),
+            color = Color.Red,
+            onClick = {}
+        ),
+        Category(
+            "Alura",
+            painterResource(id = R.drawable.ic_bookmark),
+            color = Color(0xFF007BFF),
+            onClick = {}
+        ),
+        Category(
+            stringResource(id = R.string.job_vacancies),
+            painterResource(id = R.drawable.ic_bookmark),
+            color = colorResource(id = R.color.detailsSecond),
+            subcategories = listOf("InfoJobs", "Linkedin"),
+            onClick = {}
+        ),
+//        Category(
+//            "Interesses",
+//            painterResource(id = R.drawable.ic_bookmark),
+//            color = Color.Gray,
+//            onClick = {}
+//        ),
+        Category(
+            stringResource(id = R.string.trash),
+            painterResource(id = R.drawable.ic_delete_outline),
+            color = colorResource(id = R.color.danger),
+            onClick = {}
+        )
     )
 
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background
     ) {
-        Scaffold(
-//        floatingActionButton = {
-//            FloatingActionButton(onClick = { })
-
-        ) {
+        Scaffold {
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(50.dp)
             ) {
-                Row(horizontalArrangement = Arrangement.SpaceBetween,
-                    modifier = Modifier
-                    .fillMaxWidth()
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier.fillMaxWidth()
                 ) {
                     Text(
-                        modifier = Modifier
-                            .padding(vertical = 16.dp),
-                        text = "Categorias",
+                        modifier = Modifier.padding(vertical = 16.dp),
+                        text = stringResource(id = R.string.categories),
                         fontSize = 24.sp,
                         color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.textLight),
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Start
                     )
-                    Icon(imageVector = Icons.Default.Settings,
-                        contentDescription = "Configurações",
+                    Icon(
+                        imageVector = Icons.Default.Settings,
+                        contentDescription = stringResource(id = R.string.settings),
                         tint = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.shimmer),
-                        modifier = Modifier
-                            .padding(vertical = 17.dp))
+                        modifier = Modifier.padding(vertical = 17.dp)
+                    )
                 }
 
-
                 Box(modifier = Modifier.fillMaxWidth()) {
-                    Spacer(modifier = Modifier
-                        .fillMaxWidth()
-                        .height(1.dp)
-                        .background(
-                            color = if (isSystemInDarkTheme()) colorResource(id = R.color.detailsFirst) else colorResource(
-                                id = R.color.shimmer
+                    Spacer(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(1.dp)
+                            .background(
+                                color = if (isSystemInDarkTheme()) colorResource(id = R.color.detailsFirst) else colorResource(
+                                    id = R.color.shimmer
+                                )
                             )
-                        ))
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(19.dp))
 
                 LazyColumn(
-                    //verticalArrangement = Arrangement.SpaceAround,
                     modifier = Modifier
                         .weight(3f)
                         .fillMaxHeight()
-                        .padding(vertical = 10.dp),
-                )
-                {
+                        .padding(vertical = 10.dp)
+                ) {
                     items(mainCategories) { category ->
                         Spacer(modifier = Modifier.height(16.dp))
-
-                        Row (
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .fillMaxHeight()
-                                .background(
-                                    color = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
-                                        id = R.color.lighBlue
-                                    ),
-                                    shape = RoundedCornerShape(10.dp)
-                                )
-                                .padding(start = 20.dp)
-                        )
-                        {
-                            CategoryItem(
-                                category = category,
-                                onClick = {
-                                    when (category.name) {
-                                        "Enviados" -> navController.navigate(Route.SentEmailsScreen.route)
-                                    }
-                                }
-                            )
-                        }
+                        CategoryRow(navController, category)
                     }
 
                     items(categories) { category ->
                         Spacer(modifier = Modifier.height(16.dp))
-
-                        Row (
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .fillMaxHeight()
-                                .border(
-                                    BorderStroke(
-                                        1.dp,
-                                        color = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
-                                            id = R.color.lighBlue
-                                        )
-                                    ),
-                                    shape = RoundedCornerShape(10.dp)
-                                )
-                                .padding(start = 20.dp, end = 10.dp)
-                        )
-                        {
-                            CategoryItem(
-                                category = category,
-                                onClick = {
-                                    when (category.name) {
-                                        "Favoritos" -> navController.navigate(Route.FavoriteEmailsScreen.route)
-                                        "Spam" -> navController.navigate(Route.SpamEmailsScreen.route)
-                                    }
-                                }
-                            )
-                        }
+                        CategoryRow(navController, category)
                     }
                 }
-
             }
         }
     }
+}
 
+@Composable
+fun CategoryRow(navController: NavHostController, category: Category) {
+    val favoriteStr = stringResource(id = R.string.favorites)
+    val spamStr = stringResource(id = R.string.spam)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxSize()
+            .fillMaxHeight()
+            .border(
+                BorderStroke(
+                    1.dp,
+                    color = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
+                        id = R.color.lighBlue
+                    )
+                ),
+                shape = RoundedCornerShape(10.dp)
+            )
+            .padding(start = 20.dp, end = 10.dp)
+    ) {
+        CategoryItem(
+            category = category,
+            onClick = {
+                when (category.name) {
+                    favoriteStr -> navController.navigate(Route.FavoriteEmailsScreen.route)
+                    spamStr -> navController.navigate(Route.SpamEmailsScreen.route)
+                }
+            }
+        )
     }
-
-
+}
 
 @Composable
 fun CategoryItem(category: Category, onClick: () -> Unit) {
     var expanded by remember { mutableStateOf(false) }
 
-    Column(modifier = Modifier.fillMaxSize()
-    ) {
+    Column(modifier = Modifier.fillMaxSize()) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
@@ -240,10 +251,10 @@ fun CategoryItem(category: Category, onClick: () -> Unit) {
                 .padding(vertical = 8.dp)
         ) {
             Icon(
-                painter = category.icon ?: painterResource(id = R.drawable.ic_bookmark),
+                painter = category.icon,
                 contentDescription = null,
                 modifier = Modifier.size(24.dp),
-                tint = category.color ?: colorResource(id = R.color.primary)
+                tint = category.color
             )
             Spacer(modifier = Modifier.width(8.dp))
             Text(
@@ -262,16 +273,12 @@ fun CategoryItem(category: Category, onClick: () -> Unit) {
         }
 
         if (expanded && category.subcategories.isNotEmpty()) {
-            Column(modifier = Modifier
-                .padding(start = 32.dp)
-                .fillMaxSize()
-            ) {
+            Column(modifier = Modifier.padding(start = 32.dp)) {
                 category.subcategories.forEach { subcategory ->
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .fillMaxHeight()
                             .clickable { /* Handle subcategory click */ }
                             .padding(vertical = 8.dp)
                     ) {
@@ -293,6 +300,7 @@ fun CategoryItem(category: Category, onClick: () -> Unit) {
         }
     }
 }
+
 
 @RequiresApi(Build.VERSION_CODES.O)
 @Preview(showBackground = true)

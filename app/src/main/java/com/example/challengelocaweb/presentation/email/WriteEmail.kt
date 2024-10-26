@@ -2,17 +2,11 @@ package com.example.challengelocaweb.presentation.email
 
 import android.net.Uri
 import android.os.Build
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
-import androidx.camera.core.Camera
-import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -26,13 +20,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.graphics.painter.BrushPainter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -42,16 +34,10 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.example.challengelocaweb.R
-import com.example.challengelocaweb.domain.model.Attachment
-import com.example.challengelocaweb.domain.model.Email
 import com.example.challengelocaweb.domain.model.SendEmail
 import com.example.challengelocaweb.presentation.AttachmentOption
 import com.example.challengelocaweb.presentation.AttachmentOptionsDialog
 import com.example.challengelocaweb.presentation.home.HomeViewModel
-import java.time.LocalDateTime
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
@@ -60,30 +46,29 @@ fun WriteEmailScreen(
     navController: NavHostController,
     viewModel: HomeViewModel
 ) {
-    val to = remember { mutableStateOf("") }
+    val para = remember { mutableStateOf("") }
     val cc = remember { mutableStateOf("") }
     val cco = remember { mutableStateOf("") }
-    val subject = remember { mutableStateOf("") }
-    val body = remember { mutableStateOf("") }
+    val assunto = remember { mutableStateOf("") }
+    val corpo = remember { mutableStateOf("") }
 
-    val showAttachmentDialog = remember { mutableStateOf(false) }
-    val attachments = remember { mutableStateListOf<Uri>() }
-    val context = LocalContext.current
+    val mostrarDialogAnexo = remember { mutableStateOf(false) }
+    val anexos = remember { mutableStateListOf<Uri>() }
+    val contexto = LocalContext.current
 
-    val documentLauncher = rememberLauncherForActivityResult(
+    val lancadorDocumento = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            attachments.add(it)
+            anexos.add(it)
         }
     }
 
-    // Launcher para selecionar imagens
-    val imageLauncher = rememberLauncherForActivityResult(
+    val lancadorImagem = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
         uri?.let {
-            attachments.add(it)
+            anexos.add(it)
         }
     }
 
@@ -93,7 +78,7 @@ fun WriteEmailScreen(
                 title = {
                     Text(
                         modifier = Modifier.fillMaxWidth(),
-                        text = "Novo Email",
+                        text = stringResource(id = R.string.new_mail),
                         fontSize = 22.sp,
                         color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.textLight),
                         fontWeight = FontWeight.SemiBold,
@@ -127,11 +112,11 @@ fun WriteEmailScreen(
                     .padding(paddingValues)
                     .padding(30.dp)
             ) {
-                EmailTextField(label = "Para:", value = to.value) { to.value = it }
+                EmailTextField(label = stringResource(id = R.string.to), value = para.value) { para.value = it }
                 EmailTextField(label = "CC:", value = cc.value) { cc.value = it }
-                EmailTextField(label = "CCO:", value = cco.value) { cco.value = it }
-                EmailTextField(label = "Assunto:", value = subject.value) { subject.value = it }
-                EmailBodyField(value = body.value) { body.value = it }
+                EmailTextField(label = stringResource(id = R.string.bcc), value = cco.value) { cco.value = it }
+                EmailTextField(label = stringResource(id = R.string.subject), value = assunto.value) { assunto.value = it }
+                EmailBodyField(value = corpo.value) { corpo.value = it }
 
                 Spacer(modifier = Modifier.weight(1f))
 
@@ -143,7 +128,7 @@ fun WriteEmailScreen(
                 ) {
                     FloatingActionButton(
                         onClick = {
-                            showAttachmentDialog.value = true
+                            mostrarDialogAnexo.value = true
                         },
                         containerColor = if (isSystemInDarkTheme()) colorResource(id = R.color.secondaryButtonsDark) else colorResource(id = R.color.secondaryButtonsLight),
                     ) {
@@ -155,25 +140,24 @@ fun WriteEmailScreen(
                     }
                     FloatingActionButton(
                         onClick = {
-                            val htmlContent = """
+                            val conteudoHtml = """
                                 <html>
                                 <body>
-                                    <p>De: ${to.value}</p>
-                                    <p>Assunto: ${subject.value}</p>
-                                    <p>${body.value.replace("\n", "<br>")}</p>
+                                    <p>De: ${para.value}</p>
+                                    <p>Assunto: ${assunto.value}</p>
+                                    <p>${corpo.value.replace("\n", "<br>")}</p>
                                 </body>
                                 </html>
                             """.trimIndent()
 
-                            // Enviar e-mail
                             val email = SendEmail(
                                 sender = "seu_email@gmail.com",
-                                subject = subject.value,
-                                contentHtml = htmlContent,
-                                contentPlain = body.value,
+                                subject = assunto.value,
+                                contentHtml = conteudoHtml,
+                                contentPlain = corpo.value,
                                 isConfidential = false
                             )
-                            viewModel.sendEmail(email, attachments)
+                            viewModel.sendEmail(email, anexos)
 
                             navController.popBackStack()
                         },
@@ -190,43 +174,30 @@ fun WriteEmailScreen(
         }
     )
 
-    if (showAttachmentDialog.value) {
+    if (mostrarDialogAnexo.value) {
         AttachmentOptionsDialog(
-            onDismiss = { showAttachmentDialog.value = false },
-            onOptionSelected = { option ->
-                showAttachmentDialog.value = false
-                when (option) {
-                    AttachmentOption.Document -> documentLauncher.launch("application/pdf")
-                    AttachmentOption.Camera, AttachmentOption.Gallery -> imageLauncher.launch("image/*")
+            onDismiss = { mostrarDialogAnexo.value = false },
+            onOptionSelected = { opcao ->
+                mostrarDialogAnexo.value = false
+                when (opcao) {
+                    AttachmentOption.Document -> lancadorDocumento.launch("application/pdf")
+                    AttachmentOption.Camera, AttachmentOption.Gallery -> lancadorImagem.launch("image/*")
                 }
             }
         )
     }
 }
 
-
 @Composable
 fun EmailTextField(label: String, value: String, onValueChange: (String) -> Unit) {
     Row(
         modifier = Modifier
-            .padding(vertical = 7.dp)
-            .background(if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(id = R.color.lighBlue), shape = RoundedCornerShape(10.dp))
-            .border(
-                BorderStroke(
-                    1.dp,
-                    color = if (isSystemInDarkTheme()) colorResource(id = R.color.gray) else colorResource(
-                        id = R.color.lighBlue
-                    )
-                ),
-                shape = RoundedCornerShape(10.dp)
-            )
-            .height(40.dp)
+            .padding(vertical = 6.dp),
     ) {
         Text(
-            modifier = Modifier.padding(9.dp),
             text = label,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
+            fontSize = 20.sp,
+            fontWeight = FontWeight.Bold,
         )
         BasicTextField(
             value = value,
@@ -246,24 +217,17 @@ fun EmailTextField(label: String, value: String, onValueChange: (String) -> Unit
 @Composable
 fun EmailBodyField(value: String, onValueChange: (String) -> Unit) {
     Column(modifier = Modifier.padding(vertical = 4.dp)) {
-        Text(
-            modifier = Modifier.padding(top = 9.dp),
-            text = "Escrever e-mail",
-            fontSize = 15.sp,
-            fontWeight = FontWeight.Normal,
-        )
+        Text(text = stringResource(id = R.string.write_mail), fontSize = 16.sp, fontWeight = FontWeight.Bold)
         BasicTextField(
             value = value,
             onValueChange = onValueChange,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 12.dp)
+                .padding(8.dp)
                 .height(200.dp),
-            textStyle = TextStyle(fontSize = 16.sp, color = if (isSystemInDarkTheme()) colorResource(id = R.color.textDark) else colorResource(id = R.color.small_text)),
-            cursorBrush = SolidColor(if (isSystemInDarkTheme()) Color.White else Color.Black),
+            textStyle = TextStyle(fontSize = 16.sp),
             keyboardOptions = KeyboardOptions.Default.copy(autoCorrect = true),
             keyboardActions = KeyboardActions.Default
         )
     }
 }
-
